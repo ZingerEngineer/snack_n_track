@@ -36,3 +36,6 @@ coverage
 .env
 node_modules
 
+apps/mobile/android
+
+*.vscode
