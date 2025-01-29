@@ -1,0 +1,18 @@
+version: '3.8'
+name: snack_n_track
+services:
+  postgres:
+    image: postgres:17.2
+    container_name: prisma_postgres_snack_n_track_db
+    restart: always
+    environment:
+      POSTGRES_USER: pstSnackTrackAdmin
+      POSTGRES_PASSWORD: dd849a5182cebe432c83041b152f15ddeec3d0be454e93fb64c4ab8e08e1a2ca
+      POSTGRES_DB: snack_n_track_prisma_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

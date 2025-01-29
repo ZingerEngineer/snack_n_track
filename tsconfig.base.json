@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@shared-types/*": ["packages/shared-types/src/*"],
+      "@utils/*": ["packages/utils/src/*"],
+      "@validation-schemas/*": ["packages/validation-schemas/src/*"]
+    },
+    "strict": true,
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
