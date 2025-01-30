@@ -1,0 +1,4 @@
+const getUser = () => {}
+
+export { getUser }
+
