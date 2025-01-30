@@ -39,3 +39,4 @@ node_modules
 apps/mobile/android
 
 *.vscode
+apps/server/uploads

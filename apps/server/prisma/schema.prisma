@@ -8,8 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
+  id                  Int      @id @default(autoincrement())
+  email               String   @unique
+  name                String?
+  password            String?
+  gender              String?
+  age                 Int?
+  goals               String?
+  dietary_preferences String?
+  medical_conditions  String?
+  createdAt           DateTime @default(now())
 }
