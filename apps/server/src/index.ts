@@ -7,6 +7,7 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import router from '../routers/index'
 import errorHandler from '../middlewares/globalErrorHandler'
 import { InternalServerError } from '../classes/Error'
+import cookieParser from 'cookie-parser'
 
 dotenv.config({
   path: ['../../../.env', './.env']
@@ -18,6 +19,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(router)
 app.use(errorHandler)
 
