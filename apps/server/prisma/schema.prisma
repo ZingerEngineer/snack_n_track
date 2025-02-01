@@ -8,14 +8,28 @@ datasource db {
 }
 
 model User {
-  id                  Int      @id @default(autoincrement())
-  email               String   @unique
+  id                  Int            @id @default(autoincrement())
+  email               String         @unique
   name                String?
-  password            String?
+  password            String
   gender              String?
   age                 Int?
   goals               String?
   dietary_preferences String?
   medical_conditions  String?
-  createdAt           DateTime @default(now())
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime?      @updatedAt
+  deletedAt           DateTime?
+  RefreshToken        RefreshToken[]
+}
+
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  userId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  expiresAt DateTime  @default(dbgenerated("now() + interval '7 days'"))
+
+  User User @relation(fields: [userId], references: [id])
 }
