@@ -1,9 +1,14 @@
 import express from 'express'
-import authenticateUser from '../middlewares/authenticateUser'
+import authorizationMiddleware from '../middlewares/authorizationMiddleware'
+import { Request, Response } from 'express'
+
 const privateRouter = express.Router()
 
-privateRouter.use(authenticateUser)
-privateRouter.get('/', (_, res) => {
+// Authorization middleware
+privateRouter.use(authorizationMiddleware)
+
+// Route handler
+privateRouter.get('/', (_, res: Response) => {
   res.json({ message: 'Hello private World' })
 })
 
