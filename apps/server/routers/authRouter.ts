@@ -6,6 +6,7 @@ import {
   refreshTokenController
 } from '../controllers/auth.controller'
 import { BaseError } from '../classes/Error'
+import authorizationMiddleware from '../middlewares/authorizationMiddleware'
 const authRouter = express.Router()
 
 authRouter.get('/getme', (req: Request, res: Response) => {
@@ -57,6 +58,10 @@ authRouter.post('/register', async (req: Request, res: Response) => {
 authRouter.post('/logout', async (req: Request, res: Response) => {
   try {
     const logoutResults = await logoutController(req)
+    if (logoutResults.status === 'success') {
+      res.clearCookie('accessToken')
+      res.clearCookie('refreshToken')
+    }
     res.status(200).json(logoutResults)
   } catch (error) {
     console.error(error)
@@ -88,5 +93,14 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     res.status(400).json({ error })
   }
 })
+
+authRouter.get(
+  '/session',
+  authorizationMiddleware,
+  async (_, res: Response) => {
+    res.json({ authenticated: true })
+  }
+)
+
 export default authRouter
 

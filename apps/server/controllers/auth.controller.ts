@@ -84,12 +84,11 @@ const registerController = async (req: Request) => {
 
 const logoutController = async (req: Request) => {
   try {
-    const authHeader = req.headers.authorization
-    const token = authHeader?.split(' ')[1]
-    if (!token) {
-      throw new ValidationError('Token is missing')
+    const accessToken = decodeURIComponent(req.signedCookies['accessToken'])
+    if (!accessToken || typeof accessToken !== 'string') {
+      throw new ValidationError('Invalid auth cookie')
     }
-    const accessTokenData = TokenUtils.verifyAccessToken(token)
+    const accessTokenData = TokenUtils.verifyAccessToken(accessToken)
     const parsedToken = accessTokenDataSchema.parse(accessTokenData)
     const userId = parsedToken.userId
 
@@ -103,9 +102,9 @@ const logoutController = async (req: Request) => {
         refreshTokenDao.deleteTokenById(token.id.toString())
       )
     )
-
     return { status: 'success' }
   } catch (error) {
+    console.error(error)
     if (error instanceof z.ZodError) {
       throw new ValidationError('Invalid access token')
     }
@@ -114,19 +113,14 @@ const logoutController = async (req: Request) => {
 }
 
 const refreshTokenController = async (req: Request) => {
-  const refreshHeader = req.headers['refresh']
+  const refreshToken = decodeURIComponent(req.signedCookies['refreshToken'])
 
-  if (
-    !refreshHeader ||
-    typeof refreshHeader !== 'string' ||
-    !refreshHeader.startsWith('Refresher')
-  ) {
+  if (!refreshToken || typeof refreshToken !== 'string') {
     throw new ValidationError('Invalid refresh token')
   }
 
   try {
-    const token = refreshHeader.split(' ')[1]
-    const tokenData = TokenUtils.verifyRefreshToken(token)
+    const tokenData = TokenUtils.verifyRefreshToken(refreshToken)
     const parsedToken = accessTokenDataSchema.parse(tokenData)
     const newAccessToken = TokenUtils.createAccessToken(parsedToken.userId)
 

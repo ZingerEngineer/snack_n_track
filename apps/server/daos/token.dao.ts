@@ -4,6 +4,9 @@ import {
   ValidationError
 } from '../classes/Error'
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
 import PrismaGlobal from '../classes/PrismaGlobal'
 
 class TokenUtils {

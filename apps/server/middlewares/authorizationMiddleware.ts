@@ -7,17 +7,15 @@ const authorizationMiddleware = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const authHeader = req.headers.authorization
-  const token = authHeader?.split(' ')[1] // Extract Bearer token
-
+  const accessToken = decodeURIComponent(req.signedCookies['accessToken'])
   try {
-    if (token) {
+    if (accessToken) {
       // Verify the access token
-      TokenUtils.verifyAccessToken(token)
+      TokenUtils.verifyAccessToken(accessToken)
       return next() // Token is valid, proceed to the next middleware
     }
 
-    // No token provided, attempt to refresh
+    // No token provided or invalid token, attempt to refresh
     const results = await refreshTokenController(req)
     if (results?.accessToken) {
       res.cookie('accessToken', encodeURIComponent(results.accessToken), {
