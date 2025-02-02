@@ -21,11 +21,15 @@ import '@ionic/vue/css/text-transformation.css'
 import '@ionic/vue/css/flex-utils.css'
 import '@ionic/vue/css/display.css'
 
-const app = createApp(App)
+import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
 
-app.use(createPinia())
-app.use(router)
-app.use(IonicVue)
+const app = createApp(App)
+  .use(createPinia())
+  .use(router)
+  .use(IonicVue)
+  .use(Vue3Toastify, {
+    autoClose: 3000,
+  } as ToastContainerOptions)
 
 router.isReady().then(() => {
   app.mount('#app')
