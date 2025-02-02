@@ -2,6 +2,9 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue'
 import { ref } from 'vue'
 import pickPicture from '../apis/mobile/pickPicture'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const imagePath = ref<string | null>(null)
 const pickPhotoHandler = async () => {
@@ -31,6 +34,24 @@ const anaylsePhotoHandler = async () => {
     console.log(error)
   }
 }
+
+const logout = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/v1/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      credentials: 'include',
+    })
+    if (response.ok) {
+      router.push('/login')
+    }
+  } catch (error) {
+    console.error('Error logging out:', error)
+  }
+}
 </script>
 
 <template>
@@ -41,6 +62,7 @@ const anaylsePhotoHandler = async () => {
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <ion-button @click="logout"> Logout </ion-button>
       <div class="p-4 flex flex-col justify-center items-center gap-4">
         <p class="text-2xl font-semibold">Main page</p>
         <div class="flex flex-col justify-center items-center">
