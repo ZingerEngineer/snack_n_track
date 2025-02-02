@@ -9,16 +9,19 @@ import errorHandler from '../middlewares/globalErrorHandler'
 import { InternalServerError } from '../classes/Error'
 import cookieParser from 'cookie-parser'
 
-dotenv.config({
-  path: ['../../../.env', './.env']
-})
+dotenv.config()
 
 const upload = multer({ dest: 'uploads/' })
 
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+  })
+)
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(router)
 app.use(errorHandler)
