@@ -1,16 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
-import { BaseError, InternalServerError } from '../classes/Error'
+import { InternalServerError } from '../classes/Error'
 
 // Create a single supabase client for interacting with your database
 const initSupabaseClient = () => {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY)
-    throw new BaseError('Missing Supabase environment variables', 500, false)
+    throw new InternalServerError('Missing Supabase environment variables')
 
-  const supabase = createClient(
+  const supabaseClient = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY
   )
-  return supabase
+  return supabaseClient
 }
 
 export default initSupabaseClient
