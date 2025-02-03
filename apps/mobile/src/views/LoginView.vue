@@ -5,6 +5,9 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
 import ToastService from '../services/ToastService.ts'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth.store'
+
+const { login } = useAuthStore()
 
 const router = useRouter()
 // Define Zod validation schemas
@@ -35,22 +38,7 @@ const { value: password, errorMessage: passwordError } = useField('password')
 // Submit handler
 const onSubmit = handleSubmit(async (values) => {
   try {
-    const response = await fetch('http://localhost:3000/v1/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      credentials: 'include',
-      body: JSON.stringify(values),
-    })
-
-    if (!response.ok) {
-      throw new Error('Login failed')
-    }
-
-    const data = await response.json()
-    console.log('Login successful:', data)
+    await login(values)
     ToastService.success('Login successful')
     router.push('/home')
   } catch (error) {
