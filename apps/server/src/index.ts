@@ -11,8 +11,6 @@ import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
-const upload = multer({ dest: 'uploads/' })
-
 const app = express()
 
 app.use(express.json())
