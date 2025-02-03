@@ -14,25 +14,27 @@ const authorizationMiddleware = async (
       TokenUtils.verifyAccessToken(accessToken)
       return next() // Token is valid, proceed to the next middleware
     }
-
-    // No token provided or invalid token, attempt to refresh
-    const results = await refreshTokenController(req)
-    if (results?.accessToken) {
-      res.cookie('accessToken', encodeURIComponent(results.accessToken), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        signed: true,
-        maxAge: 15 * 60 * 1000
-      })
-      return next() // New access token issued, proceed
-    } else {
+  } catch (error) {
+    try {
+      const results = await refreshTokenController(req)
+      if (results?.accessToken) {
+        res.cookie('accessToken', encodeURIComponent(results.accessToken), {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          signed: true,
+          maxAge: 15 * 60 * 1000
+        })
+        return next() // New access token issued, proceed
+      } else {
+        res.status(401).json({ message: 'Unauthorized access' })
+      }
+    } catch (error) {
+      console.error(error)
       res.status(401).json({ message: 'Unauthorized access' })
     }
-  } catch (error) {
-    console.error('Authorization error:', error)
-    res.status(401).json({ message: 'Invalid or expired token' })
   }
+  // No token provided or invalid token, attempt to refresh
 }
 
 export default authorizationMiddleware
