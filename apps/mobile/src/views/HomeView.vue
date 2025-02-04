@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.store'
 import ToastService from '../services/ToastService'
 
-const { logout, user, isAuthenticated } = useAuthStore()
+const { logout, isAuthenticated } = useAuthStore()
 const router = useRouter()
 
 const imagePath = ref<string | null>(null)
@@ -54,28 +54,19 @@ const logOutHandler = async () => {
 <template>
   <ion-page>
     <ion-header v-if="isAuthenticated">
-      <ion-toolbar>
-        <ion-title>Snack n' Track v0</ion-title>
-        {{ user.email }}
-      </ion-toolbar>
+      <div class="flex justify-between items-center">
+        <ion-toolbar>
+          <ion-title>Home</ion-title>
+        </ion-toolbar>
+      </div>
     </ion-header>
     <ion-content>
-      <div v-if="isAuthenticated" class="wrapper">
+      <div class="" v-if="isAuthenticated">
         <ion-button @click="logOutHandler"> Logout </ion-button>
         <div class="p-4 flex flex-col justify-center items-center gap-4">
-          <p class="text-2xl font-semibold">Main page</p>
           <div class="flex flex-col justify-center items-center">
-            <p>
-              Image path: <span>{{ imagePath }}</span>
-            </p>
             <div class="flex justify-center items-center aspect-square overflow-hidden w-64">
               <div
-                v-if="imagePath"
-                :style="{ backgroundImage: imagePath ? `url(${imagePath})` : 'none' }"
-                class="w-64 h-64 bg-cover bg-center rounded-md border-2 border-gray-400 shadow-xl"
-              ></div>
-              <div
-                v-else
                 class="w-64 h-64 bg-cover bg-center rounded-md border-2 from-gray-300 to-gray-400 bg-gradient-to-l border-gray-400 shadow-xl"
               ></div>
             </div>
@@ -117,6 +108,6 @@ const logOutHandler = async () => {
 
 <style scoped>
 ion-page {
-  color: white;
+  color: black;
 }
 </style>
