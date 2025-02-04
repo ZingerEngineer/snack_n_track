@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import HomeView from '../views/HomeView.vue'
 import type { RouteRecordRaw } from 'vue-router'
+import HomeViewEnhanced from '@/views/HomeViewEnhanced.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -13,6 +14,19 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: HomeView,
     meta: { requiresAuth: true },
+  },
+
+  {
+    path: '/homeE',
+    name: 'homE',
+    component: HomeViewEnhanced,
+    children: [
+      {
+        path: 'scan',
+        name: 'scan',
+        component: () => import('../views/ScanView.vue'),
+      },
+    ],
   },
   {
     path: '/login',
