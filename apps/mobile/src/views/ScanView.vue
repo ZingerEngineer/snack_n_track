@@ -3,11 +3,10 @@ import { cameraOutline, trash } from 'ionicons/icons'
 import { IonPage, IonContent, IonIcon, IonButton } from '@ionic/vue'
 import { ref } from 'vue'
 import pickPicture from '../apis/mobile/pickPicture'
+import { INutritionData, IEstimatedNutritionData } from '../types/global.types'
 
 const imagePath = ref<string | null>(null)
-const nutritionData = ref<null | { calories: number; protein: number; carbs: number; fat: number }>(
-  null,
-)
+const nutritionData = ref<null | INutritionData | IEstimatedNutritionData>(null)
 const pickPhotoHandler = async () => {
   const imgBlobUrl = await pickPicture()
   if (!imgBlobUrl) return
@@ -21,26 +20,17 @@ const resetPhoto = () => {
 
 const anaylsePhotoHandler = async () => {
   if (!imagePath.value) return
-  try {
-    const imgBlob = await fetch(imagePath.value).then((res) => res.blob())
-    const formData = new FormData()
-    formData.append('file', imgBlob)
-    const response = await fetch('http://localhost:3000/v1/private/scan', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    })
-    const data = await response.json()
-    nutritionData.value = {
-      calories: data.calories ? data.calories : 0,
-      protein: data.protein ? data.protein : 0,
-      carbs: data.carbs ? data.carbs : 0,
-      fat: data.fat ? data.fat : 0,
-    }
-    console.log(data)
-  } catch (error) {
-    console.log(error)
-  }
+  const imgBlob = await fetch(imagePath.value).then((res) => res.blob())
+  const formData = new FormData()
+  formData.append('file', imgBlob)
+  const response = await fetch('http://localhost:3000/v1/private/scan', {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  })
+
+  const data = await response.json()
+  nutritionData.value = data.response
 }
 </script>
 
@@ -81,27 +71,55 @@ const anaylsePhotoHandler = async () => {
           <ion-button v-if="imagePath" :onclick="anaylsePhotoHandler"> Analyse Food </ion-button>
         </div>
         <div v-if="nutritionData" class="mt-4 w-full px-8">
-          <ion-card>
+          <ion-card
+            v-if="nutritionData"
+            :class="{
+              'border-2 border-green-500': 'name' in nutritionData,
+              'border-2 border-yellow-500': 'estimated_name' in nutritionData,
+            }"
+          >
             <ion-card-header>
               <ion-card-title>Nutrition Facts</ion-card-title>
             </ion-card-header>
             <ion-card-content>
               <ion-grid>
-                <ion-row>
-                  <ion-col>Calories</ion-col>
-                  <ion-col>{{ nutritionData.calories }}</ion-col>
+                <ion-row v-if="'name' in nutritionData">
+                  <ion-col>Name</ion-col>
+                  <ion-col>{{ nutritionData.name }}</ion-col>
                 </ion-row>
-                <ion-row>
-                  <ion-col>Protein</ion-col>
-                  <ion-col>{{ nutritionData.protein }} g</ion-col>
+                <ion-row v-if="'estimated_name' in nutritionData">
+                  <ion-col>Estimated Name</ion-col>
+                  <ion-col>{{ nutritionData.estimated_name }}</ion-col>
                 </ion-row>
-                <ion-row>
+                <ion-row v-if="'type_of_food' in nutritionData">
+                  <ion-col>Type of Food</ion-col>
+                  <ion-col>{{ nutritionData.type_of_food }}</ion-col>
+                </ion-row>
+                <ion-row v-if="'estimated_typeOfFood' in nutritionData">
+                  <ion-col>Estimated Type of Food</ion-col>
+                  <ion-col>{{ nutritionData.estimated_typeOfFood }}</ion-col>
+                </ion-row>
+                <ion-row v-if="'proteins' in nutritionData">
+                  <ion-col>Proteins</ion-col>
+                  <ion-col>{{ nutritionData.proteins }} g</ion-col>
+                </ion-row>
+                <ion-row v-if="'carbs' in nutritionData">
                   <ion-col>Carbohydrates</ion-col>
                   <ion-col>{{ nutritionData.carbs }} g</ion-col>
                 </ion-row>
-                <ion-row>
-                  <ion-col>Fat</ion-col>
-                  <ion-col>{{ nutritionData.fat }} g</ion-col>
+                <ion-row v-if="'fats' in nutritionData">
+                  <ion-col>Fats</ion-col>
+                  <ion-col>{{ nutritionData.fats }} g</ion-col>
+                </ion-row>
+                <ion-row v-if="'vitamins' in nutritionData">
+                  <ion-col>Vitamins</ion-col>
+                  <ion-col>
+                    <ul>
+                      <li v-for="(vitamin, index) in nutritionData.vitamins" :key="index">
+                        {{ vitamin.vitamin_name }}: {{ vitamin.vitamin_portion }}
+                      </li>
+                    </ul>
+                  </ion-col>
                 </ion-row>
               </ion-grid>
             </ion-card-content>

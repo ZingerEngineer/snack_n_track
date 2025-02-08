@@ -1,107 +1,58 @@
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue'
-import { ref } from 'vue'
-import pickPicture from '../apis/mobile/pickPicture'
-import { useRouter } from 'vue-router'
+import { IonPage, IonContent, IonIcon } from '@ionic/vue'
 import { useAuthStore } from '../stores/auth.store'
+import { logOutOutline } from 'ionicons/icons'
 import ToastService from '../services/ToastService'
+import { useRouter } from 'vue-router'
 
-const { logout, isAuthenticated } = useAuthStore()
 const router = useRouter()
+const { logout, user } = useAuthStore()
 
-const imagePath = ref<string | null>(null)
-const pickPhotoHandler = async () => {
-  const imgBlobUrl = await pickPicture()
-  if (!imgBlobUrl) return
-  imagePath.value = imgBlobUrl
-}
-
-const resetPhoto = () => {
-  if (imagePath.value) URL.revokeObjectURL(imagePath.value)
-  imagePath.value = null
-}
-
-const anaylsePhotoHandler = async () => {
-  if (!imagePath.value) return
-  try {
-    const imgBlob = await fetch(imagePath.value).then((res) => res.blob())
-    const formData = new FormData()
-    formData.append('file', imgBlob)
-    const response = await fetch('http://localhost:3000/v1/private/scan', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    })
-    const data = await response.json()
-    console.log(data)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const logOutHandler = async () => {
+const handleLogout = async () => {
   try {
     await logout()
-    ToastService.success('Logout successful')
+    ToastService.success('Logged out successfully')
     router.push('/login')
   } catch (error) {
-    ToastService.error('Logout failed')
     console.error('Logout failed:', error)
+    ToastService.error('Logout failed')
   }
 }
 </script>
 
 <template>
   <ion-page>
-    <ion-header v-if="isAuthenticated">
-      <div class="flex justify-between items-center">
-        <ion-toolbar>
-          <ion-title>Home</ion-title>
-        </ion-toolbar>
-      </div>
-    </ion-header>
     <ion-content>
-      <div class="" v-if="isAuthenticated">
-        <ion-button @click="logOutHandler"> Logout </ion-button>
-        <div class="p-4 flex flex-col justify-center items-center gap-4">
-          <div class="flex flex-col justify-center items-center">
-            <div class="flex justify-center items-center aspect-square overflow-hidden w-64">
+      <div class="w-full h-full">
+        <ion-card class="p-2">
+          <ion-card-header>
+            <ion-card-title>Welcome home.</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="w-full h-full flex flex-row justify-between items-center">
+              <div>
+                <ion-icon
+                  @click="handleLogout"
+                  class="text-emerald-400 rounded-xl p-2 text-[3rem]"
+                  :icon="logOutOutline"
+                />
+              </div>
               <div
-                class="w-64 h-64 bg-cover bg-center rounded-md border-2 from-gray-300 to-gray-400 bg-gradient-to-l border-gray-400 shadow-xl"
-              ></div>
-            </div>
-          </div>
-          <div id="buttons-wrapper" class="flex flex-col gap-2">
-            <div class="flex flex-row justify-center items-center">
-              <button
-                :onclick="pickPhotoHandler"
-                :class="[
-                  'px-6 py-4 font-semibold bg-black text-white mt-4',
-                  imagePath ? 'rounded-md rounded-r-none' : 'rounded-md',
-                ]"
+                class="flex flex-row items-center justify-center bg-emerald-400 px-5 py-2 rounded-full text-white border-emerald-300 border-2 gap-2"
               >
-                {{ imagePath ? 'Change' : 'Pick' }} Photo
-              </button>
-              <button
-                v-if="imagePath"
-                :onclick="resetPhoto"
-                class="px-4 py-4 font-semibold bg-red-500 text-white rounded-md rounded-l-none mt-4"
-              >
-                X
-              </button>
+                <p class="">
+                  {{ user?.email }}
+                </p>
+                <img
+                  class="w-12 bg-cover bg-center rounded-full"
+                  src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3383.jpg?semt=ais_hybrid"
+                  alt="Random"
+                />
+              </div>
             </div>
-
-            <button
-              :onclick="anaylsePhotoHandler"
-              class="px-6 py-4 font-semibold bg-black text-white rounded-md mt-4"
-            >
-              Analyse Food
-            </button>
-          </div>
-        </div>
+          </ion-card-content>
+        </ion-card>
       </div>
-
-      <ion-button v-if="!isAuthenticated" router-link="/login" class="text-white">Login</ion-button>
     </ion-content>
   </ion-page>
 </template>

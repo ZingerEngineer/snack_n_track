@@ -3,7 +3,7 @@ import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton } from '@io
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
-import ToastService from '../services/ToastService.ts'
+import ToastService from '../services/ToastService'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.store'
 
@@ -40,7 +40,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     await login(values)
     ToastService.success('Login successful')
-    router.push('/home')
+    router.push('/dashboard/home')
   } catch (error) {
     console.error('Login failed:', error)
     ToastService.error('Login failed')

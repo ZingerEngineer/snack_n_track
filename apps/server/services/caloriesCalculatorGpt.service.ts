@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import { loginToProvider } from './util/loginToProvider'
+import { loginToProvider } from './util/loginToMicrosoft'
 
 import { Calculator } from './types'
 puppeteer.use(StealthPlugin())
@@ -9,7 +9,7 @@ async function puppeteerScript(imageURL: string) {
   const email = process.env.EMAIL_SECRET as string
   const password = process.env.PASSWORD_SECRET as string
   const prompt =
-    'How much calories are in the food inside this image? Criteria: Consider number of elements in the image, color, and size of the elements. Reply only with the total calories calculated in numbers & do not suggest more than one response.'
+    'I will provide an image of Egyptian food. Please analyze the image and respond with a certainty level based on the clarity and coherence of the food representation. Your response should be formatted as JSON. 1. If the image is clear and coherently represents the food parts, provide a certainty percentage between 90-100%. Include the following fields in your JSON response: - `percentage_of_certainty`: a number representing the certainty percentage. - `isSure`: a boolean indicating certainty (true). - `name`: the specific name of the food. - `type_of_food`: categorize it as Vegetable, Fruit, Grain, Dessert, Beverage, or Meal. - `proteins`: the amount of protein in appropriate measurement units (ml or grams). - `carbs`: the amount of carbohydrates in appropriate measurement units (ml or grams). - `fats`: the amount of fats in appropriate measurement units (ml or grams). - `vitamins`: an array of objects, each containing: - `vitamin_name`: the name of the vitamin. - `vitamin_portion`: the amount in appropriate measurement units (ml or grams). 2. If the image is somewhat blurry or the food is not coherent enough, provide a certainty percentage between 60-80%. Your JSON response should include: - `percentage_of_certainty`: a number representing the certainty percentage. - `isSure`: a boolean indicating certainty (false). - `estimated_name`: your best estimate of the food name. - `estimated_typeOfFood`: categorize it as Vegetable, Fruit, Grain, Dessert, Beverage, or Meal. 3. If the certainty percentage is below 60%, return a JSON response containing: - `status`: "failed". Please analyze the image and provide your response accordingly. Take your time and reply only with the JSON file.'
 
   if (!imageURL) throw new Error('No image path found')
   let response: string | null = null

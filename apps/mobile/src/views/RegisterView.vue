@@ -36,13 +36,12 @@ const { value: password, errorMessage: passwordError } = useField('password')
 // Submit handler
 const onSubmit = handleSubmit(async (values) => {
   try {
-    const response = await axios.post('http://localhost:3000/v1/auth/register', values)
-    console.log('Register success:', response.data)
+    await axios.post('http://localhost:3000/v1/auth/register', values)
     ToastService.success('Register success')
     router.push('/login')
   } catch (error) {
-    console.error('Register failed:', error)
     ToastService.error('Register failed')
+    return
   }
 })
 </script>

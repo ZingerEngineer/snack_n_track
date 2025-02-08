@@ -1,30 +1,32 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
-import HomeView from '../views/HomeView.vue'
 import type { RouteRecordRaw } from 'vue-router'
-import HomeViewEnhanced from '@/views/HomeViewEnhanced.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'root',
-    redirect: '/home',
+    redirect: '/dashboard',
   },
   {
-    path: '/home',
-    name: 'home',
-    component: HomeView,
-    meta: { requiresAuth: true },
-  },
-
-  {
-    path: '/homeE',
-    name: 'homE',
-    component: HomeViewEnhanced,
+    path: '/dashboard',
+    name: 'dashboard',
+    redirect: '/dashboard/home',
+    component: () => import('../views/DashboardView.vue'),
     children: [
       {
-        path: 'scan',
+        path: '/dashboard/home',
+        name: 'home',
+        component: () => import('../views/HomeView.vue'),
+      },
+      {
+        path: '/dashboard/scan',
         name: 'scan',
         component: () => import('../views/ScanView.vue'),
+      },
+      {
+        path: '/dashboard/history',
+        name: 'history',
+        component: () => import('../views/HistoryView.vue'),
       },
     ],
   },
@@ -38,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
     name: '/register',
     component: () => import('../views/RegisterView.vue'),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('../views/NotFoundView.vue'),
+  },
 ]
 
 const router = createRouter({
@@ -45,20 +52,30 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from, next) => {
+function debounce(func: (...args: any[]) => void, wait: number) {
+  let timeout: ReturnType<typeof setTimeout>
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
+
+const debouncedBeforeEach = debounce(async (to, from, next) => {
   try {
-    console.log('Checking session...')
     const response = await fetch('http://localhost:3000/v1/auth/session', {
       method: 'GET',
       credentials: 'include',
     })
 
     const responseJson = await response.json()
-    console.log(responseJson)
 
     if (responseJson.authenticated) {
       if (to.path === '/login' || to.path === '/register') {
-        next('/home') // Redirect authenticated users away from login or register
+        next('/dashboard/home') // Redirect authenticated users away from login or register
       } else if (to.meta.requiresAuth) {
         next() // Allow navigation if authenticated and route requires auth
       } else {
@@ -75,6 +92,8 @@ router.beforeEach(async (to, from, next) => {
     console.error('Authorization error:', error)
     next('/login') // Redirect on error (e.g., token expired)
   }
-})
+}, 300)
+
+router.beforeEach(debouncedBeforeEach)
 
 export default router

@@ -7,7 +7,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 
 import downloadFile from '../utils/downloadFile'
-import { CaloriesClaculatorGPT } from '../services/caloriesCalculatorGpt.service'
+import { CaloriesCalculatorGPTRevamped } from '../services/caloriesCalculatorGpt.serviceRevamped'
 import { CaloriesClaculator } from '../services/caloriesCalculator.service'
 
 dotenv.config()
@@ -76,7 +76,7 @@ mealRouter.post(
         )
       }
 
-      const { data: publicURL } = await supaBaseClient.storage
+      const { data: publicURL } = supaBaseClient.storage
         .from('snack-n-track-bucket')
         .getPublicUrl(`meal/${fileNameWithExtension}`)
 
@@ -88,16 +88,20 @@ mealRouter.post(
       await fs.unlink(file.path)
       console.log(`fileUrl: ${publicURL.publicUrl}`)
 
-      const imagePath = path.resolve(__dirname, '../downloads')
-      downloadFile(publicURL.publicUrl, `../downloads/${fileNameWithExtension}`)
-
-      const caloriesCalculator = new CaloriesClaculator(CaloriesClaculatorGPT)
-      const calories = await caloriesCalculator.calculateCalories(
+      await downloadFile(
+        publicURL.publicUrl,
         `../downloads/${fileNameWithExtension}`
       )
-      console.log('Calories:', calories)
 
-      res.status(200).json({ calories })
+      const caloriesCalculator = new CaloriesClaculator(
+        CaloriesCalculatorGPTRevamped
+      )
+      const response = await caloriesCalculator.calculateCalories(
+        `../downloads/${fileNameWithExtension}`
+      )
+      console.log('Response:', response)
+
+      res.status(200).json({ response })
     } catch (error: any) {
       console.error('Upload error:', error)
       res

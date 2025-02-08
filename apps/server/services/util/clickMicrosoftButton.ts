@@ -1,0 +1,20 @@
+import { NotFoundError } from '../../classes/Error'
+import { Page } from 'puppeteer'
+
+async function clickMicrosoftButton(page: Page): Promise<void> {
+  try {
+    await page.waitForSelector('.social-btn', { visible: true })
+    await page.evaluate(() => {
+      const microsoftButton = Array.from(
+        document.getElementsByTagName('IMG')
+      ).filter((img) => (img as HTMLImageElement).src.includes('microsoft'))[0]
+        ?.parentElement?.parentElement as HTMLButtonElement
+      if (microsoftButton) microsoftButton.click()
+    })
+  } catch (error) {
+    throw new NotFoundError('Microsoft button not found')
+  }
+}
+
+export default clickMicrosoftButton
+
