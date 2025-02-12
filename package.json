@@ -10,7 +10,10 @@
     "dev": "concurrently \"npm run server\" \"npm run mobile\"",
     "server": "npm run -w apps/server dev",
     "mobile": "npm run -w apps/mobile dev",
-    "server_mobile": "concurrently \"npm run server\" \"npm run -w apps/mobile dev\""
+    "server_mobile": "concurrently \"npm run server\" \"npm run -w apps/mobile dev\"",
+    "compose-up": "docker compose  -d",
+    "compose-db-up": "docker compose up -d db",
+    "compose-db-down": "docker compose down"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
