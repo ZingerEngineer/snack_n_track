@@ -4,6 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.snackntrack.app',
   appName: 'snack_n_track_vuejs_ionic',
   webDir: 'dist',
+  bundledWebRuntime: false,
 }
 
 export default config
