@@ -34,9 +34,11 @@ coverage
 downloads
 
 .env
+*.env
 node_modules
 
 apps/mobile/android
+
 
 *.vscode
 apps/server/uploads
