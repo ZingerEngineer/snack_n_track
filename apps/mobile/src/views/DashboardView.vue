@@ -34,8 +34,4 @@ import {
 import { sparkles, bookmark, home } from 'ionicons/icons'
 </script>
 
-<style>
-ion-tab-bar {
-  --background: var(--ion-color-tertiary);
-}
-</style>
+<style></style>
