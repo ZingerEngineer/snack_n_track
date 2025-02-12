@@ -21,6 +21,7 @@ import '@ionic/vue/css/text-transformation.css'
 import '@ionic/vue/css/flex-utils.css'
 import '@ionic/vue/css/display.css'
 import './theme/variables.css'
+import './theme/global.css'
 
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
 
