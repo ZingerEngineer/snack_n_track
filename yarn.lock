@@ -317,6 +317,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@capgo/capacitor-social-login@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@capgo/capacitor-social-login/-/capacitor-social-login-1.2.6.tgz#f36709990923898f8c0f6eb7d55621a46daa58d7"
+  integrity sha512-JQ62cl9LS1ivOKsU40enfTeiM1LYnQj6/gIpU1b3Zh4vyoS3aj0TFcoV7NVN8KUte9LcbSuWP5Qq/orNh6lnpg==
+
 "@colors/colors@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"

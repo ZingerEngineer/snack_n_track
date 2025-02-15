@@ -20,4 +20,7 @@ interface IEstimatedNutritionData {
     estimated_name: string;
     estimated_typeOfFood: TTypeOfFood;
 }
-export { type INutritionData, type IEstimatedNutritionData };
+interface IFailureObject {
+    status: 'failed';
+}
+export type { IEstimatedNutritionData, INutritionData, IFailureObject, TTypeOfFood };

@@ -7,6 +7,9 @@ const router = useRouter();
 const { user } = useAuthStore();
 const handleScanRouting = () => {
     router.push('/dashboard/scan');
+};
+const routeToUserSettings = () => {
+    router.push('/user/settings');
 }; /* PartiallyEnd: #3632/scriptSetup.vue */
 function __VLS_template() {
     const __VLS_ctx = {};
@@ -57,7 +60,7 @@ function __VLS_template() {
         ...{ class: ("text-white flex flex-col ml-2") },
     });
     __VLS_elementAsFunction(__VLS_intrinsicElements.h1, __VLS_intrinsicElements.h1)({});
-    (__VLS_ctx.user.name ? __VLS_ctx.user.name : 'Guest');
+    (__VLS_ctx.user?.name ? __VLS_ctx.user.name : 'Guest');
     __VLS_elementAsFunction(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
         ...{ class: ("text-sm") },
     });
@@ -66,45 +69,54 @@ function __VLS_template() {
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
     const __VLS_26 = __VLS_asFunctionalComponent(__VLS_25, new __VLS_25({
+        ...{ 'onClick': {} },
         icon: ((__VLS_ctx.faCog)),
         ...{ class: ("text-white text-4xl") },
     }));
     const __VLS_27 = __VLS_26({
+        ...{ 'onClick': {} },
         icon: ((__VLS_ctx.faCog)),
         ...{ class: ("text-white text-4xl") },
     }, ...__VLS_functionalComponentArgsRest(__VLS_26));
+    let __VLS_31;
+    const __VLS_32 = {
+        onClick: (__VLS_ctx.routeToUserSettings)
+    };
+    let __VLS_28;
+    let __VLS_29;
+    var __VLS_30;
     __VLS_24.slots.default;
     var __VLS_24;
     __VLS_18.slots.default;
     var __VLS_18;
-    const __VLS_31 = {}.IonCard;
+    const __VLS_33 = {}.IonCard;
     /** @type { [typeof __VLS_components.IonCard, typeof __VLS_components.ionCard, typeof __VLS_components.IonCard, typeof __VLS_components.ionCard, ] } */ ;
     // @ts-ignore
-    const __VLS_32 = __VLS_asFunctionalComponent(__VLS_31, new __VLS_31({
+    const __VLS_34 = __VLS_asFunctionalComponent(__VLS_33, new __VLS_33({
         ...{ class: ("p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full") },
     }));
-    const __VLS_33 = __VLS_32({
+    const __VLS_35 = __VLS_34({
         ...{ class: ("p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full") },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_32));
-    const __VLS_37 = {}.IonCardHeader;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_34));
+    const __VLS_39 = {}.IonCardHeader;
     /** @type { [typeof __VLS_components.IonCardHeader, typeof __VLS_components.ionCardHeader, typeof __VLS_components.IonCardHeader, typeof __VLS_components.ionCardHeader, ] } */ ;
     // @ts-ignore
-    const __VLS_38 = __VLS_asFunctionalComponent(__VLS_37, new __VLS_37({}));
-    const __VLS_39 = __VLS_38({}, ...__VLS_functionalComponentArgsRest(__VLS_38));
-    const __VLS_43 = {}.IonCardTitle;
+    const __VLS_40 = __VLS_asFunctionalComponent(__VLS_39, new __VLS_39({}));
+    const __VLS_41 = __VLS_40({}, ...__VLS_functionalComponentArgsRest(__VLS_40));
+    const __VLS_45 = {}.IonCardTitle;
     /** @type { [typeof __VLS_components.IonCardTitle, typeof __VLS_components.ionCardTitle, typeof __VLS_components.IonCardTitle, typeof __VLS_components.ionCardTitle, ] } */ ;
     // @ts-ignore
-    const __VLS_44 = __VLS_asFunctionalComponent(__VLS_43, new __VLS_43({}));
-    const __VLS_45 = __VLS_44({}, ...__VLS_functionalComponentArgsRest(__VLS_44));
-    __VLS_48.slots.default;
-    var __VLS_48;
-    __VLS_42.slots.default;
-    var __VLS_42;
-    const __VLS_49 = {}.IonCardContent;
+    const __VLS_46 = __VLS_asFunctionalComponent(__VLS_45, new __VLS_45({}));
+    const __VLS_47 = __VLS_46({}, ...__VLS_functionalComponentArgsRest(__VLS_46));
+    __VLS_50.slots.default;
+    var __VLS_50;
+    __VLS_44.slots.default;
+    var __VLS_44;
+    const __VLS_51 = {}.IonCardContent;
     /** @type { [typeof __VLS_components.IonCardContent, typeof __VLS_components.ionCardContent, typeof __VLS_components.IonCardContent, typeof __VLS_components.ionCardContent, ] } */ ;
     // @ts-ignore
-    const __VLS_50 = __VLS_asFunctionalComponent(__VLS_49, new __VLS_49({}));
-    const __VLS_51 = __VLS_50({}, ...__VLS_functionalComponentArgsRest(__VLS_50));
+    const __VLS_52 = __VLS_asFunctionalComponent(__VLS_51, new __VLS_51({}));
+    const __VLS_53 = __VLS_52({}, ...__VLS_functionalComponentArgsRest(__VLS_52));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: ("w-full h-full flex flex-col justify-between items-center gap-2") },
     });
@@ -121,15 +133,15 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
         ...{ class: ("text-sm") },
     });
-    const __VLS_55 = {}.FontAwesomeIcon;
+    const __VLS_57 = {}.FontAwesomeIcon;
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
-    const __VLS_56 = __VLS_asFunctionalComponent(__VLS_55, new __VLS_55({
+    const __VLS_58 = __VLS_asFunctionalComponent(__VLS_57, new __VLS_57({
         icon: ((__VLS_ctx.faPlateWheat)),
     }));
-    const __VLS_57 = __VLS_56({
+    const __VLS_59 = __VLS_58({
         icon: ((__VLS_ctx.faPlateWheat)),
-    }, ...__VLS_functionalComponentArgsRest(__VLS_56));
+    }, ...__VLS_functionalComponentArgsRest(__VLS_58));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: ("flex flex-col items-center justify-center") },
     });
@@ -140,15 +152,15 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
         ...{ class: ("text-sm") },
     });
-    const __VLS_61 = {}.FontAwesomeIcon;
+    const __VLS_63 = {}.FontAwesomeIcon;
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
-    const __VLS_62 = __VLS_asFunctionalComponent(__VLS_61, new __VLS_61({
+    const __VLS_64 = __VLS_asFunctionalComponent(__VLS_63, new __VLS_63({
         icon: ((__VLS_ctx.faUtensils)),
     }));
-    const __VLS_63 = __VLS_62({
+    const __VLS_65 = __VLS_64({
         icon: ((__VLS_ctx.faUtensils)),
-    }, ...__VLS_functionalComponentArgsRest(__VLS_62));
+    }, ...__VLS_functionalComponentArgsRest(__VLS_64));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: ("flex flex-col items-center justify-center") },
     });
@@ -159,82 +171,82 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
         ...{ class: ("text-sm") },
     });
-    const __VLS_67 = {}.FontAwesomeIcon;
+    const __VLS_69 = {}.FontAwesomeIcon;
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
-    const __VLS_68 = __VLS_asFunctionalComponent(__VLS_67, new __VLS_67({
+    const __VLS_70 = __VLS_asFunctionalComponent(__VLS_69, new __VLS_69({
         icon: ((__VLS_ctx.faBowlRice)),
     }));
-    const __VLS_69 = __VLS_68({
+    const __VLS_71 = __VLS_70({
         icon: ((__VLS_ctx.faBowlRice)),
-    }, ...__VLS_functionalComponentArgsRest(__VLS_68));
-    const __VLS_73 = {}.IonButton;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_70));
+    const __VLS_75 = {}.IonButton;
     /** @type { [typeof __VLS_components.IonButton, typeof __VLS_components.ionButton, typeof __VLS_components.IonButton, typeof __VLS_components.ionButton, ] } */ ;
     // @ts-ignore
-    const __VLS_74 = __VLS_asFunctionalComponent(__VLS_73, new __VLS_73({
+    const __VLS_76 = __VLS_asFunctionalComponent(__VLS_75, new __VLS_75({
         ...{ 'onClick': {} },
         ...{ class: ("w-full text-white") },
     }));
-    const __VLS_75 = __VLS_74({
+    const __VLS_77 = __VLS_76({
         ...{ 'onClick': {} },
         ...{ class: ("w-full text-white") },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_74));
-    let __VLS_79;
-    const __VLS_80 = {
+    }, ...__VLS_functionalComponentArgsRest(__VLS_76));
+    let __VLS_81;
+    const __VLS_82 = {
         onClick: (__VLS_ctx.handleScanRouting)
     };
-    let __VLS_76;
-    let __VLS_77;
-    __VLS_78.slots.default;
-    var __VLS_78;
-    __VLS_54.slots.default;
-    var __VLS_54;
-    __VLS_36.slots.default;
-    var __VLS_36;
+    let __VLS_78;
+    let __VLS_79;
+    __VLS_80.slots.default;
+    var __VLS_80;
+    __VLS_56.slots.default;
+    var __VLS_56;
+    __VLS_38.slots.default;
+    var __VLS_38;
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: ("w-full flex flex-row justify-between items-center gap-6") },
     });
-    const __VLS_81 = {}.IonCard;
+    const __VLS_83 = {}.IonCard;
     /** @type { [typeof __VLS_components.IonCard, typeof __VLS_components.ionCard, typeof __VLS_components.IonCard, typeof __VLS_components.ionCard, ] } */ ;
     // @ts-ignore
-    const __VLS_82 = __VLS_asFunctionalComponent(__VLS_81, new __VLS_81({
+    const __VLS_84 = __VLS_asFunctionalComponent(__VLS_83, new __VLS_83({
         ...{ class: ("p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-3/5") },
     }));
-    const __VLS_83 = __VLS_82({
+    const __VLS_85 = __VLS_84({
         ...{ class: ("p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-3/5") },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_82));
-    const __VLS_87 = {}.IonCardHeader;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_84));
+    const __VLS_89 = {}.IonCardHeader;
     /** @type { [typeof __VLS_components.IonCardHeader, typeof __VLS_components.ionCardHeader, typeof __VLS_components.IonCardHeader, typeof __VLS_components.ionCardHeader, ] } */ ;
     // @ts-ignore
-    const __VLS_88 = __VLS_asFunctionalComponent(__VLS_87, new __VLS_87({}));
-    const __VLS_89 = __VLS_88({}, ...__VLS_functionalComponentArgsRest(__VLS_88));
-    const __VLS_93 = {}.IonCardTitle;
+    const __VLS_90 = __VLS_asFunctionalComponent(__VLS_89, new __VLS_89({}));
+    const __VLS_91 = __VLS_90({}, ...__VLS_functionalComponentArgsRest(__VLS_90));
+    const __VLS_95 = {}.IonCardTitle;
     /** @type { [typeof __VLS_components.IonCardTitle, typeof __VLS_components.ionCardTitle, typeof __VLS_components.IonCardTitle, typeof __VLS_components.ionCardTitle, ] } */ ;
     // @ts-ignore
-    const __VLS_94 = __VLS_asFunctionalComponent(__VLS_93, new __VLS_93({}));
-    const __VLS_95 = __VLS_94({}, ...__VLS_functionalComponentArgsRest(__VLS_94));
-    const __VLS_99 = {}.FontAwesomeIcon;
+    const __VLS_96 = __VLS_asFunctionalComponent(__VLS_95, new __VLS_95({}));
+    const __VLS_97 = __VLS_96({}, ...__VLS_functionalComponentArgsRest(__VLS_96));
+    const __VLS_101 = {}.FontAwesomeIcon;
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
-    const __VLS_100 = __VLS_asFunctionalComponent(__VLS_99, new __VLS_99({
+    const __VLS_102 = __VLS_asFunctionalComponent(__VLS_101, new __VLS_101({
         icon: ((__VLS_ctx.faMedal)),
     }));
-    const __VLS_101 = __VLS_100({
+    const __VLS_103 = __VLS_102({
         icon: ((__VLS_ctx.faMedal)),
-    }, ...__VLS_functionalComponentArgsRest(__VLS_100));
-    __VLS_98.slots.default;
-    var __VLS_98;
-    __VLS_92.slots.default;
-    var __VLS_92;
-    const __VLS_105 = {}.IonCardContent;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_102));
+    __VLS_100.slots.default;
+    var __VLS_100;
+    __VLS_94.slots.default;
+    var __VLS_94;
+    const __VLS_107 = {}.IonCardContent;
     /** @type { [typeof __VLS_components.IonCardContent, typeof __VLS_components.ionCardContent, typeof __VLS_components.IonCardContent, typeof __VLS_components.ionCardContent, ] } */ ;
     // @ts-ignore
-    const __VLS_106 = __VLS_asFunctionalComponent(__VLS_105, new __VLS_105({
+    const __VLS_108 = __VLS_asFunctionalComponent(__VLS_107, new __VLS_107({
         ...{ class: ("flex items-center justify-center") },
     }));
-    const __VLS_107 = __VLS_106({
+    const __VLS_109 = __VLS_108({
         ...{ class: ("flex items-center justify-center") },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_106));
+    }, ...__VLS_functionalComponentArgsRest(__VLS_108));
     __VLS_elementAsFunction(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
         ...{ class: ("w-36 h-36 mb-2") },
         viewBox: ("0 0 64 64"),
@@ -270,42 +282,42 @@ function __VLS_template() {
         'dominant-baseline': ("middle"),
         'text-anchor': ("middle"),
     });
-    __VLS_110.slots.default;
-    var __VLS_110;
-    __VLS_86.slots.default;
-    var __VLS_86;
-    const __VLS_111 = {}.IonCard;
+    __VLS_112.slots.default;
+    var __VLS_112;
+    __VLS_88.slots.default;
+    var __VLS_88;
+    const __VLS_113 = {}.IonCard;
     /** @type { [typeof __VLS_components.IonCard, typeof __VLS_components.ionCard, typeof __VLS_components.IonCard, typeof __VLS_components.ionCard, ] } */ ;
     // @ts-ignore
-    const __VLS_112 = __VLS_asFunctionalComponent(__VLS_111, new __VLS_111({
+    const __VLS_114 = __VLS_asFunctionalComponent(__VLS_113, new __VLS_113({
         ...{ class: ("flex flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-2/5") },
     }));
-    const __VLS_113 = __VLS_112({
+    const __VLS_115 = __VLS_114({
         ...{ class: ("flex flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-2/5") },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_112));
-    const __VLS_117 = {}.IonCardHeader;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_114));
+    const __VLS_119 = {}.IonCardHeader;
     /** @type { [typeof __VLS_components.IonCardHeader, typeof __VLS_components.ionCardHeader, typeof __VLS_components.IonCardHeader, typeof __VLS_components.ionCardHeader, ] } */ ;
     // @ts-ignore
-    const __VLS_118 = __VLS_asFunctionalComponent(__VLS_117, new __VLS_117({}));
-    const __VLS_119 = __VLS_118({}, ...__VLS_functionalComponentArgsRest(__VLS_118));
-    const __VLS_123 = {}.IonCardTitle;
+    const __VLS_120 = __VLS_asFunctionalComponent(__VLS_119, new __VLS_119({}));
+    const __VLS_121 = __VLS_120({}, ...__VLS_functionalComponentArgsRest(__VLS_120));
+    const __VLS_125 = {}.IonCardTitle;
     /** @type { [typeof __VLS_components.IonCardTitle, typeof __VLS_components.ionCardTitle, typeof __VLS_components.IonCardTitle, typeof __VLS_components.ionCardTitle, ] } */ ;
     // @ts-ignore
-    const __VLS_124 = __VLS_asFunctionalComponent(__VLS_123, new __VLS_123({}));
-    const __VLS_125 = __VLS_124({}, ...__VLS_functionalComponentArgsRest(__VLS_124));
-    __VLS_128.slots.default;
-    var __VLS_128;
-    __VLS_122.slots.default;
-    var __VLS_122;
-    const __VLS_129 = {}.IonCardContent;
+    const __VLS_126 = __VLS_asFunctionalComponent(__VLS_125, new __VLS_125({}));
+    const __VLS_127 = __VLS_126({}, ...__VLS_functionalComponentArgsRest(__VLS_126));
+    __VLS_130.slots.default;
+    var __VLS_130;
+    __VLS_124.slots.default;
+    var __VLS_124;
+    const __VLS_131 = {}.IonCardContent;
     /** @type { [typeof __VLS_components.IonCardContent, typeof __VLS_components.ionCardContent, typeof __VLS_components.IonCardContent, typeof __VLS_components.ionCardContent, ] } */ ;
     // @ts-ignore
-    const __VLS_130 = __VLS_asFunctionalComponent(__VLS_129, new __VLS_129({
+    const __VLS_132 = __VLS_asFunctionalComponent(__VLS_131, new __VLS_131({
         ...{ class: ("flex flex-grow") },
     }));
-    const __VLS_131 = __VLS_130({
+    const __VLS_133 = __VLS_132({
         ...{ class: ("flex flex-grow") },
-    }, ...__VLS_functionalComponentArgsRest(__VLS_130));
+    }, ...__VLS_functionalComponentArgsRest(__VLS_132));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: ("w-full h-full flex flex-col justify-center items-center gap-4") },
     });
@@ -321,15 +333,15 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
         ...{ class: ("text-sm") },
     });
-    const __VLS_135 = {}.FontAwesomeIcon;
+    const __VLS_137 = {}.FontAwesomeIcon;
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
-    const __VLS_136 = __VLS_asFunctionalComponent(__VLS_135, new __VLS_135({
+    const __VLS_138 = __VLS_asFunctionalComponent(__VLS_137, new __VLS_137({
         icon: ((__VLS_ctx.faShoePrints)),
     }));
-    const __VLS_137 = __VLS_136({
+    const __VLS_139 = __VLS_138({
         icon: ((__VLS_ctx.faShoePrints)),
-    }, ...__VLS_functionalComponentArgsRest(__VLS_136));
+    }, ...__VLS_functionalComponentArgsRest(__VLS_138));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: ("flex flex-col items-center justify-center") },
     });
@@ -342,19 +354,19 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.p, __VLS_intrinsicElements.p)({
         ...{ class: ("text-sm") },
     });
-    const __VLS_141 = {}.FontAwesomeIcon;
+    const __VLS_143 = {}.FontAwesomeIcon;
     /** @type { [typeof __VLS_components.FontAwesomeIcon, ] } */ ;
     // @ts-ignore
-    const __VLS_142 = __VLS_asFunctionalComponent(__VLS_141, new __VLS_141({
+    const __VLS_144 = __VLS_asFunctionalComponent(__VLS_143, new __VLS_143({
         icon: ((__VLS_ctx.faMedal)),
     }));
-    const __VLS_143 = __VLS_142({
+    const __VLS_145 = __VLS_144({
         icon: ((__VLS_ctx.faMedal)),
-    }, ...__VLS_functionalComponentArgsRest(__VLS_142));
-    __VLS_134.slots.default;
-    var __VLS_134;
-    __VLS_116.slots.default;
-    var __VLS_116;
+    }, ...__VLS_functionalComponentArgsRest(__VLS_144));
+    __VLS_136.slots.default;
+    var __VLS_136;
+    __VLS_118.slots.default;
+    var __VLS_118;
     __VLS_12.slots.default;
     var __VLS_12;
     __VLS_5.slots.default;
@@ -390,6 +402,7 @@ const __VLS_self = (await import('vue')).defineComponent({
             FontAwesomeIcon: FontAwesomeIcon,
             user: user,
             handleScanRouting: handleScanRouting,
+            routeToUserSettings: routeToUserSettings,
         };
     },
 });

@@ -3,9 +3,11 @@ export declare const useAuthStore: import("pinia").StoreDefinition<"auth", Pick<
     user: import("vue").Ref<{
         id: number;
         email: string;
+        name: string;
     } | null, IUser | {
         id: number;
         email: string;
+        name: string;
     } | null>;
     token: import("vue").Ref<string, string>;
     isAuthenticated: import("vue").ComputedRef<boolean>;
@@ -16,9 +18,11 @@ export declare const useAuthStore: import("pinia").StoreDefinition<"auth", Pick<
     user: import("vue").Ref<{
         id: number;
         email: string;
+        name: string;
     } | null, IUser | {
         id: number;
         email: string;
+        name: string;
     } | null>;
     token: import("vue").Ref<string, string>;
     isAuthenticated: import("vue").ComputedRef<boolean>;
@@ -29,9 +33,11 @@ export declare const useAuthStore: import("pinia").StoreDefinition<"auth", Pick<
     user: import("vue").Ref<{
         id: number;
         email: string;
+        name: string;
     } | null, IUser | {
         id: number;
         email: string;
+        name: string;
     } | null>;
     token: import("vue").Ref<string, string>;
     isAuthenticated: import("vue").ComputedRef<boolean>;

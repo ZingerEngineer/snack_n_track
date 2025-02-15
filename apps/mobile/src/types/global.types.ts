@@ -1,4 +1,3 @@
-
 type TTypeOfFood = 'Vegetable' | 'Fruit' | 'Grain' | 'Dessert' | 'Beverage' | 'Meal'
 interface INutritionData {
   id: string
@@ -22,5 +21,8 @@ interface IEstimatedNutritionData {
   estimated_name: string
   estimated_typeOfFood: TTypeOfFood
 }
+interface IFailureObject {
+  status: 'failed'
+}
 
-export { type INutritionData,type IEstimatedNutritionData }
+export type { IEstimatedNutritionData, INutritionData, IFailureObject, TTypeOfFood }

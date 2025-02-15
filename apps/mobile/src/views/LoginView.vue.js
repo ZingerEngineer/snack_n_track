@@ -1,3 +1,4 @@
+import { useSocialLogin } from '../stores/googleAuth.store';
 import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton } from '@ionic/vue';
 import { useField, useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
@@ -5,6 +6,9 @@ import * as zod from 'zod';
 import ToastService from '../services/ToastService';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth.store';
+import { onMounted } from 'vue';
+import { SocialLogin } from '@capgo/capacitor-social-login';
+const { user, loginWithGoogle } = useSocialLogin();
 const { login } = useAuthStore();
 const router = useRouter();
 // Define Zod validation schemas
@@ -22,6 +26,22 @@ const validationSchema = toTypedSchema(zod.object({
 const { handleSubmit } = useForm({
     validationSchema,
 });
+async function handleGoogleLogin() {
+    try {
+        const res = await SocialLogin.login({
+            provider: 'google',
+            options: {
+                scopes: ['email', 'profile'],
+            },
+        });
+        // handle the response. popoutStore is specific to my app
+        console.log('Google login response:', res);
+    }
+    catch (error) {
+        console.log(error);
+        console.error('Google login failed:', error);
+    }
+}
 // Fields with error messages
 const { value: email, errorMessage: emailError } = useField('email');
 const { value: password, errorMessage: passwordError } = useField('password');
@@ -36,6 +56,13 @@ const onSubmit = handleSubmit(async (values) => {
         console.error('Login failed:', error);
         ToastService.error('Login failed');
     }
+});
+onMounted(() => {
+    SocialLogin.initialize({
+        google: {
+            webClientId: '795655910199-tegacmq62fgirj62nf9t2s2hkvmeibnn.apps.googleusercontent.com',
+        },
+    });
 }); /* PartiallyEnd: #3632/scriptSetup.vue */
 function __VLS_template() {
     const __VLS_ctx = {};
@@ -171,11 +198,32 @@ function __VLS_template() {
     }, ...__VLS_functionalComponentArgsRest(__VLS_56));
     __VLS_60.slots.default;
     var __VLS_60;
+    const __VLS_61 = {}.IonButton;
+    /** @type { [typeof __VLS_components.IonButton, typeof __VLS_components.ionButton, typeof __VLS_components.IonButton, typeof __VLS_components.ionButton, ] } */ ;
+    // @ts-ignore
+    const __VLS_62 = __VLS_asFunctionalComponent(__VLS_61, new __VLS_61({
+        ...{ 'onClick': {} },
+    }));
+    const __VLS_63 = __VLS_62({
+        ...{ 'onClick': {} },
+    }, ...__VLS_functionalComponentArgsRest(__VLS_62));
+    let __VLS_67;
+    const __VLS_68 = {
+        onClick: (__VLS_ctx.handleGoogleLogin)
+    };
+    let __VLS_64;
+    let __VLS_65;
+    __VLS_66.slots.default;
+    var __VLS_66;
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ class: ("mt-4 w-full flex justify-center items-center bg-red-500") },
+    });
+    (__VLS_ctx.user);
     __VLS_12.slots.default;
     var __VLS_12;
     __VLS_5.slots.default;
     var __VLS_5;
-    ['ion-padding', 'w-full', 'flex', 'justify-center', 'items-center', 'text-white', 'login-container', 'mt-2', 'error-message', 'mt-2', 'error-message', 'login-btn',];
+    ['ion-padding', 'w-full', 'flex', 'justify-center', 'items-center', 'text-white', 'login-container', 'mt-2', 'error-message', 'mt-2', 'error-message', 'login-btn', 'mt-4', 'w-full', 'flex', 'justify-center', 'items-center', 'bg-red-500',];
     var __VLS_slots;
     var $slots;
     let __VLS_inheritedAttrs;
@@ -200,6 +248,8 @@ const __VLS_self = (await import('vue')).defineComponent({
             IonLabel: IonLabel,
             IonInput: IonInput,
             IonButton: IonButton,
+            user: user,
+            handleGoogleLogin: handleGoogleLogin,
             email: email,
             emailError: emailError,
             password: password,

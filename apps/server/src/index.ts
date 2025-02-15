@@ -16,8 +16,9 @@ const app = express()
 app.use(express.json())
 app.use(
   cors({
-    origin: 'http://localhost:5173',
-    credentials: true
+    origin: 'http://localhost:5173', // ✅ Exact match, no wildcard
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
+    credentials: true // ✅ If using cookies or authorization headers
   })
 )
 app.use(cookieParser(process.env.COOKIE_SECRET))

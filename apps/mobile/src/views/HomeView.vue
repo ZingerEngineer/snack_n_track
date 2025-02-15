@@ -19,6 +19,9 @@ const { user } = useAuthStore()
 const handleScanRouting = () => {
   router.push('/dashboard/scan')
 }
+const routeToUserSettings = () => {
+  router.push('/user/settings')
+}
 </script>
 
 <template>
@@ -37,11 +40,15 @@ const handleScanRouting = () => {
                   alt="user avatar"
                 />
                 <div class="text-white flex flex-col ml-2">
-                  <h1>Welcome, {{ user.name ? user.name : 'Guest' }}</h1>
+                  <h1>Welcome, {{ user?.name ? user.name : 'Guest' }}</h1>
                   <p class="text-sm">{{ user?.email }}</p>
                 </div>
               </div>
-              <FontAwesomeIcon :icon="faCog" class="text-white text-4xl" />
+              <FontAwesomeIcon
+                @click="routeToUserSettings"
+                :icon="faCog"
+                class="text-white text-4xl"
+              />
             </div>
           </ion-card-content>
         </ion-card>
