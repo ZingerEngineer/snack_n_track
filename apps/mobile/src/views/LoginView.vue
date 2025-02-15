@@ -10,7 +10,7 @@ import { useAuthStore } from '../stores/auth.store'
 import { onMounted } from 'vue'
 import { SocialLogin } from '@capgo/capacitor-social-login'
 
-const { user, loginWithGoogle } = useSocialLogin()
+const { user } = useSocialLogin()
 
 const { login } = useAuthStore()
 
