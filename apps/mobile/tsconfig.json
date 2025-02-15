@@ -1,22 +1,7 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "exclude": ["node_modules"],
-  "include": ["src/**/*"],
   "files": [],
   "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.vitest.json"
-    }
-  ],
-  "compilerOptions": {
-    "module": "NodeNext",
-    "declaration": false
-  },
-  "types": ["vue3-toastify/global"]
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }
