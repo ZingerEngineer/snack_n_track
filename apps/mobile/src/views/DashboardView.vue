@@ -4,7 +4,7 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="history" href="/dashboard/history">
-          <ion-icon :icon="bookmark" />
+          <FontAwesomeIcon icon="test" />
           <ion-label>History</ion-label>
         </ion-tab-button>
         <ion-tab-button tab="home" href="/dashboard/home">
@@ -31,7 +31,7 @@ import {
   IonIcon,
 } from '@ionic/vue'
 
-import { sparkles, bookmark, home } from 'ionicons/icons'
+import { sparkles, home } from 'ionicons/icons'
 </script>
 
 <style></style>

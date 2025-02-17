@@ -14,13 +14,14 @@
     "compose-up": "docker compose  -d",
     "compose-db-up": "docker compose up -d db",
     "compose-db-down": "docker compose down",
-    "clean": "rm -rf **/node_modules **/dist node_modules"
+    "clean": "rimraf **/**/dist yarn.lock **/**/node_modules node_modules"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
     "eslint": "^9.15.0",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "zod": "^3.23.8"

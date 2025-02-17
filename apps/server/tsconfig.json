@@ -1,4 +1,14 @@
 {
+  "compilerOptions": {
+    "target": "ES6", // Output ECMAScript , "seeds"6 compatible code
+    "module": "commonjs", // Use CommonJS module system (default in Node.js)
+    "rootDir": "./src", // Specify the root folder of your source files
+    "outDir": "./dist", // Redirect output structure to the "dist" folder
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow default imports from modules with no default export
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true // Ensure file name casing consistency
+  },
   "extends": "../../tsconfig.base.json",
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

@@ -11,12 +11,21 @@
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "ionic:serve": "npm run dev",
+    "ionic:build": "npm run build",
+    "dev:android": "npm run init:mobile && ionic cap run android --host=0.0.0.0 --port=3000 --open -l --external",
+    "build:android": "npm run init:mobile && ionic cap build android",
+    "init:mobile": "mkdir -p ./dist && [ -f ./dist/index.html ] || touch ./dist/index.html"
   },
   "dependencies": {
-    "@capacitor/android": "^6.2.0",
-    "@capacitor/camera": "^6.1.1",
-    "@capacitor/core": "^6.2.0",
+    "@capacitor/android": "7.0.1",
+    "@capacitor/app": "7.0.1",
+    "@capacitor/camera": "7.0.1",
+    "@capacitor/core": "7.0.1",
+    "@capacitor/haptics": "7.0.1",
+    "@capacitor/keyboard": "7.0.1",
+    "@capacitor/status-bar": "7.0.1",
     "@capgo/capacitor-social-login": "^1.2.6",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
@@ -34,7 +43,7 @@
     "vue3-toastify": "^0.2.8"
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.2.0",
+    "@capacitor/cli": "7.0.1",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.9.0",
     "@vitejs/plugin-vue": "^5.1.4",

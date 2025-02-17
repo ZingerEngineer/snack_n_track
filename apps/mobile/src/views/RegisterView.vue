@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
-import ToastService from '../services/ToastService.ts'
+import ToastService from '../services/ToastService'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -40,7 +40,8 @@ const onSubmit = handleSubmit(async (values) => {
     ToastService.success('Register success')
     router.push('/login')
   } catch (error) {
-    ToastService.error('Register failed')
+    ToastService.error('Register failure')
+    throw error
     return
   }
 })

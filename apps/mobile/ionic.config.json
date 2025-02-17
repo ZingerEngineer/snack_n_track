@@ -1,0 +1,7 @@
+{
+  "name": "snack n' track",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}

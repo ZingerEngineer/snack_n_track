@@ -1,11 +1,11 @@
 // src/composables/useSocialLogin.js
 import { ref } from 'vue'
-import { SocialLogin } from '@capgo/capacitor-social-login'
+import { SocialLogin, type GoogleLoginResponse } from '@capgo/capacitor-social-login'
 
 export function useSocialLogin() {
   const webClientId = import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID_SECRET
 
-  const user = ref(null)
+  const user = ref<GoogleLoginResponse | null>(null)
   const error = ref<Error | null>(null)
   const isInitialized = ref(false)
 
@@ -48,7 +48,7 @@ export function useSocialLogin() {
     } catch (err) {
       console.log(err)
       console.error('SocialLogin login error:', err)
-      error.value = err
+      // error.value = err
       throw err
     }
   }
@@ -57,7 +57,7 @@ export function useSocialLogin() {
    * Logout from the specified provider.
    * Currently supports 'google', 'apple', or 'facebook'.
    */
-  async function logout(provider = 'google') {
+  async function logout(provider: 'facebook' | 'google' | 'apple' = 'google') {
     try {
       await SocialLogin.logout({ provider })
       user.value = null
@@ -65,7 +65,7 @@ export function useSocialLogin() {
       console.log(err)
 
       console.error('SocialLogin logout error:', err)
-      error.value = err
+      // error.value = err
     }
   }
 

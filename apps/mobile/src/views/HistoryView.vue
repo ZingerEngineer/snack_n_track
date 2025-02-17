@@ -4,14 +4,13 @@ import {
   IonContent,
   IonCard,
   IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonGrid,
   IonRow,
   IonCol,
 } from '@ionic/vue'
-import { ref, onMounted } from 'vue'
-import { INutritionData, IEstimatedNutritionData } from '../types/global.types'
+import { ref } from 'vue'
+import type { INutritionData, IEstimatedNutritionData } from '../types/global.types'
 
 const scannedFood = ref<null | INutritionData[] | IEstimatedNutritionData[]>(null)
 </script>
@@ -22,7 +21,7 @@ const scannedFood = ref<null | INutritionData[] | IEstimatedNutritionData[]>(nul
       <div v-if="scannedFood && scannedFood.length">
         <ion-card v-for="data in scannedFood" :key="data.id">
           <ion-card-header>
-            <ion-card-title>{{ data.name || data.estimated_name }}</ion-card-title>
+            <!-- <ion-card-title>{{ data.name? data.name : data.estimated_name }}</ion-card-title> -->
           </ion-card-header>
           <ion-card-content>
             <ion-grid>
