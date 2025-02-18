@@ -9,6 +9,7 @@ class UserDAO {
       try {
         this.prisma = new PrismaClient()
       } catch (error) {
+        console.log(error)
         throw new InternalServerError('Failed to connect to database')
       }
     }

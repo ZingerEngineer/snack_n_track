@@ -13,3 +13,4 @@ export const closePrismaClient = async () => {
     await prisma.$disconnect()
   }
 }
+
