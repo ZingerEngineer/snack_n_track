@@ -6,7 +6,7 @@ echo "Installing dependencies..." &&
 yarn && 
 echo "Applying DB changes..." &&
 npx prisma generate --schema=./src/prisma/schema.prisma &&
-npx prisma migrate deploy &&
+npx prisma migrate deploy --schema=./src/prisma/schema.prisma  &&
 echo "Building project artifcats..." &&
 yarn build &&
 cp .env ./dist/.env &&

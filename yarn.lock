@@ -283,14 +283,14 @@
   integrity sha512-jukJJHfkcyEBOkFBJRD3EwXMIIQo7lSv0ExPWgsIliPdGXLAj6ElvK2JaYEzec3vKyLc4RTNFVv0PMEU0vnImg==
 
 "@capacitor/app@7.0.1":
-  version "7.0.1-nightly-20250214T150516.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-7.0.1-nightly-20250214T150516.0.tgz#32dfbe0ae6c8910bbca634ae8bd2ba3e9fae8d1f"
-  integrity sha512-qayp96E50hlHpi6NeZx9XT8hRgGwUV+1gHVMD5jRr3qZcO7I6WKafBu9Pk/5wsMjuhsBCzXFtC5rQp5P3p/U0A==
+  version "7.0.1-nightly-20250218T150530.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-7.0.1-nightly-20250218T150530.0.tgz#c0377e7ffc2b1cc228008ba8cb18c4c6d27cb0c5"
+  integrity sha512-fzVPm+kdGhdUIfnBnFI10wzjBbFesVDPerXO/dhd4Enlhdxnumb27nUbCPXZSlYhm8nENcE4naWrMvfot8KgSw==
 
 "@capacitor/camera@7.0.1":
-  version "7.0.1-nightly-20250214T150516.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-7.0.1-nightly-20250214T150516.0.tgz#8047a2817fad48eb6189a6418dd0a66440e664e9"
-  integrity sha512-Ov87WOkV61sEQsRvoqpr/ETPF/fRPTBQAHt96FabsupjWcKi/r4l4XVqeXmAGFjGcB29TjY5flmJruDj67PYwA==
+  version "7.0.1-nightly-20250218T150530.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-7.0.1-nightly-20250218T150530.0.tgz#efa64edbe445b1aba5193645112de173c8037e6e"
+  integrity sha512-AbebCsEpQ4wifFtIl/ymQ4+89cGZy9AYActsWHzoOc6z1Ckx2LlxVGPjASMTIKq3B5CFgau8TiWBZMn6zvEnmg==
 
 "@capacitor/cli@7.0.1":
   version "7.0.1"
@@ -323,19 +323,19 @@
     tslib "^2.1.0"
 
 "@capacitor/haptics@7.0.1":
-  version "7.0.1-nightly-20250214T150516.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/haptics/-/haptics-7.0.1-nightly-20250214T150516.0.tgz#6bddf06fb51643f190b306dde00e21f0cc766249"
-  integrity sha512-xVegGlWfEC56xhdLM3TajgQmlbZ74Tsyi5uqp9LooLdtSt3S4MflGdPyPGyynrVLmzh3n0TBWeIYiaKZtqotSA==
+  version "7.0.1-nightly-20250218T150530.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/haptics/-/haptics-7.0.1-nightly-20250218T150530.0.tgz#907e91805eff256ba81a60b11c0217605bc90ae1"
+  integrity sha512-Lm29fQqsk+l/H2wAI4K5ioaZWVqAflUP68jjMrKExc6QSfbS3gxJDeAsL4xvIVoKZon0tgqEqUxiYoDb5hNhTA==
 
 "@capacitor/keyboard@7.0.1":
-  version "7.0.1-nightly-20250214T150516.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/keyboard/-/keyboard-7.0.1-nightly-20250214T150516.0.tgz#e415c5168809b1409d71c78fbb1112337149d298"
-  integrity sha512-H69o3TlVrdGC6JHxvAeomQy6oYR80aE+R2OEHls8bKbMRDMJC7egBoYpv6tJ0a9D6RPDJFhYtex/przjLH3sPw==
+  version "7.0.1-nightly-20250218T150530.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/keyboard/-/keyboard-7.0.1-nightly-20250218T150530.0.tgz#4e129f8c4033fcaca43f9f2204af8c3c94ef37a6"
+  integrity sha512-+9PV8URXaDYDjDs/sA1+mXdDkh2WzugcByGMF64rhBuh8039jUwN+mhSy2qjMt6Jo0ADZteQIqotD/DCuyvF9Q==
 
 "@capacitor/status-bar@7.0.1":
-  version "7.0.1-nightly-20250214T150516.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-7.0.1-nightly-20250214T150516.0.tgz#d897e104e43abbf6c9707107bfcd50ed4275bb44"
-  integrity sha512-6iKFIewkjEgkK+1wlv8Vj0ljHnHaIlTceLUqP66HqKBdZv2LVe/g0sLujsBhcGYsjCAhy0OUAs7V6EWPZmBLww==
+  version "7.0.1-nightly-20250218T150530.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-7.0.1-nightly-20250218T150530.0.tgz#1449f8403681deb0a27cecbc94cfc9a8ede82983"
+  integrity sha512-++i6pwynE2yVj2DhNUJ+8ZVtAEzkiyjaGz5hlUF6m1S6ef77rmQWfib878ScghkQGvQs5keiOf9cSw0f0f7mJg==
 
 "@capgo/capacitor-social-login@^1.2.6":
   version "1.2.6"
