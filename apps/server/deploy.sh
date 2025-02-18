@@ -11,4 +11,5 @@ echo "Building project artifcats..." &&
 yarn build &&
 cp .env ./dist/.env &&
 echo "Running project..." &&
-pm2 restart 0
+pm2 restart 0 &&
+echo "Deployment complete!"
