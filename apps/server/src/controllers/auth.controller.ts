@@ -50,9 +50,10 @@ const loginController = async (req: Request) => {
 
 const registerController = async (req: Request) => {
   const { email, password } = req.body
-  validateCredentials(email, password)
 
   try {
+    validateCredentials(email, password)
+
     registerSchema.parse({ email, password })
     const existingUser = await userDao.getUserByEmail(email)
 
