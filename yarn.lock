@@ -277,20 +277,20 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@capacitor/android@7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-7.0.1.tgz#16c45a305edeb8bcf0b083ea52abcc62ca4e5e70"
-  integrity sha512-jukJJHfkcyEBOkFBJRD3EwXMIIQo7lSv0ExPWgsIliPdGXLAj6ElvK2JaYEzec3vKyLc4RTNFVv0PMEU0vnImg==
+"@capacitor/android@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-7.0.0.tgz#232439e19c037301fa0a49a20675325d4929469a"
+  integrity sha512-T7WMJPGlzEzNFI3s3lA8F2H6XyYzQM8OwgIfPKOAbawc6Fq669ABKIpfNPzsQHR1kVxH3cMHYSkDaPMgJyDdXQ==
 
-"@capacitor/app@7.0.1":
-  version "7.0.1-nightly-20250218T150530.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-7.0.1-nightly-20250218T150530.0.tgz#c0377e7ffc2b1cc228008ba8cb18c4c6d27cb0c5"
-  integrity sha512-fzVPm+kdGhdUIfnBnFI10wzjBbFesVDPerXO/dhd4Enlhdxnumb27nUbCPXZSlYhm8nENcE4naWrMvfot8KgSw==
+"@capacitor/app@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-7.0.0.tgz#f216c6fdef2ed227b04786fb3c381ecc319d5135"
+  integrity sha512-/UFwfPFsw/Jen6vjrV0lfTBOQWSaDDdmrYXKpYg4Xn8hwj0xrrRPXxC43j7VmPoj9AFMVPA+hx94ygqjChPASQ==
 
-"@capacitor/camera@7.0.1":
-  version "7.0.1-nightly-20250218T150530.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-7.0.1-nightly-20250218T150530.0.tgz#efa64edbe445b1aba5193645112de173c8037e6e"
-  integrity sha512-AbebCsEpQ4wifFtIl/ymQ4+89cGZy9AYActsWHzoOc6z1Ckx2LlxVGPjASMTIKq3B5CFgau8TiWBZMn6zvEnmg==
+"@capacitor/camera@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-7.0.0.tgz#faf542e503c10c103f74ff47bbdb48b319c54e5d"
+  integrity sha512-waEXGt1/qN8Uz8TWBl2exngLrkyll+fNFLj00ayJrPgZxQN8kfWHGz6YlJfQJLlBRXeay7W844Ao4iX0zziEMw==
 
 "@capacitor/cli@7.0.1":
   version "7.0.1"
@@ -315,27 +315,27 @@
     tslib "^2.8.1"
     xml2js "^0.6.2"
 
-"@capacitor/core@7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-7.0.1.tgz#e2a635ffced0aa0e1160f48cffa8d8148f947972"
-  integrity sha512-1Ob9bvA/p8g8aNwK6VesxEekGXowLVf6APjkW4LRnr05H+7z/bke+Q5pn9zqh/GgTbIxAQ/rwZrAZvvxkdm1UA==
+"@capacitor/core@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-7.0.0.tgz#789044b0f6efae342fa85fc9f5b09479e07b6f4b"
+  integrity sha512-JMJxPi/tHeOR/I87/P0kc1DUKrj+XfXlYTnNZ8sCp4LA/MPLkTOzpZm3cga7fTY0nWaSqLll2xalrC0psQBfuA==
   dependencies:
     tslib "^2.1.0"
 
-"@capacitor/haptics@7.0.1":
-  version "7.0.1-nightly-20250218T150530.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/haptics/-/haptics-7.0.1-nightly-20250218T150530.0.tgz#907e91805eff256ba81a60b11c0217605bc90ae1"
-  integrity sha512-Lm29fQqsk+l/H2wAI4K5ioaZWVqAflUP68jjMrKExc6QSfbS3gxJDeAsL4xvIVoKZon0tgqEqUxiYoDb5hNhTA==
+"@capacitor/haptics@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/haptics/-/haptics-7.0.0.tgz#b16b8968850ded0c3f0a233fea54321e94f3e199"
+  integrity sha512-8uI8rWyAbq8EzkjS+sHZSncyzujHzVbuLKgj8J5H0yUL6+r26F16gVA2iuQuIBvzbSMy7Y0/pUuWlwZr/H8AKg==
 
-"@capacitor/keyboard@7.0.1":
-  version "7.0.1-nightly-20250218T150530.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/keyboard/-/keyboard-7.0.1-nightly-20250218T150530.0.tgz#4e129f8c4033fcaca43f9f2204af8c3c94ef37a6"
-  integrity sha512-+9PV8URXaDYDjDs/sA1+mXdDkh2WzugcByGMF64rhBuh8039jUwN+mhSy2qjMt6Jo0ADZteQIqotD/DCuyvF9Q==
+"@capacitor/keyboard@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/keyboard/-/keyboard-7.0.0.tgz#c31dcda3faa4158dc63da07e17e8c1ec31382e6d"
+  integrity sha512-Tqwy8wG+sx4UqiFCX4Q+bFw6uKgG7BiHKAPpeefoIgoEB8H8Jf3xZNZoVPnJIMuPsCdSvuyHXZbJXH9IEEirGA==
 
-"@capacitor/status-bar@7.0.1":
-  version "7.0.1-nightly-20250218T150530.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-7.0.1-nightly-20250218T150530.0.tgz#1449f8403681deb0a27cecbc94cfc9a8ede82983"
-  integrity sha512-++i6pwynE2yVj2DhNUJ+8ZVtAEzkiyjaGz5hlUF6m1S6ef77rmQWfib878ScghkQGvQs5keiOf9cSw0f0f7mJg==
+"@capacitor/status-bar@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-7.0.0.tgz#11a66ac1a34f49d792931f8eca7f2ce3f65ef1b5"
+  integrity sha512-wsvPkWkoSOXMIgVHu4c6P1sOuDSZ1ClUo5OpLRwj7u8DYzlV4jlmNzztQn2Lvsiqx1z4kfukSaqe40k1Lo4c9g==
 
 "@capgo/capacitor-social-login@^1.2.6":
   version "1.2.6"
