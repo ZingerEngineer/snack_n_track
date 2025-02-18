@@ -19,12 +19,12 @@
     "init:mobile": "mkdir -p ./dist && [ -f ./dist/index.html ] || touch ./dist/index.html"
   },
   "dependencies": {
-    "@capacitor/android": "7.0.1",
-    "@capacitor/app": "7.0.1",
-    "@capacitor/camera": "7.0.1",
-    "@capacitor/core": "7.0.1",
+    "@capacitor/android": "7.0.0",
+    "@capacitor/app": "7.0.0",
+    "@capacitor/camera": "7.0.0",
+    "@capacitor/core": "7.0.0",
     "@capacitor/haptics": "7.0.0",
-    "@capacitor/keyboard": "7.0.1",
+    "@capacitor/keyboard": "7.0.0",
     "@capacitor/status-bar": "7.0.0",
     "@capgo/capacitor-social-login": "^1.2.6",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
