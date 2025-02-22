@@ -1,30 +1,55 @@
 // src/stores/authStore.ts
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { type IUser, type ILoginCredentials } from '../types/user.types'
+import type { IUser, ILoginCredentials, IRegisterCredentials } from '../types/user/user.types'
+import fetcher from '../utils/server/fetcher'
+import ToastService from '../services/ToastService'
+import { useRouter } from 'vue-router'
+import { useLoadingStore } from './loading.store'
+import type { ILoginResults } from '../schemas/user/user.auth'
+import PreferencesService from '../apis/mobile/usePreferences'
+import z from 'zod'
+import { UserSchema } from '../schemas/user/user.zod'
+
+const LoginResultsSchema: z.ZodType<ILoginResults> = z.object({
+  user: z.object({
+    name: z.string().nullable(),
+    email: z.string().nullable(),
+    avatar: z.string().nullable(),
+    age: z.number().nullable(),
+    gender: z.string().nullable(),
+  }),
+  accessToken: z.string(),
+  refreshToken: z.string(),
+})
+
+const RegisterResultsSchema = z.object({
+  status: z.string(),
+})
+
+const LogoutResultsSchema = z.object({
+  status: z.string(),
+})
 
 export const useAuthStore = defineStore('auth', () => {
+  const loadingStore = useLoadingStore()
+  const router = useRouter()
   // State
   const user = ref<IUser | null>(null)
-  const token = ref<string>(localStorage.getItem('token') || '')
+  const accessToken = ref<string>('')
   const isAuthenticated = computed(() => !!user.value)
 
   // Initialize: Check session if token exists but user data is missing
   const initializeAuth = async () => {
-    if (token.value && !user.value) {
+    if (accessToken.value && !user.value) {
       try {
-        const response = await fetch('http://localhost:3000/v1/auth/session', {
+        const data = await fetcher('auth/session', {
           method: 'GET',
-          credentials: 'include', // Ensure cookies are sent
+          credentials: 'include',
         })
 
-        if (!response.ok) {
-          throw new Error('Session expired or invalid')
-        }
-
-        const data = await response.json()
-        user.value = data.user
-        localStorage.setItem('user', JSON.stringify(user.value))
+        user.value = data as IUser
+        await PreferencesService.setItem('user', JSON.stringify(user.value))
       } catch (error) {
         console.error('Session expired or invalid:', error)
         logout()
@@ -35,70 +60,111 @@ export const useAuthStore = defineStore('auth', () => {
   // Login method
   const login = async (credentials: ILoginCredentials) => {
     try {
-      const response = await fetch('http://localhost:3000/v1/auth/login', {
+      loadingStore.startLoading()
+      const data = await fetcher('auth/login', {
+        method: 'POST',
+        body: JSON.stringify(credentials),
+      })
+      const loginResults = LoginResultsSchema.parse(data)
+      accessToken.value = loginResults.accessToken
+      user.value = loginResults.user
+      // Store in localStorage
+      PreferencesService.setItem('accessToken', accessToken.value)
+      PreferencesService.setItem('user', JSON.stringify(user.value))
+      ToastService.success('Logged in.')
+      router.push('/dashboard/home')
+    } catch (error) {
+      console.log(error)
+      ToastService.error('Login failure')
+    } finally {
+      loadingStore.stopLoading()
+    }
+  }
+
+  // Register method
+  const register = async (credentials: IRegisterCredentials) => {
+    try {
+      loadingStore.startLoading()
+      const data = await fetcher('auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(credentials),
-        credentials: 'include',
       })
-
-      if (!response.ok) {
-        throw new Error('Login failed')
+      const registerResults = RegisterResultsSchema.parse(data)
+      if (registerResults.status === 'success') {
+        ToastService.success('Register success')
+        router.push('/login')
       }
-
-      const data = await response.json()
-      token.value = data.accessToken
-      user.value = data.user
-      // Store in localStorage
-      localStorage.setItem('accessToken', token.value)
-      localStorage.setItem('user', JSON.stringify(user.value))
-    } catch (error) {
-      throw error
+    } catch {
+      ToastService.error('Register failure')
+    } finally {
+      loadingStore.stopLoading()
     }
   }
 
   // Logout method
   const logout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/v1/auth/logout', {
+      loadingStore.startLoading()
+      const response = await fetcher('auth/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
         credentials: 'include',
       })
-      if (response.ok) {
+      const logoutResults = LogoutResultsSchema.parse(response)
+      if (logoutResults.status === 'success') {
+        accessToken.value = ''
         user.value = null
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('user')
+        PreferencesService.removeItem('accessToken')
+        PreferencesService.removeItem('user')
+        ToastService.success('Logged out.')
+        router.push('/login')
       }
-    } catch (error) {
-      throw error
+    } catch {
+      ToastService.error('Logout failure')
+    } finally {
+      loadingStore.stopLoading()
     }
   }
 
   // Load user from localStorage if available
-  const loadUserFromLocalStorage = () => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      user.value = JSON.parse(storedUser)
-    } else {
-      initializeAuth() // Call session API if user cleared localStorage manually
+  const loadUserFromLocalStorage = async () => {
+    try {
+      const storedUser = await PreferencesService.getItem('user')
+      if (!storedUser) return
+      if (!storedUser.value) return
+      const parsedUser = UserSchema.parse(JSON.parse(storedUser.value))
+      user.value = parsedUser
+    } catch {
+      return
+    }
+  }
+
+  const loadAccessTokenFromLocalStorage = async () => {
+    try {
+      const storedToken = await PreferencesService.getItem('accessToken')
+      if (!storedToken) return
+      if (!storedToken.value) return
+      accessToken.value = storedToken.value
+    } catch {
+      return
     }
   }
 
   // Auto-load on store creation
   loadUserFromLocalStorage()
+  loadAccessTokenFromLocalStorage()
 
   return {
     user,
-    token,
+    accessToken,
     isAuthenticated,
     login,
+    register,
     logout,
     initializeAuth,
   }
