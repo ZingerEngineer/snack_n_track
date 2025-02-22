@@ -29,10 +29,10 @@ const routeToUserSettings = () => {
     <ion-content>
       <div class="p-6 w-full h-full flex items-center flex-col gap-6">
         <ion-card
-          class="p-2 w-full border-2 to-primary from-primary/50 bg-gradient-to-l border-primary rounded-2xl shadow-lg"
+          class="flex justify-center items-center p-2 w-full border-2 to-primary from-primary/50 bg-gradient-to-l border-primary rounded-2xl shadow-lg min-h-[8rem]"
         >
-          <ion-card-content>
-            <div class="w-full h-full flex flex-row justify-between items-center">
+          <ion-card-content class="">
+            <div class="w-full h-full flex flex-row justify-between items-center gap-4">
               <div class="flex flex-row items-center justify-center">
                 <img
                   class="w-16 bg-cover bg-center rounded-full"
@@ -53,14 +53,14 @@ const routeToUserSettings = () => {
           </ion-card-content>
         </ion-card>
         <ion-card
-          class="p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full"
+          class="flex justify-center flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full min-h-[11rem]"
         >
           <ion-card-header>
             <ion-card-title> Meals </ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <div class="w-full h-full flex flex-col justify-between items-center gap-2">
-              <div class="w-full h-full flex flex-row justify-between items-center">
+              <div class="w-full h-full flex flex-row justify-between items-center gap-4 flex-wrap">
                 <div class="flex flex-col items-center justify-center">
                   <h2>0 kCals</h2>
                   <div class="flex flex-row items-center justify-center gap-2">
