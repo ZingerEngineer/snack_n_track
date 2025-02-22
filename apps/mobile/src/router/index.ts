@@ -1,5 +1,11 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import fetcher from '../utils/server/fetcher'
+import type {
+  NavigationGuardNext,
+  RouteLocationNormalized,
+  RouteLocationNormalizedLoaded,
+} from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -63,12 +69,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/LoginView.vue'),
+    component: () => import('../views/AuthViews/LoginView.vue'),
   },
   {
     path: '/register',
     name: 'register',
-    component: () => import('../views/RegisterView.vue'),
+    component: () => import('../views/AuthViews/RegisterView.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
@@ -82,74 +88,56 @@ const router = createRouter({
   routes,
 })
 
-import type {
-  RouteLocationNormalizedGeneric,
-  RouteLocationNormalizedLoadedGeneric,
-  NavigationGuardNext,
-} from 'vue-router'
-import debounce from '../utils/debounce'
-
-function isRouteLocationNormalizedGeneric(to: unknown): to is RouteLocationNormalizedGeneric {
-  return typeof to === 'object' && to !== null && 'path' in to
-}
-
-function isRouteLocationNormalizedLoadedGeneric(
-  from: unknown,
-): from is RouteLocationNormalizedLoadedGeneric {
-  return typeof from === 'object' && from !== null && 'path' in from
-}
-
-function isNavigationGuardNext(next: unknown): next is NavigationGuardNext {
-  return typeof next === 'function'
-}
-
-const debouncedRouting = debounce(async (to: unknown, from: unknown, next: unknown) => {
-  if (
-    !isRouteLocationNormalizedGeneric(to) ||
-    !isRouteLocationNormalizedLoadedGeneric(from) ||
-    !isNavigationGuardNext(next) ||
-    !(next instanceof Function)
-  ) {
-    throw new Error('Invalid arguments passed to debouncedRouting')
-  }
+const getSession = async (): Promise<{ authorized: boolean }> => {
   try {
-    const response = await fetch('http://localhost:3000/v1/auth/session', {
+    const response = await fetcher<{ authorized: boolean }>('auth/session', {
       method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
-      },
     })
-    console.log('Response:', response)
-    const responseJson = await response.json()
-    console.log('Response JSON:', responseJson)
-    if (responseJson.authenticated) {
-      if (to.path === '/login' || to.path === '/register') {
-        console.log(
-          'Authenticated user trying to access login or register, redirecting to /dashboard/home',
-        )
-        router.push('/dashboard/home') // Redirect authenticated users away from login or register
-      } else {
-        console.log('Authenticated user, allowing navigation')
-        next() // Allow navigation if authenticated
-      }
-    } else {
-      if (to.path !== '/login' && to.path !== '/register') {
-        console.log('Unauthenticated user trying to access protected route, redirecting to /login')
-        router.push('/login') // Redirect unauthenticated users away from protected routes
-      } else {
-        console.log('Unauthenticated user accessing login or register, allowing navigation')
-        next() // Allow navigation if unauthenticated and route does not require auth
-      }
+
+    return response
+  } catch (error) {
+    console.error('Session error:', error)
+    throw new Error(`Failed to fetch session`)
+  }
+}
+
+// The route guard using async/await. This guard assumes that routes
+// such as '/login' and '/register' are publicly accessible.
+const authGuard = async (
+  to: RouteLocationNormalized,
+  _: RouteLocationNormalizedLoaded,
+  next: NavigationGuardNext,
+) => {
+  try {
+    const session = await getSession()
+    const isAuthorized = session.authorized
+    // If the user is authorized and trying to access login or register,
+    // redirect them to the dashboard.
+    if (isAuthorized && ['/login', '/register'].includes(to.path)) {
+      return next('/dashboard/home')
     }
+
+    // If the user is not authorized and is trying to access a protected route,
+    // redirect them to login.
+    if (!isAuthorized && !['/login', '/register'].includes(to.path)) {
+      return next('/login')
+    }
+
+    // If the user is already on the login page and not authorized, allow the navigation.
+    if (!isAuthorized && to.path === '/login') {
+      return next()
+    }
+
+    // Otherwise, allow the navigation.
+    return next()
   } catch (error) {
     console.error('Authorization error:', error)
-    console.log('Error occurred, redirecting to /login')
-    router.push('/login') // Redirect on error (e.g., token expired)
+    // On error (such as network issues or token expiration), redirect to login.
+    return next('/login')
   }
-}, 300)
+}
 
-router.beforeEach(debouncedRouting)
+// Register the guard with Vue Router.
+router.beforeEach(authGuard)
 
 export default router
