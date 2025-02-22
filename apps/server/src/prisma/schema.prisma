@@ -7,29 +7,303 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PortionUnit {
+  // Volume (liquid) measurements
+  TEASPOON
+  TABLESPOON
+  CUP
+  MILLILITER
+  LITER
+  PINT
+  QUART
+  GALLON
+
+  // Weight measurements
+  GRAM
+  KILOGRAM
+  OUNCE
+  POUND
+
+  // Other generic or small quantity measures
+  PINCH
+  DASH
+  PIECE
+  SLICE
+  SERVING
+}
+
+enum NutritionUnit {
+  // Mass units:
+  g
+  kg
+  mg
+  mcg
+
+  // Volume units:
+  L
+  mL
+  mcL
+
+  // Energy units:
+  kcal
+  kJ
+
+  // Additional units:
+  oz
+  lb
+}
+
 model User {
-  id                  Int            @id @default(autoincrement())
-  email               String         @unique
-  name                String?
-  password            String
-  gender              String?
-  age                 Int?
-  goals               String?
-  dietary_preferences String?
-  medical_conditions  String?
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime?      @updatedAt
-  deletedAt           DateTime?
-  RefreshToken        RefreshToken[]
+  id         String    @id @default(uuid())
+  name       String?
+  email      String    @unique
+  avatar     String?
+  googleId   String?   @unique
+  password   String
+  role       String    @default("USER")
+  age        Int?
+  gender     String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  deletedAt  DateTime?
+  softDelete Boolean   @default(false)
+
+  medicalConditions UserMedicalCondition[]
+  progress          Progress[]
+  RefreshToken      RefreshToken[]
+  goals             UserGoal[]
+  preferences       Preferences?
+  healthTracking    UserHealthTracking[]
+  meals             Meal[]
+  mealScans         MealScan[]
+}
+
+model Preferences {
+  id            String  @id @default(uuid())
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String  @unique
+  language      String  @default("en")
+  theme         String  @default("light")
+  notifications Boolean @default(false)
+}
+
+model UserHealthTracking {
+  id                String    @id @default(uuid())
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  weight            Float?
+  height            Float?
+  BMI               Float?
+  sugarLevel        Float?
+  bloodPressure     String?
+  cholesterolLevel  Float?
+  dietaryPreference String?
+  activityLevel     String?
+  dateRecorded      DateTime?
+}
+
+model Goal {
+  id          String     @id @default(uuid())
+  goalName    String     @default("New Goal")
+  dateCreated DateTime   @default(now())
+  dueDate     DateTime?
+  isFinished  Boolean    @default(false)
+  progress    Progress[]
+  userGoals   UserGoal[]
+}
+
+model UserGoal {
+  userId String
+  goalId String
+  user   User   @relation(fields: [userId], references: [id])
+  goal   Goal   @relation(fields: [goalId], references: [id])
+
+  @@id([userId, goalId])
+}
+
+model Progress {
+  id             String   @id @default(uuid())
+  goalId         String?
+  userId         String?
+  goalWeight     Float
+  currentWeight  Float
+  caloriesTarget Float
+  caloriesBurned Float
+  dateMeasured   DateTime
+  goal           Goal?    @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Meal {
+  id            String         @id @default(uuid())
+  name          String         @default("New Meal")
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId        String?
+  createdAt     DateTime       @default(now())
+  totalCalories Float
+  foodItems     MealFoodItem[]
+}
+
+model MealFoodItem {
+  mealId   String
+  foodId   String
+  meal     Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  foodItem FoodItem @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@id([mealId, foodId])
+}
+
+model FoodItem {
+  id               String           @id @default(uuid())
+  foodName         String           @unique
+  portionUnit      PortionUnit      @default(SERVING)
+  portionSizeValue Float            @default(1)
+  ingredients      FoodIngredient[]
+  MealFoodItem     MealFoodItem[]
+  MealScanFoodItem MealScan[]
+}
+
+model FoodIngredient {
+  foodId       String
+  ingredientId String
+  foodItem     FoodItem   @relation(fields: [foodId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@id([foodId, ingredientId])
+}
+
+model Ingredient {
+  id             String               @id @default(uuid())
+  ingredientName String
+  amount         Float
+  nutrition      IngredientNutrition?
+  FoodIngredient FoodIngredient[]
+}
+
+model IngredientNutrition {
+  id           String     @id @default(uuid())
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId String     @unique
+
+  carbohydratesAmount Float         @default(0)
+  carbohydratesUnit   NutritionUnit @default(g)
+
+  proteinsAmount Float         @default(0)
+  proteinsUnit   NutritionUnit @default(g)
+
+  fatsAmount Float         @default(0)
+  fatsUnit   NutritionUnit @default(g)
+
+  saturatedFatAmount Float         @default(0)
+  saturatedFatUnit   NutritionUnit @default(g)
+
+  unsaturatedFatAmount Float         @default(0)
+  unsaturatedFatUnit   NutritionUnit @default(g)
+
+  transFatAmount Float         @default(0)
+  transFatUnit   NutritionUnit @default(g)
+
+  fiberAmount Float         @default(0)
+  fiberUnit   NutritionUnit @default(g)
+
+  sugarsAmount Float         @default(0)
+  sugarsUnit   NutritionUnit @default(g)
+
+  cholesterolAmount Float         @default(0)
+  cholesterolUnit   NutritionUnit @default(mg)
+
+  sodiumAmount Float         @default(0)
+  sodiumUnit   NutritionUnit @default(mg)
+
+  potassiumAmount Float         @default(0)
+  potassiumUnit   NutritionUnit @default(mg)
+
+  calciumAmount Float         @default(0)
+  calciumUnit   NutritionUnit @default(mg)
+
+  ironAmount Float         @default(0)
+  ironUnit   NutritionUnit @default(mg)
+
+  magnesiumAmount Float         @default(0)
+  magnesiumUnit   NutritionUnit @default(mg)
+
+  zincAmount Float         @default(0)
+  zincUnit   NutritionUnit @default(mg)
+
+  vitaminAAmount Float         @default(0)
+  vitaminAUnit   NutritionUnit @default(mg) // IU could be added if needed
+
+  vitaminB1Amount Float         @default(0)
+  vitaminB1Unit   NutritionUnit @default(mg)
+
+  vitaminB2Amount Float         @default(0)
+  vitaminB2Unit   NutritionUnit @default(mg)
+
+  vitaminB3Amount Float         @default(0)
+  vitaminB3Unit   NutritionUnit @default(mg)
+
+  vitaminB5Amount Float         @default(0)
+  vitaminB5Unit   NutritionUnit @default(mg)
+
+  vitaminB6Amount Float         @default(0)
+  vitaminB6Unit   NutritionUnit @default(mg)
+
+  vitaminB7Amount Float         @default(0)
+  vitaminB7Unit   NutritionUnit @default(mcg) // Alternatively, mcg
+
+  vitaminB9Amount Float         @default(0)
+  vitaminB9Unit   NutritionUnit @default(mcg)
+
+  vitaminB12Amount Float         @default(0)
+  vitaminB12Unit   NutritionUnit @default(mcg)
+
+  vitaminCAmount Float         @default(0)
+  vitaminCUnit   NutritionUnit @default(mg)
+
+  vitaminDAmount Float         @default(0)
+  vitaminDUnit   NutritionUnit @default(mg) // or mcg if preferred
+
+  vitaminEAmount Float         @default(0)
+  vitaminEUnit   NutritionUnit @default(mg)
+
+  vitaminKAmount Float         @default(0)
+  vitaminKUnit   NutritionUnit @default(mg)
+}
+
+model MealScan {
+  id              String     @id @default(uuid())
+  name            String     @default("New Meal Scan")
+  user            User       @relation(fields: [userId], references: [id])
+  userId          String
+  isChatGPTMade   Boolean    @default(false)
+  scanDate        DateTime   @default(now())
+  foodItems       FoodItem[]
+  confidenceScore Float
+  approvalStatus  String
+}
+
+model MedicalCondition {
+  id            String                 @id @default(uuid())
+  conditionName String
+  users         UserMedicalCondition[]
+}
+
+model UserMedicalCondition {
+  userId             String
+  medicalConditionId String
+  user               User             @relation(fields: [userId], references: [id])
+  medicalCondition   MedicalCondition @relation(fields: [medicalConditionId], references: [id])
+
+  @@id([userId, medicalConditionId])
 }
 
 model RefreshToken {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   token     String    @unique
-  userId    Int
+  userId    String
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   expiresAt DateTime  @default(dbgenerated("now() + interval '7 days'"))
 
-  User User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
