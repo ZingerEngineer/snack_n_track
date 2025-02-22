@@ -1,0 +1,134 @@
+<script setup lang="ts">
+import { useSocialLogin } from '../../stores/googleAuth.store'
+import { IonPage, IonContent, IonInput, IonButton } from '@ionic/vue'
+import { useField, useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/auth.store'
+import { onMounted, ref } from 'vue'
+import { SocialLogin } from '@capgo/capacitor-social-login'
+import snackNTrackLogo from '../../assets/snackntracklogo.svg'
+import { LoginSchema } from '../../schemas/user/user.zod'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import googleIcon from '../../assets/google.svg'
+import { handleGoogleLogin, togglePasswordVisibility } from './utils'
+
+const router = useRouter()
+
+const { user } = useSocialLogin()
+
+const { login } = useAuthStore()
+
+const validationSchema = toTypedSchema(LoginSchema)
+
+const { handleSubmit } = useForm({
+  validationSchema,
+})
+
+// Fields with error messages
+const { value: email, errorMessage: emailError } = useField('email')
+const { value: password, errorMessage: passwordError } = useField('password')
+const showPassword = ref(false)
+
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    await login(values)
+  } catch {
+    return
+  }
+})
+
+onMounted(() => {
+  SocialLogin.initialize({
+    google: {
+      webClientId: '795655910199-tegacmq62fgirj62nf9t2s2hkvmeibnn.apps.googleusercontent.com',
+    },
+  })
+})
+</script>
+
+<template>
+  <ion-page>
+    <ion-content class="ion-padding">
+      <div
+        class="login-container min-h-full max-w-full flex flex-col justify-center items-center gap-4"
+      >
+        <img :src="snackNTrackLogo" alt="snack n track logo" />
+        <p>
+          New to Snack n' track ?
+          <span @click="router.push('/register')" class="text-primary">Register</span>
+        </p>
+
+        <form @submit.prevent="onSubmit" class="flex justify-center items-center gap-4 flex-col">
+          <div class="flex flex-col justify-center w-full">
+            <ion-input
+              class="w-full"
+              :helper-text="emailError ? '' : 'Enter your email.'"
+              label-placement="floating"
+              label="Email"
+              inputmode="email"
+              fill="outline"
+              debounce="500"
+              clearInput="true"
+              name="email"
+              v-model="email"
+              type="email"
+            ></ion-input>
+            <div class="error-message">{{ emailError }}</div>
+          </div>
+          <!-- Password Input -->
+          <div class="flex flex-col justify-center w-full">
+            <ion-input
+              :helper-text="passwordError ? '' : 'Enter your password.'"
+              label-placement="floating"
+              label="Password"
+              inputmode="password"
+              fill="outline"
+              debounce="500"
+              clearInput="true"
+              name="password"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+            >
+              <ion-button class="w-8 h-8" fill="clear" @click="togglePasswordVisibility">
+                <FontAwesomeIcon
+                  class="text-[1.1rem]"
+                  :icon="showPassword ? faEyeSlash : faEye"
+                ></FontAwesomeIcon>
+              </ion-button>
+            </ion-input>
+            <span class="error-message">{{ passwordError }}</span>
+          </div>
+          <ion-button class="login-button w-full" type="submit">Login</ion-button>
+          <ion-button class="w-full" fill="outline" @click="handleGoogleLogin"
+            ><img class="w-6 h-6 mr-2" :src="googleIcon" />Sign in with Google</ion-button
+          >
+          <div class="mt-4 w-full flex justify-center items-center bg-red-500">
+            {{ user }}
+          </div>
+        </form>
+      </div>
+    </ion-content>
+  </ion-page>
+</template>
+
+<style scoped>
+h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+ion-input {
+  --border-radius: 0.5rem;
+}
+ion-button {
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+}
+
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+</style>
