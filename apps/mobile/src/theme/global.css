@@ -65,10 +65,6 @@ html {
   font-family: 'Montserrat', sans-serif;
 }
 
-ion-content {
-  --background: var(--ion-color-light-shade);
-}
-
 * {
   font-family: 'Montserrat', sans-serif;
 }
