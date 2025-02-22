@@ -62,4 +62,6 @@
   --ion-color-dark-contrast-rgb: 255, 255, 255;
   --ion-color-dark-shade: #0c0c0c;
   --ion-color-dark-tint: #262626;
+
+  --ion-top-bar-margin: 56px;
 }
