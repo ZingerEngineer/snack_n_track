@@ -27,14 +27,13 @@ const authorizationMiddleware = async (
         })
         return next() // New access token issued, proceed
       } else {
-        res.status(401).json({ message: 'Unauthorized access' })
+        res.status(200).json({ authorized: false })
       }
     } catch (error) {
       console.error(error)
-      res.status(401).json({ message: 'Unauthorized access' })
+      res.status(200).json({ authorized: false })
     }
   }
-  // No token provided or invalid token, attempt to refresh
 }
 
 export default authorizationMiddleware

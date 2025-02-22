@@ -8,13 +8,16 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 import PrismaGlobal from '../classes/PrismaGlobal'
+import { ITokenPayload } from '../types/user/user.auth'
 
 class TokenUtils {
   private static refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
   private static accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
-  static createRefreshToken(userId: string, daysExpiresIn?: number): string {
-    const payload = { userId }
+  static createRefreshToken(
+    payload: ITokenPayload,
+    daysExpiresIn?: number
+  ): string {
     const refreshTokenSecret = this.refreshTokenSecret
     if (!refreshTokenSecret || !payload) {
       throw new InternalServerError('Failed to generate refresh token')
@@ -24,8 +27,10 @@ class TokenUtils {
     })
   }
 
-  static createAccessToken(userId: string, expiresInMinutes?: number): string {
-    const payload = { userId }
+  static createAccessToken(
+    payload: ITokenPayload,
+    expiresInMinutes?: number
+  ): string {
     const accessTokenSecret = this.accessTokenSecret
     if (!accessTokenSecret || !payload) {
       throw new InternalServerError('Failed to generate access token')
@@ -61,14 +66,19 @@ class TokenUtils {
 }
 
 class RefreshTokenDAO {
-  async createToken(userId: string) {
-    const prisma = PrismaGlobal.getPrismaClient()
+  async createToken(payload: ITokenPayload) {
     try {
-      const refreshToken = TokenUtils.createRefreshToken(userId)
+      const prisma = PrismaGlobal.getPrismaClient()
+      const { userId, role, googleId } = payload
+      const refreshToken = TokenUtils.createRefreshToken({
+        userId: userId,
+        role: role,
+        googleId: googleId
+      })
       const token = await prisma.refreshToken.create({
         data: {
           token: refreshToken,
-          userId: parseInt(userId)
+          userId: userId
         }
       })
       return token
@@ -79,11 +89,11 @@ class RefreshTokenDAO {
     }
   }
 
-  async getUserTokens(userId: string) {
+  async getUserTokensByUserId(userId: string) {
     const prisma = PrismaGlobal.getPrismaClient()
     try {
       const tokens = await prisma.refreshToken.findMany({
-        where: { userId: parseInt(userId) }
+        where: { userId: userId }
       })
       if (tokens.length === 0) {
         throw new NotFoundError('No tokens found for user')
@@ -96,11 +106,11 @@ class RefreshTokenDAO {
     }
   }
 
-  async getTokenById(tokenId: string) {
+  async getTokenByTokenId(tokenId: string) {
     const prisma = PrismaGlobal.getPrismaClient()
     try {
       const token = await prisma.refreshToken.findUnique({
-        where: { id: parseInt(tokenId) }
+        where: { id: tokenId }
       })
       return token
     } catch (error) {
@@ -114,7 +124,7 @@ class RefreshTokenDAO {
     const prisma = PrismaGlobal.getPrismaClient()
     try {
       const token = await prisma.refreshToken.findFirst({
-        where: { userId: parseInt(userId) }
+        where: { userId: userId }
       })
       return token
     } catch (error) {
@@ -124,11 +134,11 @@ class RefreshTokenDAO {
     }
   }
 
-  async deleteTokenById(id: string) {
+  async deleteTokenById(tokenId: string) {
     const prisma = PrismaGlobal.getPrismaClient()
     try {
       await prisma.refreshToken.delete({
-        where: { id: parseInt(id) }
+        where: { id: tokenId }
       })
     } catch (error) {
       throw new InternalServerError('Failed to delete refresh token')

@@ -6,7 +6,7 @@ import { loginSchema, registerSchema } from '../schemas/user/user.auth.zod'
 import bcrypt from 'bcrypt'
 import { RefreshTokenDAO, TokenUtils } from '../daos/token.dao'
 import { accessTokenDataSchema } from '../schemas/token.zod'
-
+import { ITokenPayload } from '../types/user/user.auth'
 const userDao = new UserDao()
 const refreshTokenDao = new RefreshTokenDAO()
 
@@ -28,14 +28,22 @@ const loginController = async (req: Request) => {
       throw new ValidationError('Invalid email or password')
     }
 
-    const accessToken = TokenUtils.createAccessToken(user.id.toString())
-    const refreshToken = (await refreshTokenDao.createToken(user.id.toString()))
+    const tokensPayload: ITokenPayload = {
+      userId: user.id,
+      role: user.role || 'USER',
+      googleId: user.googleId ? user.googleId : null
+    }
+    const accessToken = TokenUtils.createAccessToken(tokensPayload)
+    const refreshToken = (await refreshTokenDao.createToken(tokensPayload))
       .token
 
     return {
       user: {
-        id: user.id,
-        email: user.email
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        age: user.age,
+        gender: user.gender
       },
       accessToken,
       refreshToken
@@ -68,10 +76,6 @@ const registerController = async (req: Request) => {
     })
 
     return {
-      user: {
-        id: newUser.id,
-        email: newUser.email
-      },
       status: 'success'
     }
   } catch (error) {
@@ -93,7 +97,7 @@ const logoutController = async (req: Request) => {
     const parsedToken = accessTokenDataSchema.parse(accessTokenData)
     const userId = parsedToken.userId
 
-    const tokens = await refreshTokenDao.getUserTokens(userId)
+    const tokens = await refreshTokenDao.getUserTokensByUserId(userId)
     if (!tokens.length) {
       throw new ValidationError('No tokens found for user')
     }
@@ -114,20 +118,29 @@ const logoutController = async (req: Request) => {
 }
 
 const refreshTokenController = async (req: Request) => {
-  const refreshToken = decodeURIComponent(req.signedCookies['refreshToken'])
-
-  if (!refreshToken || typeof refreshToken !== 'string') {
-    throw new ValidationError('Invalid refresh token')
-  }
-
   try {
-    const tokenData = TokenUtils.verifyRefreshToken(refreshToken)
-    const parsedToken = accessTokenDataSchema.parse(tokenData)
-    const newAccessToken = TokenUtils.createAccessToken(parsedToken.userId)
+    const refreshToken = req.signedCookies['refreshToken']
 
+    if (!refreshToken || typeof refreshToken !== 'string') {
+      throw new ValidationError('Invalid refresh token')
+    }
+    console.log('refreshToken:', refreshToken)
+    const decodedToken = decodeURIComponent(refreshToken)
+    console.log('decodedToken:', decodedToken)
+    const tokenData = TokenUtils.verifyRefreshToken(decodedToken)
+    console.log('tokenData:', tokenData)
+    const parsedToken = accessTokenDataSchema.parse(tokenData)
+    console.log('parsedToken:', parsedToken)
+    const newAccessToken = TokenUtils.createAccessToken({
+      userId: parsedToken.userId,
+      role: parsedToken.role,
+      googleId: parsedToken.googleId
+    })
+    console.log('newAccessToken:', newAccessToken)
     return { accessToken: newAccessToken }
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    console.error(error)
+    if (error instanceof z.ZodError || error instanceof ValidationError) {
       throw new ValidationError('Invalid refresh token')
     }
     throw new InternalServerError('Failed to refresh token')

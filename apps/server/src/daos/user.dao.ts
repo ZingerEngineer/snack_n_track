@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { InternalServerError } from '../classes/Error'
+import { InternalServerError, NotFoundError } from '../classes/Error'
 
 class UserDAO {
   private prisma: PrismaClient | null = null
@@ -27,7 +27,7 @@ class UserDAO {
     }
   }
 
-  async getUserById(userId: number) {
+  async getUserById(userId: string) {
     const prisma = this.getPrismaClient()
     try {
       const user = await prisma.user.findUnique({
@@ -35,7 +35,21 @@ class UserDAO {
       })
       return user
     } catch (error) {
-      throw new InternalServerError('Failed to get user by ID')
+      throw new NotFoundError('Failed to get user by ID')
+    } finally {
+      await this.closePrismaClient()
+    }
+  }
+
+  async getUserByGoogleId(googleId: string) {
+    const prisma = this.getPrismaClient()
+    try {
+      const user = await prisma.user.findUnique({
+        where: { googleId: googleId }
+      })
+      return user
+    } catch (error) {
+      throw new NotFoundError('Failed to get user by ID')
     } finally {
       await this.closePrismaClient()
     }

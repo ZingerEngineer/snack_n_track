@@ -12,13 +12,16 @@ import cookieParser from 'cookie-parser'
 dotenv.config()
 
 const app = express()
-
 app.use(express.json())
 app.use(
   cors({
-    origin: 'http://localhost:5173', // ✅ Exact match, no wildcard
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PROD_URL_FRONTEND
+        : process.env.DEV_URL_FRONTEND,
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
-    credentials: true // ✅ If using cookies or authorization headers
+    credentials: true,
+    allowedHeaders: 'Content-Type, Authorization'
   })
 )
 app.use(cookieParser(process.env.COOKIE_SECRET))
@@ -27,7 +30,7 @@ app.use(errorHandler)
 
 let supaBaseClient: SupabaseClient | null = null
 
-const port = 3000
+const port = 8080
 
 app.listen(port, async () => {
   console.log(`Server listening at http://localhost:${port}`)
