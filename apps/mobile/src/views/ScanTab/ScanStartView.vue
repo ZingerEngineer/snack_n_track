@@ -18,14 +18,16 @@ const handleRouteToUpload = () => {
       >
         <FontAwesomeIcon
           :icon="faMagicWandSparkles"
-          class="absolute blur-md top-[15rem] opacity-50 text-8xl text-white"
+          class="absolute blur-md top-[9rem] opacity-50 text-8xl text-white"
         ></FontAwesomeIcon
         ><FontAwesomeIcon
           :icon="faMagicWandSparkles"
           class="absolute blur-sm opacity-10 text-[22rem] left-40 text-white"
         ></FontAwesomeIcon>
         <FontAwesomeIcon :icon="faMagicWandSparkles" class="text-8xl text-white"></FontAwesomeIcon>
-        <p class="font-bold text-white">Pick a picture for your food and let us do the magic!</p>
+        <p class="font-bold text-white px-10">
+          Pick a picture for your food and let us do the magic!
+        </p>
         <ion-button @click="handleRouteToUpload">Scan Food</ion-button>
       </div>
     </ion-content>
