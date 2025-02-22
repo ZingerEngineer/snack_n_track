@@ -10,7 +10,7 @@ import {
   IonCol,
 } from '@ionic/vue'
 import { ref } from 'vue'
-import type { INutritionData, IEstimatedNutritionData } from '../types/global.types'
+import type { INutritionData, IEstimatedNutritionData } from '../types/meal/meal.types'
 
 const scannedFood = ref<null | INutritionData[] | IEstimatedNutritionData[]>(null)
 </script>
