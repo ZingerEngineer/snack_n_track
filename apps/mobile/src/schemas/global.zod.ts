@@ -1,5 +1,5 @@
 import z from 'zod'
-import createUUID from '../utils/createUUID'
+import createUUID from '../utils/global/createUUID'
 
 const NutritionDataSchema = z.object({
   id: z.string().default(() => createUUID()),
@@ -26,8 +26,4 @@ const EstimatedNutritionDataSchema = z.object({
   estimated_typeOfFood: z.enum(['Vegetable', 'Fruit', 'Grain', 'Dessert', 'Beverage', 'Meal']),
 })
 
-const FailureObjectSchema = z.object({
-  status: z.literal('failed'),
-})
-
-export { NutritionDataSchema, EstimatedNutritionDataSchema, FailureObjectSchema }
+export { NutritionDataSchema, EstimatedNutritionDataSchema }
