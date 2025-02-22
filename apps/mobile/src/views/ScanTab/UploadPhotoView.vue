@@ -18,7 +18,9 @@ const handleScan = () => {
 <template>
   <ion-page>
     <ion-content>
-      <div class="content-wrapper h-full flex flex-col items-center justify-center">
+      <div
+        class="content-wrapper h-full flex flex-col items-center justify-center mt-[var(--ion-top-bar-margin)]"
+      >
         <div class="w-full h-full flex flex-col justify-center items-center gap-4">
           <div class="flex flex-col w-full h-full justify-center items-center">
             <div
