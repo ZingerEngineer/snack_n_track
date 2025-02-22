@@ -98,7 +98,7 @@ authRouter.get(
   '/session',
   authorizationMiddleware,
   async (_, res: Response) => {
-    res.json({ authenticated: true })
+    res.json({ authorized: true })
   }
 )
 
