@@ -25,6 +25,7 @@
     "@capacitor/core": "7.0.0",
     "@capacitor/haptics": "7.0.0",
     "@capacitor/keyboard": "7.0.0",
+    "@capacitor/preferences": "^7.0.0",
     "@capacitor/status-bar": "7.0.0",
     "@capgo/capacitor-social-login": "^1.2.6",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
