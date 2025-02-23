@@ -40,17 +40,13 @@ import {
   IonMenuButton,
   IonRouterOutlet,
 } from '@ionic/vue'
-import ToastService from '../../services/ToastService'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const handleLogout = () => {
+const handleLogout = async () => {
   try {
-    authStore.logout()
-    router.push('/login')
-    ToastService.success('Logged out successfully')
-  } catch (error) {
-    ToastService.error('Error logging out')
+    await authStore.logout()
+  } catch {
     return
   }
 }

@@ -122,7 +122,9 @@ const registerController = async (req: Request) => {
 const logoutController = async (req: Request) => {
   console.log('[logoutController] Logout attempt initiated')
   try {
-    const accessToken = req.signedCookies['accessToken']
+    const accessToken =
+      req.signedCookies['accessToken'] ||
+      req.headers['authorization']?.toString().split(' ')[1]
     console.log('[logoutController] Access token received:', accessToken)
     if (!accessToken || typeof accessToken !== 'string') {
       console.error('[logoutController] Invalid access token cookie')

@@ -126,9 +126,9 @@ export const useAuthStore = defineStore('auth', () => {
       if (logoutResults.status === 'success') {
         accessToken.value = ''
         user.value = null
-        PreferencesService.removeItem('accessToken')
-        PreferencesService.removeItem('refreshToken')
-        PreferencesService.removeItem('user')
+        await PreferencesService.removeItem('accessToken')
+        await PreferencesService.removeItem('refreshToken')
+        await PreferencesService.removeItem('user')
         ToastService.success('Logged out.')
         router.push('/login')
       }
