@@ -43,7 +43,7 @@ async function scrappingCalculator(
   try {
     console.log('[scrappingCalculator] Launching browser')
     browser = await puppeteer.launch({
-      headless: 'shell',
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
