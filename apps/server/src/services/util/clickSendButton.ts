@@ -19,11 +19,11 @@ async function clickSendButton(page: Page): Promise<void> {
     await Promise.race([
       page.waitForSelector("button[aria-label='Send prompt']", {
         visible: true,
-        timeout: 7000
+        timeout: 10000
       }),
       page.waitForSelector("button[data-testid='send-button']", {
         visible: true,
-        timeout: 7000
+        timeout: 10000
       })
     ])
     await page.click(

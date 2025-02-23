@@ -1,6 +1,7 @@
 import { $Enums, Prisma, PrismaClient } from '@prisma/client'
 import { InternalServerError, NotFoundError } from '../classes/Error'
 import { DefaultArgs } from '@prisma/client/runtime/library'
+import FoodItemDao from './foodItem.dao'
 
 enum PortionUnit {
   // Volume (liquid) measurements
@@ -149,6 +150,9 @@ interface IScanFoodItem {
 interface IScanMealData {
   userId: string
   name: string
+  isChatGPTMade: boolean
+  confidenceScore: number
+  approvalStatus: string
   foodItems: IScanFoodItem[]
 }
 
@@ -248,30 +252,34 @@ class ScanMealDao {
   }
   async createScanMeal(data: IScanMealData) {
     try {
-      const { userId, name, foodItems } = data
+      const foodItemDao = new FoodItemDao()
 
+      const { userId, name, foodItems } = data
       const prisma = this.getPrismaClient()
-      const dbFoodItems: Prisma.Prisma__FoodItemClient<
-        {
-          id: string
-          foodName: string
-          portionUnit: $Enums.PortionUnit
-          portionSizeValue: number
-        } | null,
-        null,
-        DefaultArgs
-      >[] = []
+      const dbFoodItems: {
+        id: string
+        foodName: string
+        portionUnit: $Enums.PortionUnit
+        portionSizeValue: number
+      }[] = []
+      const newFoodItems: {
+        id: string
+        foodName: string
+        portionUnit: $Enums.PortionUnit
+        portionSizeValue: number
+      }[] = []
       //First we try to find the food items in the database.
-      foodItems.map((foodItem) => {
-        let currentFoodItem = prisma.foodItem.findUnique({
+      foodItems.map(async (foodItem) => {
+        let currentFoodItem = await prisma.foodItem.findUnique({
           where: { foodName: foodItem.foodName }
         })
-        dbFoodItems.push(currentFoodItem)
+        if (currentFoodItem) dbFoodItems.push(currentFoodItem)
       })
       if (dbFoodItems.length === 0) {
+        console.log('No food items found')
         //If no food items are found, we create the food items.
-        const newFoodItems = foodItems.map((foodItem) =>
-          prisma.foodItem.create({
+        foodItems.map(async (foodItem) => {
+          const currentFoodItem = await prisma.foodItem.create({
             data: {
               foodName: foodItem.foodName,
               portionUnit: foodItem.portionUnit
@@ -282,7 +290,9 @@ class ScanMealDao {
                 : 1
             }
           })
-        )
+          if (currentFoodItem) newFoodItems.push(currentFoodItem)
+        })
+
         if (newFoodItems.length === 0) {
           throw new InternalServerError('Failed to create food items')
         }
@@ -293,9 +303,35 @@ class ScanMealDao {
         data: {
           userId: data.userId,
           name: data.name,
-          foodItems: data.foodItems
+          isChatGPTMade: data.isChatGPTMade,
+          confidenceScore: data.confidenceScore,
+          approvalStatus: data.approvalStatus
         }
       })
+      if (dbFoodItems.length > 0) {
+        prisma.mealScan.update({
+          where: { id: scanMeal.id },
+          data: {
+            foodItems: {
+              connect: dbFoodItems.map((foodItem) => {
+                return { id: foodItem.id }
+              })
+            }
+          }
+        })
+      }
+      if (newFoodItems.length > 0) {
+        prisma.mealScan.update({
+          where: { id: scanMeal.id },
+          data: {
+            foodItems: {
+              connect: newFoodItems.map((foodItem) => {
+                return { id: foodItem.id }
+              })
+            }
+          }
+        })
+      }
       return scanMeal
     } catch (error) {
       throw new InternalServerError('Failed to create meal')

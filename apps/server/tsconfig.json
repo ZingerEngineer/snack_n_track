@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Output ECMAScript , "seeds"6 compatible code
+    "target": "ESNext", // Output ECMAScript , "seeds"6 compatible code
     "module": "commonjs", // Use CommonJS module system (default in Node.js)
     "rootDir": "./src", // Specify the root folder of your source files
     "outDir": "./dist", // Redirect output structure to the "dist" folder
@@ -13,3 +13,4 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
+

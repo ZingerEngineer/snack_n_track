@@ -64,4 +64,5 @@
   --ion-color-dark-tint: #262626;
 
   --ion-top-bar-margin: 56px;
+  --safe-area-inset-top: 20px;
 }

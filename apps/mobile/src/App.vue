@@ -2,11 +2,16 @@
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import ModalComponent from './components/ModalComponent.vue'
 import LoadingComponent from './components/LoadingComponent.vue'
+import { isPlatform } from '@ionic/vue'
+
+// Determine if the app is running in a native (hybrid or mobile) environment.
+const isNative = isPlatform('hybrid') || isPlatform('mobile')
+console.log('isNative:', isNative)
 </script>
 
 <template>
-  <ion-app>
-    <LoadingComponent />
+  <LoadingComponent />
+  <ion-app :class="{ 'safe-area': isNative }">
     <ModalComponent modalId="modal">
       <template #header>
         <h1 class="text-2xl font-bold">Modal Header</h1>
@@ -18,11 +23,12 @@ import LoadingComponent from './components/LoadingComponent.vue'
         <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Close</button>
       </template>
     </ModalComponent>
+
     <ion-router-outlet />
   </ion-app>
 </template>
-<style scoped>
-ion-app {
-  background-color: #343434;
+<style lang="css" scoped>
+.safe-area {
+  margin-top: var(--safe-area-inset-top, 20px);
 }
 </style>

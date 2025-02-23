@@ -8,9 +8,8 @@ import snackNTrackLogo from '../../assets/snackntracklogo.svg'
 import { RegisterSchema } from '../../schemas/user/user.zod'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import googleIcon from '../../assets/google.svg'
 import { ref } from 'vue'
-import { handleGoogleLogin, togglePasswordVisibility } from './utils'
+import { togglePasswordVisibility } from './utils'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -22,6 +21,9 @@ const { handleSubmit } = useForm({
   validationSchema,
 })
 
+const handleTogglePassword = () => {
+  togglePasswordVisibility(showPassword)
+}
 // Fields with error messages
 const { value: email, errorMessage: emailError } = useField('email')
 const { value: password, errorMessage: passwordError } = useField('password')
@@ -58,7 +60,6 @@ const onSubmit = handleSubmit(async (values) => {
               label="Email"
               inputmode="email"
               fill="outline"
-              debounce="500"
               clearInput="true"
               name="email"
               v-model="email"
@@ -67,32 +68,35 @@ const onSubmit = handleSubmit(async (values) => {
             <div class="error-message">{{ emailError }}</div>
           </div>
           <!-- Password Input -->
-          <div class="flex flex-col justify-center w-full">
+          <div class="relative flex flex-col justify-center w-full">
             <ion-input
               :helper-text="passwordError ? '' : 'Enter your password.'"
               label-placement="floating"
               label="Password"
               inputmode="password"
               fill="outline"
-              debounce="500"
               clearInput="true"
               name="password"
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
             >
-              <ion-button class="w-8 h-8" fill="clear" @click="togglePasswordVisibility">
-                <FontAwesomeIcon
-                  class="text-[1.1rem]"
-                  :icon="showPassword ? faEyeSlash : faEye"
-                ></FontAwesomeIcon>
-              </ion-button>
             </ion-input>
+            <ion-button
+              :class="[
+                'w-8 h-8 absolute top-[0.7rem] z-50',
+                password ? 'right-[3rem]' : 'right-[1rem]',
+              ]"
+              fill="clear"
+              @click="handleTogglePassword"
+            >
+              <FontAwesomeIcon
+                class="text-[1.1rem]"
+                :icon="showPassword ? faEyeSlash : faEye"
+              ></FontAwesomeIcon>
+            </ion-button>
             <span class="error-message">{{ passwordError }}</span>
           </div>
           <ion-button class="login-button w-full" type="submit">Register</ion-button>
-          <ion-button class="w-full" fill="outline" @click="handleGoogleLogin"
-            ><img class="w-6 h-6 mr-2" :src="googleIcon" />Signup with Google</ion-button
-          >
         </form>
       </div>
     </ion-content>

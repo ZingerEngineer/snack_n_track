@@ -14,7 +14,7 @@ const handleRouteToUpload = () => {
   <ion-page>
     <ion-content>
       <div
-        class="content-wrapper h-full flex gap-5 flex-col items-center justify-center bg-tertiary"
+        class="content-wrapper h-full flex gap-5 flex-col items-center justify-center from-tertiary via-primary to-white bg-gradient-to-t"
       >
         <FontAwesomeIcon
           :icon="faMagicWandSparkles"

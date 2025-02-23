@@ -25,7 +25,7 @@ const handleScan = () => {
           <div class="flex flex-col w-full h-full justify-center items-center">
             <div
               @click="scan.pickPhotoHandler"
-              class="bg-primary-shade hover:to-primary-shade hover:from-emerald-300 hover:bg-gradient-to-t relative w-full h-full flex justify-center items-center z-[1]"
+              class="bg-secondary-shade hover:to-secondary-shade hover:from-emerald-300 hover:bg-gradient-to-t relative w-full h-full flex justify-center items-center z-[1]"
             >
               <FontAwesomeIcon
                 :icon="faCameraAlt"
@@ -51,7 +51,7 @@ const handleScan = () => {
             </div>
           </div>
           <ion-button
-            class="absolute bottom-10 right-10 transition-all duration-300 ease-in-out text-white z-50"
+            class="absolute bottom-4 right-10 transition-all duration-300 ease-in-out text-white z-50"
             v-if="isImageSelected"
             @click="handleScan"
           >

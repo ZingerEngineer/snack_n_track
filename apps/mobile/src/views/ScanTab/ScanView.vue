@@ -33,7 +33,7 @@ const router = useRoute()
 
 <template>
   <ion-page>
-    <ion-toolbar>
+    <ion-toolbar class="border-b-4 border-primary">
       <ion-buttons slot="start">
         <ion-back-button :icon="home" defaultHref="/dashboard/home"></ion-back-button>
       </ion-buttons>

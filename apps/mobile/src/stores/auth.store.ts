@@ -46,6 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
         const data = await fetcher('auth/session', {
           method: 'GET',
           credentials: 'include',
+          contentType: 'application/json',
         })
 
         user.value = data as IUser
@@ -64,6 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await fetcher('auth/login', {
         method: 'POST',
         body: JSON.stringify(credentials),
+        contentType: 'application/json',
       })
       const loginResults = LoginResultsSchema.parse(data)
       accessToken.value = loginResults.accessToken
@@ -91,6 +93,7 @@ export const useAuthStore = defineStore('auth', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
+        contentType: 'application/json',
       })
       const registerResults = RegisterResultsSchema.parse(data)
       if (registerResults.status === 'success') {
@@ -114,6 +117,7 @@ export const useAuthStore = defineStore('auth', () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        contentType: 'application/json',
       })
       const logoutResults = LogoutResultsSchema.parse(response)
       if (logoutResults.status === 'success') {

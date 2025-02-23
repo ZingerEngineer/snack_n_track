@@ -111,95 +111,144 @@ class FoodItemDao {
     }
   }
 
+  // async createFoodItem(foodItem: {
+  //   foodName: string
+  //   portionUnit: PortionUnit
+  //   portionSizeValue: number
+  //   ingredients: string[]
+  //   MealFoodItem?: string[]
+  //   MealScanFoodItem?: string[]
+  // }) {
+  //   const prisma = this.getPrismaClient()
+  //   try {
+  //     const {
+  //       foodName,
+  //       portionUnit,
+  //       portionSizeValue,
+  //       ingredients,
+  //       MealFoodItem,
+  //       MealScanFoodItem
+  //     } = foodItem
+
+  //     const ingredientDao = new IngredientDao()
+  //     // Get the ingredient objects by name.
+  //     const ingredientList = await Promise.all(
+  //       ingredients.map(async (ingredient) => {
+  //         const currentIngredient =
+  //           await ingredientDao.getIngredientByName(ingredient)
+  //         return currentIngredient[0] // assuming it exists and has an id
+  //       })
+  //     )
+
+  //     let mealFoodItemList: {
+  //       id: string
+  //       name: string
+  //       userId: string | null
+  //       createdAt: Date
+  //       totalCalories: number
+  //     }[] = []
+  //     if (MealFoodItem) {
+  //       const mealDao = new MealDao()
+  //       mealFoodItemList = await Promise.all(
+  //         MealFoodItem.map(async (mealName) => {
+  //           const currentMeal = await mealDao.getMealsByName(mealName)
+  //           return currentMeal[0]
+  //         })
+  //       )
+  //     }
+
+  //     let mealScanFoodItemList: {
+  //       id: string
+  //       name: string
+  //       userId: string
+  //       isChatGPTMade: boolean
+  //       scanDate: Date
+  //       confidenceScore: number
+  //       approvalStatus: string
+  //     }[] = []
+  //     if (MealScanFoodItem) {
+  //       const scanMealDao = new ScanMealDao()
+  //       mealScanFoodItemList = await Promise.all(
+  //         MealScanFoodItem.map(async (scanMealName) => {
+  //           const currentScanMeal =
+  //             await scanMealDao.getScanMealsByName(scanMealName)
+  //           return currentScanMeal[0]
+  //         })
+  //       )
+  //     }
+
+  //     // Use nested create to create FoodIngredient records.
+  //     const newFoodItem = await prisma.foodItem.create({
+  //       data: {
+  //         foodName,
+  //         portionUnit,
+  //         portionSizeValue,
+  //         // Create a FoodIngredient record for each ingredient.
+  //         ingredients: {
+  //           create: ingredientList.map((ingredient) => ({
+  //             // Prisma will automatically set the foodId to the newly created FoodItem's id.
+  //             ingredient: {
+  //               connect: { id: ingredient.id }
+  //             },
+  //             // You can specify the amount or any other fields for the FoodIngredient.
+  //             amount: ingredient.amount // Or a default value
+  //           }))
+  //         },
+  //         // If there are related MealFoodItem records, connect them.
+  //         ...(mealFoodItemList.length > 0 && {
+  //           MealFoodItem: {
+  //             connect: mealFoodItemList.map((meal) => ({
+  //               mealId: meal.id,
+  //               foodId: undefined // This field will be auto-populated once the FoodItem exists; adjust if necessary.
+  //             }))
+  //           }
+  //         }),
+  //         // Similarly for MealScanFoodItem.
+  //         ...(mealScanFoodItemList.length > 0 && {
+  //           MealScanFoodItem: {
+  //             connect: mealScanFoodItemList.map((scanMeal) => ({
+  //               id: scanMeal.id
+  //             }))
+  //           }
+  //         })
+  //       }
+  //     })
+
+  //     return newFoodItem
+  //   } catch (error) {
+  //     throw new InternalServerError('Failed to create food item')
+  //   } finally {
+  //     await this.closePrismaClient()
+  //   }
+  // }
+
   async createFoodItem(foodItem: {
     foodName: string
     portionUnit: PortionUnit
     portionSizeValue: number
     ingredients: string[]
-    MealFoodItem?: string[]
-    MealScanFoodItem?: string[]
   }) {
-    const prisma = this.getPrismaClient()
     try {
-      const {
-        foodName,
-        portionUnit,
-        portionSizeValue,
-        ingredients,
-        MealFoodItem,
-        MealScanFoodItem
-      } = foodItem
+      const dbIngredientList = []
+      const prisma = this.getPrismaClient()
+      const { foodName, portionUnit, portionSizeValue, ingredients } = foodItem
 
       const ingredientDao = new IngredientDao()
+      // Get the ingredient objects by name.
       const ingredientList = await Promise.all(
         ingredients.map(async (ingredient) => {
           const currentIngredient =
             await ingredientDao.getIngredientByName(ingredient)
-          return currentIngredient[0]
+          return currentIngredient[0] // assuming it exists and has an id
         })
       )
 
-      let mealFoodItemList: {
-        id: string
-        name: string
-        userId: string | null
-        createdAt: Date
-        totalCalories: number
-      }[] = []
-      if (MealFoodItem) {
-        const mealDao = new MealDao()
-        mealFoodItemList = await Promise.all(
-          MealFoodItem.map(async (mealName) => {
-            const currentMeal = await mealDao.getMealsByName(mealName)
-            return currentMeal[0]
-          })
-        )
-      }
-
-      let mealScanFoodItemList: {
-        id: string
-        name: string
-        userId: string
-        isChatGPTMade: boolean
-        scanDate: Date
-        confidenceScore: number
-        approvalStatus: string
-      }[] = []
-      if (MealScanFoodItem) {
-        const scanMealDao = new ScanMealDao()
-        mealScanFoodItemList = await Promise.all(
-          MealScanFoodItem.map(async (scanMealName) => {
-            const currentScanMeal =
-              await scanMealDao.getScanMealsByName(scanMealName)
-            return currentScanMeal[0]
-          })
-        )
-      }
-
+      // Use nested create to create FoodIngredient records.
       const newFoodItem = await prisma.foodItem.create({
         data: {
           foodName,
           portionUnit,
-          portionSizeValue,
-          ingredients: {
-            connect: ingredientList.map((ingredient) => ({
-              ingredientId: ingredient.id
-            }))
-          },
-          ...(mealFoodItemList.length > 0 && {
-            MealFoodItem: {
-              connect: mealFoodItemList.map((meal) => ({
-                mealId: meal.id
-              }))
-            }
-          }),
-          ...(mealScanFoodItemList.length > 0 && {
-            MealScanFoodItem: {
-              connect: mealScanFoodItemList.map((scanMeal) => ({
-                id: scanMeal.id
-              }))
-            }
-          })
+          portionSizeValue
         }
       })
 

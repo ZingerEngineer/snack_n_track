@@ -1,5 +1,16 @@
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue'
+import {
+  IonPage,
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonButton,
+} from '@ionic/vue'
 import { useScanStore } from '../../stores/scan.store'
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -7,42 +18,45 @@ import { useLoadingStore } from '../../stores/loading.store'
 import formatNutritionString from './util/uploadResults'
 import { faCircleCheck, faSadTear } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faArrowLeft, faArrowRotateBack, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowRotateBack } from '@fortawesome/free-solid-svg-icons'
 const router = useRouter()
 const scanStore = useScanStore()
 const loadingStore = useLoadingStore()
 
-const nutritionData = computed(() => scanStore.nutritionData)
-
 const isLoading = computed(() => loadingStore.isLoading)
 
 const routeToDashBoard = () => {
-  router.push('/dashboard')
+  scanStore.reset()
+  router.push('/dashboard/home')
 }
 const routeToUploadPhoto = () => {
+  scanStore.reset()
   router.push('/scan/upload')
 }
 
-const handleAddFood = () => {}
+const nutritionData = computed(() => scanStore.nutritionData)
+
 watch(nutritionData, (newValue) => {
-  console.log('Nutrition data updated:', newValue)
+  if (newValue) {
+    scanStore.setNutritionData(newValue)
+  }
 })
 </script>
 
 <template>
   <ion-page>
     <ion-content>
-      <div class="w-full h-full flex justify-center items-center">
+      <div class="mt-[17rem] w-full h-full flex justify-center items-center">
         <div
           v-if="nutritionData && !isLoading"
-          class="mt-[22rem] w-full px-8 flex justify-center items-center flex-col gap-6"
+          class="w-full px-8 flex justify-center items-center flex-col gap-6"
         >
           <img
             v-if="scanStore.imagePath"
             :src="scanStore.imagePath ? scanStore.imagePath : ''"
-            class="w-1/2 h-1/2 rounded-lg shadow-lg border-2 border-primary"
+            class="w-1/2 h-1/2 rounded-lg shadow-lg border-2 border-primary mt-4"
           />
-          <div class="flex flex-col gap-6">
+          <div class="flex flex-col gap-6 w-full justify-center">
             <ion-card
               v-if="'name' in nutritionData"
               class="relative p-2 w-full border-2 to-primary from-primary/50 bg-gradient-to-l border-primary rounded-2xl shadow-lg"
@@ -135,10 +149,10 @@ watch(nutritionData, (newValue) => {
               </ion-card-content>
             </ion-card>
           </div>
-          <div class="flex justify-center mt-4 gap-2">
-            <ion-button @click="handleAddFood" routerLink="/dashboard/scan" color="primary">
-              <FontAwesomeIcon class="mr-2 text-lg" :icon="faPlusCircle"></FontAwesomeIcon>
-              Add</ion-button
+          <div class="flex justify-center mt-4 mb-10 gap-2">
+            <ion-button @click="routeToDashBoard" routerLink="/dashboard" color="primary">
+              <FontAwesomeIcon class="mr-2 text-lg" :icon="faArrowLeft"></FontAwesomeIcon>
+              Go to Dashboard</ion-button
             >
             <ion-button @click="routeToUploadPhoto" routerLink="/dashboard/scan" color="primary">
               <FontAwesomeIcon class="mr-2 text-lg" :icon="faArrowRotateBack"></FontAwesomeIcon>
@@ -194,5 +208,9 @@ ion-card-title {
 }
 ion-button {
   font-size: 0.7rem;
+}
+
+.top-bar-gaurd {
+  margin-top: calc(var(--safe-area-inset-top) + 130px);
 }
 </style>

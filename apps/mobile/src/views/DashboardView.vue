@@ -2,11 +2,7 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
-      <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="history" href="/dashboard/history">
-          <FontAwesomeIcon class="text-xl" :icon="faHistory" />
-          <ion-label>History</ion-label>
-        </ion-tab-button>
+      <ion-tab-bar slot="bottom" class="border-t-4 border-primary">
         <ion-tab-button tab="home" href="/dashboard/home">
           <FontAwesomeIcon class="text-xl" :icon="faHome" />
           <ion-label>Home</ion-label>
@@ -24,7 +20,5 @@
 import { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel } from '@ionic/vue'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faHome, faHistory, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
 </script>
-
-<style></style>

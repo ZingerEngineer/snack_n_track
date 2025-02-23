@@ -15,7 +15,7 @@ async function uploadImageToGPT(page: Page, imageURL: string): Promise<void> {
     const fileInput = await page.waitForSelector(
       'input[type="file"], input[class="hidden"]',
       {
-        timeout: 7000
+        timeout: 10000
       }
     )
 

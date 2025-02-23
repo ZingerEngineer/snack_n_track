@@ -7,17 +7,24 @@ const authorizationMiddleware = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const accessToken = decodeURIComponent(req.signedCookies['accessToken'])
-  try {
-    if (accessToken) {
-      // Verify the access token
-      TokenUtils.verifyAccessToken(accessToken)
-      return next() // Token is valid, proceed to the next middleware
+  console.log('[AuthMiddleware] Incoming request for URL:', req.originalUrl)
+  const rawAccessToken = req.signedCookies['accessToken']
+  const rawRefreshToken = req.signedCookies['refreshToken']
+
+  if (!rawAccessToken) {
+    console.warn('[AuthMiddleware] No access token found in signed cookies.')
+    if (!rawRefreshToken) {
+      console.warn('[AuthMiddleware] No refresh token found in signed cookies.')
+      res.status(200).json({ authorized: false })
+      return
     }
-  } catch (error) {
+    console.log('[AuthMiddleware] Attempting to refresh token...')
     try {
       const results = await refreshTokenController(req)
       if (results?.accessToken) {
+        console.log(
+          '[AuthMiddleware] Refresh token succeeded, new access token obtained.'
+        )
         res.cookie('accessToken', encodeURIComponent(results.accessToken), {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
@@ -25,14 +32,42 @@ const authorizationMiddleware = async (
           signed: true,
           maxAge: 15 * 60 * 1000
         })
+        console.log(
+          '[AuthMiddleware] New access token set in cookies. Proceeding...'
+        )
         return next() // New access token issued, proceed
       } else {
+        console.warn(
+          '[AuthMiddleware] Refresh token controller did not return an access token.'
+        )
         res.status(200).json({ authorized: false })
+        return
       }
-    } catch (error) {
-      console.error(error)
+    } catch (refreshError) {
+      console.error(
+        '[AuthMiddleware] Error during token refresh:',
+        refreshError
+      )
       res.status(200).json({ authorized: false })
+      return
     }
+  }
+
+  const accessToken = decodeURIComponent(rawAccessToken)
+  console.log('[AuthMiddleware] Access token decoded.')
+
+  try {
+    console.log('[AuthMiddleware] Verifying access token...')
+    TokenUtils.verifyAccessToken(accessToken)
+    console.log('[AuthMiddleware] Access token is valid. Proceeding...')
+    return next() // Token is valid, proceed to the next middleware
+  } catch (verificationError) {
+    console.warn(
+      '[AuthMiddleware] Access token verification failed:',
+      verificationError
+    )
+    res.status(200).json({ authorized: false })
+    return
   }
 }
 

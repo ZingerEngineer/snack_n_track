@@ -129,7 +129,7 @@ const routeToUserSettings = () => {
                   dominant-baseline="middle"
                   text-anchor="middle"
                 >
-                  100
+                  N/A
                 </text>
               </svg>
             </ion-card-content>
@@ -143,14 +143,14 @@ const routeToUserSettings = () => {
             <ion-card-content class="flex flex-grow">
               <div class="w-full h-full flex flex-col justify-center items-center gap-4">
                 <div class="flex flex-col items-center justify-center">
-                  <h1 class="text-4xl">0</h1>
+                  <h1 class="text-4xl">N/A</h1>
                   <div class="flex flex-row items-center justify-center gap-2">
                     <p class="text-sm">Today</p>
                     <FontAwesomeIcon :icon="faShoePrints" />
                   </div>
                 </div>
                 <div class="flex flex-col items-center justify-center">
-                  <h1 class="text-4xl">0</h1>
+                  <h1 class="text-4xl">N/A</h1>
                   <div class="flex flex-row items-center justify-center gap-2">
                     <p class="text-sm">Average</p>
                     <FontAwesomeIcon :icon="faMedal" />

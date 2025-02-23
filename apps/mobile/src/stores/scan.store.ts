@@ -1,16 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { pickPicture } from '../apis/mobile/pickPicture'
-import type { INutritionData, IEstimatedNutritionData } from '../types/global.types'
+import type { INutritionData, IEstimatedNutritionData } from '../types/meal/meal.types'
+import fetcher from '../utils/server/fetcher'
 // import { NutritionDataSchema, EstimatedNutritionDataSchema } from '@/schemas/global.zod'
 import { useLoadingStore } from './loading.store'
 // import { z } from 'zod'
 // import ToastService from '@/services/ToastService'
 
 interface GPTCalculatorResponse {
-  status: 'success' | 'failed'
-  calculatorResponse: INutritionData | IEstimatedNutritionData | null
-  attempts: number
+  response: {
+    status: 'success' | 'failed'
+    calculatorResponse: INutritionData | IEstimatedNutritionData | null
+    attempts: number
+  }
 }
 
 // const GPTCalculatorResponseSchema = z.object({
@@ -66,25 +69,38 @@ export const useScanStore = defineStore('scan', () => {
     isUploading.value = true
     try {
       const imgBlob = await fetch(imagePath.value).then((res) => res.blob())
+      console.log('Blob:', imgBlob)
       const formData = new FormData()
       formData.append('file', imgBlob)
-      const response = await fetch('http://localhost:3000/v1/private/scan', {
+      const data = await fetcher('private/scan', {
         method: 'POST',
         body: formData,
-        credentials: 'include',
       })
 
-      const jsonResponse = await response.json()
-
-      nutritionData.value = (jsonResponse.response as GPTCalculatorResponse).calculatorResponse as
+      nutritionData.value = (data as GPTCalculatorResponse).response.calculatorResponse as
         | INutritionData
         | IEstimatedNutritionData
+      console.log('Nutrition Data:', nutritionData.value)
     } catch (error) {
       console.error('Error uploading photo:', error)
     } finally {
       loadingStore.stopLoading()
       isUploading.value = false
     }
+  }
+  const setImagePath = (path: string | null) => {
+    imagePath.value = path
+    isImagePathSet.value = !!path
+  }
+  const setNutritionData = (data: INutritionData | IEstimatedNutritionData | null) => {
+    nutritionData.value = data
+  }
+
+  const reset = () => {
+    imagePath.value = null
+    nutritionData.value = null
+    isUploading.value = false
+    isImagePathSet.value = false
   }
 
   return {
@@ -95,5 +111,8 @@ export const useScanStore = defineStore('scan', () => {
     pickPhotoHandler,
     resetPhoto,
     anaylsePhotoHandler,
+    setNutritionData,
+    setImagePath,
+    reset,
   }
 })

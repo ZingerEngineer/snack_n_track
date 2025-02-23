@@ -92,6 +92,7 @@ const getSession = async (): Promise<{ authorized: boolean }> => {
   try {
     const response = await fetcher<{ authorized: boolean }>('auth/session', {
       method: 'GET',
+      contentType: 'application/json',
     })
 
     return response
