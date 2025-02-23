@@ -122,12 +122,8 @@ const registerController = async (req: Request) => {
 const logoutController = async (req: Request) => {
   console.log('[logoutController] Logout attempt initiated')
   try {
-    const accessTokenCookie = req.signedCookies['accessToken']
-    console.log(
-      '[logoutController] Access token cookie received:',
-      accessTokenCookie
-    )
-    const accessToken = decodeURIComponent(accessTokenCookie)
+    const accessToken = req.signedCookies['accessToken']
+    console.log('[logoutController] Access token received:', accessToken)
     if (!accessToken || typeof accessToken !== 'string') {
       console.error('[logoutController] Invalid access token cookie')
       throw new ValidationError('Invalid auth cookie')
@@ -172,19 +168,19 @@ const logoutController = async (req: Request) => {
 const refreshTokenController = async (req: Request) => {
   console.log('[refreshTokenController] Refresh token request initiated')
   try {
-    const refreshTokenCookie = req.signedCookies['refreshToken']
+    const refreshToken =
+      req.signedCookies['refreshToken'] ||
+      req.headers['Refresh']?.toString().split(' ')[1]
     console.log(
       '[refreshTokenController] Received refresh token cookie:',
-      refreshTokenCookie
+      refreshToken
     )
 
-    if (!refreshTokenCookie || typeof refreshTokenCookie !== 'string') {
+    if (!refreshToken || typeof refreshToken !== 'string') {
       console.error('[refreshTokenController] Invalid refresh token cookie')
       throw new ValidationError('Invalid refresh token')
     }
-    const decodedToken = decodeURIComponent(refreshTokenCookie)
-    console.log('[refreshTokenController] Decoded refresh token:', decodedToken)
-    const tokenData = TokenUtils.verifyRefreshToken(decodedToken)
+    const tokenData = TokenUtils.verifyRefreshToken(refreshToken)
     console.log('[refreshTokenController] Verified token data:', tokenData)
     const parsedToken = accessTokenDataSchema.parse(tokenData)
     console.log('[refreshTokenController] Parsed token data:', parsedToken)

@@ -96,8 +96,8 @@ const getSession = async (): Promise<{ authorized: boolean }> => {
       contentType: 'application/json',
       credentials: 'include',
       headers: {
-        Authorization: `Bearer ${PreferencesService.getItem('accessToken')}`,
-        Refresh: `Refresher ${PreferencesService.getItem('refreshToken')}`,
+        Authorization: `Bearer ${(await PreferencesService.getItem('accessToken')).value}`,
+        Refresh: `Refresher ${(await PreferencesService.getItem('refreshToken')).value}`,
       },
     })
 

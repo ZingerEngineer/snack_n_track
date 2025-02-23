@@ -21,7 +21,7 @@ app.use(
         : process.env.DEV_URL_FRONTEND,
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: 'Content-Type, Authorization'
+    allowedHeaders: 'Content-Type, Authorization, Refresh'
   })
 )
 app.use(cookieParser(process.env.COOKIE_SECRET))

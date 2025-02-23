@@ -21,14 +21,14 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     console.log(
       '[authRouter POST /login] Login controller executed successfully'
     )
-    res.cookie('accessToken', encodeURIComponent(loginResults.accessToken), {
+    res.cookie('accessToken', loginResults.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       signed: true,
       sameSite: 'strict',
       maxAge: 15 * 60 * 1000
     })
-    res.cookie('refreshToken', encodeURIComponent(loginResults.refreshToken), {
+    res.cookie('refreshToken', loginResults.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       signed: true,
@@ -97,7 +97,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     console.log(
       '[authRouter POST /refresh-token] Refresh token controller executed successfully'
     )
-    res.cookie('accessToken', encodeURIComponent(results.accessToken), {
+    res.cookie('accessToken', results.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       signed: true,

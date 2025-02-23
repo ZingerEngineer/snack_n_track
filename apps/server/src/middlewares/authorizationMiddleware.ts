@@ -8,12 +8,13 @@ const authorizationMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   console.log('[AuthMiddleware] Incoming request for URL:', req.originalUrl)
+
   const rawAccessToken =
     req.signedCookies['accessToken'] ||
-    req.headers['Authorization']?.toString().split(' ')[1]
+    req.headers['authorization']?.toString().split(' ')[1]
   const rawRefreshToken =
     req.signedCookies['refreshToken'] ||
-    req.headers['Refresh']?.toString().split(' ')[1]
+    req.headers['refresh']?.toString().split(' ')[1]
 
   if (!rawAccessToken) {
     console.warn('[AuthMiddleware] No access token found in signed cookies.')
@@ -29,7 +30,7 @@ const authorizationMiddleware = async (
         console.log(
           '[AuthMiddleware] Refresh token succeeded, new access token obtained.'
         )
-        res.cookie('accessToken', encodeURIComponent(results.accessToken), {
+        res.cookie('accessToken', results.accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
@@ -57,7 +58,7 @@ const authorizationMiddleware = async (
     }
   }
 
-  const accessToken = decodeURIComponent(rawAccessToken)
+  const accessToken = rawAccessToken
   console.log('[AuthMiddleware] Access token decoded.')
 
   try {
