@@ -5,8 +5,10 @@ async function goToGPTAndPressLogin(page: Page): Promise<void> {
   try {
     // Navigate to ChatGPT login page
     await page.goto('https://chat.openai.com')
+    console.log('Navigated to ChatGPT login page')
+    console.log(fetch('https://chat.openai.com'))
     await page.waitForNavigation({ waitUntil: 'networkidle0' })
-
+    console.log('Waited for navigation')
     // Login handling
     await page.waitForSelector(
       'button.btn-primary[data-testid="login-button"]',
