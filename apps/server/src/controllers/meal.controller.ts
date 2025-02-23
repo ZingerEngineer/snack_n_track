@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { ValidationError } from '../classes/Error'
+import { NotFoundError, ValidationError } from '../classes/Error'
 import fs from 'fs/promises'
 import initSupaBaseClient from '../services/supabase'
 import { InternalServerError } from '../classes/Error'
@@ -86,19 +86,21 @@ const scanMealController = async (req: Request) => {
     console.log('[scanMealController] Local file deleted successfully')
 
     console.log('[scanMealController] Downloading file from public URL')
-    await downloadFile(
+    const finalFilePath = await downloadFile(
       publicURL.publicUrl,
-      `../downloads/${fileNameWithExtension}`
+      `./downloads`,
+      fileNameWithExtension
     )
     console.log('[scanMealController] File downloaded to ../downloads')
 
     const GPTCalculator = new CaloriesCalculatorGPTRevamped()
     console.log(
       '[scanMealController] Initiating GPT calculator with file:',
-      `../downloads/${fileNameWithExtension}`
+      finalFilePath
     )
+    if (!finalFilePath) throw new NotFoundError('File not found')
     const response = await GPTCalculator.recursiveCalculateCalories(
-      `../downloads/${fileNameWithExtension}`,
+      finalFilePath,
       0,
       3
     )

@@ -11,8 +11,9 @@ import fetch from 'node-fetch' // Make sure to install node-fetch for Node.js
  */
 async function downloadFile(
   fileUrl: string,
-  outputPath: string
-): Promise<void> {
+  outPutDir: string,
+  fileNameWithExtension: string
+): Promise<string | undefined> {
   try {
     console.log(`Downloading file from ${fileUrl}`)
     const response = await fetch(fileUrl)
@@ -24,21 +25,24 @@ async function downloadFile(
     }
 
     // Ensure the directory exists
-    const dir = path.dirname(outputPath)
+    const dir = path.join(__dirname, outPutDir)
     console.log(`Creating directory: ${dir}`)
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
 
+    const outPutFilePath = path.join(dir, fileNameWithExtension)
+    console.log(`Output file path: ${outPutFilePath}`)
     // Create a writable stream and pipe the response body into it
-    const fileStream = fs.createWriteStream(outputPath)
+    const fileStream = fs.createWriteStream(outPutFilePath)
     await new Promise<void>((resolve, reject) => {
       response.body.pipe(fileStream)
       response.body.on('error', (err) => reject(err))
       fileStream.on('finish', () => resolve())
     })
 
-    console.log(`File downloaded successfully to ${outputPath}`)
+    console.log(`File downloaded successfully to ${outPutFilePath}`)
+    return outPutFilePath
   } catch (error) {
     console.error(`Error downloading the file:`, error)
   }
