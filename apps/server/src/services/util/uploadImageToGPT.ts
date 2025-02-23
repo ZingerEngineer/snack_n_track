@@ -13,10 +13,7 @@ import { NotFoundError } from '../../classes/Error' // Adjust the import accordi
 async function uploadImageToGPT(page: Page, imageURL: string): Promise<void> {
   try {
     const fileInput = await page.waitForSelector(
-      'input[type="file"], input[class="hidden"]',
-      {
-        timeout: 10000
-      }
+      'input[type="file"], input[class="hidden"]'
     )
 
     if (!fileInput) {

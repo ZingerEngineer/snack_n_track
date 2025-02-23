@@ -15,16 +15,14 @@ const loginToMicrosoft = async (
 
     // Wait for and fill email
     await page.waitForSelector(selectors.emailInput, {
-      visible: true,
-      timeout: 10000
+      visible: true
     })
     await page.type(selectors.emailInput, email, { delay: 50 })
     await page.keyboard.press('Enter')
 
     // Wait for and fill password
     await page.waitForSelector(selectors.passwordInput, {
-      visible: true,
-      timeout: 10000
+      visible: true
     })
     await page.type(selectors.passwordInput, password, { delay: 50 })
     await page.keyboard.press('Enter')
@@ -32,12 +30,10 @@ const loginToMicrosoft = async (
     // Wait for navigation and decline button
     await Promise.race([
       page.waitForNavigation({
-        waitUntil: 'networkidle0',
-        timeout: 15000
+        waitUntil: 'networkidle0'
       }),
       page.waitForSelector(selectors.declineButton, {
-        visible: true,
-        timeout: 15000
+        visible: true
       })
     ])
 

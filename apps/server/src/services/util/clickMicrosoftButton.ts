@@ -20,8 +20,7 @@ async function clickMicrosoftButton(page: Page): Promise<void> {
   try {
     // Add timeout and increase precision with specific selector
     await page.waitForSelector('button img[src*="microsoft"]', {
-      visible: true,
-      timeout: 10000
+      visible: true
     })
     await page.click('button img[src*="microsoft"]')
   } catch (error) {
