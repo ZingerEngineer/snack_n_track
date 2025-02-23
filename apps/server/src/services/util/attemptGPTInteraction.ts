@@ -3,7 +3,7 @@ import {
   INutritionData,
   IEstimatedNutritionData
 } from '../../types/global.types'
-import typeGPTMainPrompt from './typeGPTMainPrompt'
+import typeGPTPrompt from './typeGPTPrompt'
 import uploadImageToGPT from './uploadImageToGPT'
 import debouncedCheckingUpload from './debouncedCheckingUpload'
 import clickSendButton from './clickSendButton'
@@ -25,8 +25,10 @@ async function attemptGPTInteraction(
     isFirstAttempt: boolean
   }
 ): Promise<INutritionData | IEstimatedNutritionData | null> {
-  await typeGPTMainPrompt(page, prompt)
+  await typeGPTPrompt(page, prompt)
 
+  console.log('isFirstAttempt', isFirstAttempt)
+  console.log('imageURL', imageURL)
   if (isFirstAttempt && imageURL) {
     await uploadImageToGPT(page, imageURL)
     await debouncedCheckingUpload(page)
