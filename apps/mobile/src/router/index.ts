@@ -6,6 +6,7 @@ import type {
   RouteLocationNormalized,
   RouteLocationNormalizedLoaded,
 } from 'vue-router'
+import PreferencesService from '../apis/mobile/usePreferences'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -93,6 +94,11 @@ const getSession = async (): Promise<{ authorized: boolean }> => {
     const response = await fetcher<{ authorized: boolean }>('auth/session', {
       method: 'GET',
       contentType: 'application/json',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${PreferencesService.getItem('accessToken')}`,
+        Refresh: `Refresher ${PreferencesService.getItem('refreshToken')}`,
+      },
     })
 
     return response

@@ -37,6 +37,8 @@ export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref<IUser | null>(null)
   const accessToken = ref<string>('')
+  const refreshToken = ref<string>('')
+
   const isAuthenticated = computed(() => !!user.value)
 
   // Initialize: Check session if token exists but user data is missing
@@ -69,12 +71,13 @@ export const useAuthStore = defineStore('auth', () => {
       })
       const loginResults = LoginResultsSchema.parse(data)
       accessToken.value = loginResults.accessToken
+      refreshToken.value = loginResults.refreshToken
       user.value = loginResults.user
       // Store in localStorage
       PreferencesService.setItem('accessToken', accessToken.value)
+      PreferencesService.setItem('refreshToken', refreshToken.value)
       PreferencesService.setItem('user', JSON.stringify(user.value))
       ToastService.success('Logged in.')
-      router.push('/dashboard/home')
     } catch (error) {
       console.log(error)
       ToastService.error('Login failure')
@@ -124,6 +127,7 @@ export const useAuthStore = defineStore('auth', () => {
         accessToken.value = ''
         user.value = null
         PreferencesService.removeItem('accessToken')
+        PreferencesService.removeItem('refreshToken')
         PreferencesService.removeItem('user')
         ToastService.success('Logged out.')
         router.push('/login')
@@ -159,10 +163,21 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const loadRefreshTokenFromLocalStorage = async () => {
+    try {
+      const storedToken = await PreferencesService.getItem('refreshToken')
+      if (!storedToken) return
+      if (!storedToken.value) return
+      refreshToken.value = storedToken.value
+    } catch {
+      return
+    }
+  }
+
   // Auto-load on store creation
   loadUserFromLocalStorage()
   loadAccessTokenFromLocalStorage()
-
+  loadRefreshTokenFromLocalStorage()
   return {
     user,
     accessToken,

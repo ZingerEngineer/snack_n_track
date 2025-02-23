@@ -37,6 +37,7 @@ const showPassword = ref(false)
 const onSubmit = handleSubmit(async (values) => {
   try {
     await login(values)
+    router.push('/dashboard/home')
   } catch {
     return
   }

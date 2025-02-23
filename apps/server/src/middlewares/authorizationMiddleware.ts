@@ -8,8 +8,12 @@ const authorizationMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   console.log('[AuthMiddleware] Incoming request for URL:', req.originalUrl)
-  const rawAccessToken = req.signedCookies['accessToken']
-  const rawRefreshToken = req.signedCookies['refreshToken']
+  const rawAccessToken =
+    req.signedCookies['accessToken'] ||
+    req.headers['Authorization']?.toString().split(' ')[1]
+  const rawRefreshToken =
+    req.signedCookies['refreshToken'] ||
+    req.headers['Refresh']?.toString().split(' ')[1]
 
   if (!rawAccessToken) {
     console.warn('[AuthMiddleware] No access token found in signed cookies.')
