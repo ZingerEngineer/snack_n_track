@@ -10,7 +10,7 @@ async function goToGPTAndPressLogin(page: Page): Promise<void> {
     console.log('Waited for navigation')
     // Login handling
 
-    Promise.race([
+    const buttonElement = await Promise.race([
       page.waitForSelector('button.btn-primary[data-testid="login-button"]', {
         visible: true
       }),
@@ -21,7 +21,13 @@ async function goToGPTAndPressLogin(page: Page): Promise<void> {
         }
       )
     ])
-    await page.click('button.btn-primary[data-testid="login-button"]')
+    console.log('Waited for login button')
+    console.log('buttonElement', buttonElement)
+    await Promise.race([
+      page.click('button.btn-primary[data-testid="login-button"]'),
+      page.click('button[class="btn relative btn-primary btn-small"]')
+    ])
+    console.log('Clicked on login button')
   } catch (error) {
     throw new InternalServerError(
       'Error while navigating to ChatGPT login page'
