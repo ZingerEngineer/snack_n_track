@@ -8,6 +8,7 @@ import { Calculator } from './types'
 import { InternalServerError, NotFoundError } from '../classes/Error'
 import { INutritionData, IEstimatedNutritionData } from '../types/global.types'
 import attemptGPTInteraction from './util/attemptGPTInteraction'
+import { Browser } from 'puppeteer'
 
 puppeteer.use(StealthPlugin())
 
@@ -27,7 +28,7 @@ async function scrappingCalculator(
     console.error('[scrappingCalculator] Maximum retry attempts reached')
     throw new InternalServerError('Max retries reached')
   }
-
+  let browser: Browser | null = null
   let email = process.env.EMAIL_SECRET
   let password = process.env.PASSWORD_SECRET
   console.log('[scrappingCalculator] Checking credentials')
@@ -39,12 +40,18 @@ async function scrappingCalculator(
   email = email as string
   password = password as string
 
-  console.log('[scrappingCalculator] Launching browser')
-  const browser = await puppeteer.launch({ headless: true })
-  const page = await browser.newPage()
-  console.log('[scrappingCalculator] New page created')
-
   try {
+    console.log('[scrappingCalculator] Launching browser')
+    browser = await puppeteer.launch({
+      headless: 'shell',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage'
+      ]
+    })
+    const page = await browser.newPage()
+    console.log('[scrappingCalculator] New page created')
     console.log('[scrappingCalculator] Navigating to GPT login page')
     await goToGPTAndPressLogin(page)
     console.log('[scrappingCalculator] Clicking Microsoft login button')
@@ -112,7 +119,7 @@ async function scrappingCalculator(
       `[scrappingCalculator] Attempt ${attempts + 1} failed:`,
       error
     )
-    await browser.close()
+    await browser?.close()
     if (attempts < maxRetries - 1) {
       console.warn('[scrappingCalculator] Retrying process due to error')
       return await scrappingCalculator(imageURL, attempts + 1, maxRetries)
