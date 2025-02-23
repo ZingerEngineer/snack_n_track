@@ -40,7 +40,7 @@ async function scrappingCalculator(
   password = password as string
 
   console.log('[scrappingCalculator] Launching browser')
-  const browser = await puppeteer.launch({ headless: false })
+  const browser = await puppeteer.launch({ headless: true })
   const page = await browser.newPage()
   console.log('[scrappingCalculator] New page created')
 

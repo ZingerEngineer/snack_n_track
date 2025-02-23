@@ -5,6 +5,7 @@ import type { INutritionData, IEstimatedNutritionData } from '../types/meal/meal
 import fetcher from '../utils/server/fetcher'
 // import { NutritionDataSchema, EstimatedNutritionDataSchema } from '@/schemas/global.zod'
 import { useLoadingStore } from './loading.store'
+import PreferencesService from '../apis/mobile/usePreferences'
 // import { z } from 'zod'
 // import ToastService from '@/services/ToastService'
 
@@ -75,6 +76,10 @@ export const useScanStore = defineStore('scan', () => {
       const data = await fetcher('private/scan', {
         method: 'POST',
         body: formData,
+        headers: {
+          authorization: 'Bearer ' + (await PreferencesService.getItem('accessToken')).value,
+          refresh: 'Refresher ' + (await PreferencesService.getItem('refreshToken')).value,
+        },
       })
 
       nutritionData.value = (data as GPTCalculatorResponse).response.calculatorResponse as
