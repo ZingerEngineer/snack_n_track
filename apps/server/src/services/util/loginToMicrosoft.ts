@@ -28,14 +28,14 @@ const loginToMicrosoft = async (
     await page.keyboard.press('Enter')
 
     // Wait for navigation and decline button
-    await Promise.race([
-      page.waitForNavigation({
-        waitUntil: 'networkidle0'
-      }),
-      page.waitForSelector(selectors.declineButton, {
-        visible: true
-      })
-    ])
+
+    await page.waitForNavigation({
+      waitUntil: 'networkidle0'
+    })
+
+    await page.waitForSelector(selectors.declineButton, {
+      visible: true
+    })
 
     const declineButton = await page.$(selectors.declineButton)
     if (declineButton) {
