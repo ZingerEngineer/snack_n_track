@@ -34,7 +34,10 @@ async function downloadFile(
     const outPutFilePath = path.join(dir, fileNameWithExtension)
     console.log(`Output file path: ${outPutFilePath}`)
     // Create a writable stream and pipe the response body into it
-    const fileStream = fs.createWriteStream(outPutFilePath)
+    const fileStream = fs.createWriteStream(outPutFilePath, {
+      flags: 'w',
+      mode: 0o777
+    })
     await new Promise<void>((resolve, reject) => {
       response.body.pipe(fileStream)
       response.body.on('error', (err) => reject(err))
