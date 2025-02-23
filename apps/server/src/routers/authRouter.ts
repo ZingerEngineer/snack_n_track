@@ -10,12 +10,17 @@ import authorizationMiddleware from '../middlewares/authorizationMiddleware'
 const authRouter = express.Router()
 
 authRouter.get('/getme', (req: Request, res: Response) => {
+  console.log('[authRouter GET /getme] Request received')
   res.json({ message: 'hello' })
 })
 
 authRouter.post('/login', async (req: Request, res: Response) => {
+  console.log('[authRouter POST /login] Request received')
   try {
     const loginResults = await loginController(req)
+    console.log(
+      '[authRouter POST /login] Login controller executed successfully'
+    )
     res.cookie('accessToken', encodeURIComponent(loginResults.accessToken), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -30,9 +35,10 @@ authRouter.post('/login', async (req: Request, res: Response) => {
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
+    console.log('[authRouter POST /login] Cookies set, sending response')
     res.status(200).json(loginResults)
   } catch (error) {
-    console.error(error)
+    console.error('[authRouter POST /login] Error occurred:', error)
     if (error instanceof BaseError) {
       res.status(error.statusCode).json({ error: error.message })
       return
@@ -42,11 +48,15 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 })
 
 authRouter.post('/register', async (req: Request, res: Response) => {
+  console.log('[authRouter POST /register] Request received')
   try {
     const registerResults = await registerController(req)
+    console.log(
+      '[authRouter POST /register] Register controller executed successfully'
+    )
     res.status(200).json(registerResults)
   } catch (error) {
-    console.error(error)
+    console.error('[authRouter POST /register] Error occurred:', error)
     if (error instanceof BaseError) {
       res.status(error.statusCode).json({ error: error.message })
       return
@@ -56,15 +66,22 @@ authRouter.post('/register', async (req: Request, res: Response) => {
 })
 
 authRouter.post('/logout', async (req: Request, res: Response) => {
+  console.log('[authRouter POST /logout] Request received')
   try {
     const logoutResults = await logoutController(req)
+    console.log(
+      '[authRouter POST /logout] Logout controller executed successfully'
+    )
     if (logoutResults.status === 'success') {
+      console.log(
+        '[authRouter POST /logout] Clearing cookies due to successful logout'
+      )
       res.clearCookie('accessToken')
       res.clearCookie('refreshToken')
     }
     res.status(200).json(logoutResults)
   } catch (error) {
-    console.error(error)
+    console.error('[authRouter POST /logout] Error occurred:', error)
     if (error instanceof BaseError) {
       res.status(error.statusCode).json({ error: error.message })
       return
@@ -74,8 +91,12 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
 })
 
 authRouter.post('/refresh-token', async (req: Request, res: Response) => {
+  console.log('[authRouter POST /refresh-token] Request received')
   try {
     const results = await refreshTokenController(req)
+    console.log(
+      '[authRouter POST /refresh-token] Refresh token controller executed successfully'
+    )
     res.cookie('accessToken', encodeURIComponent(results.accessToken), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -83,9 +104,12 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
+    console.log(
+      '[authRouter POST /refresh-token] Access token cookie set, sending response'
+    )
     res.status(200).json(results)
   } catch (error) {
-    console.error(error)
+    console.error('[authRouter POST /refresh-token] Error occurred:', error)
     if (error instanceof BaseError) {
       res.status(error.statusCode).json({ error: error.message })
       return
@@ -98,6 +122,9 @@ authRouter.get(
   '/session',
   authorizationMiddleware,
   async (_, res: Response) => {
+    console.log(
+      '[authRouter GET /session] Session endpoint reached after authorization'
+    )
     res.json({ authorized: true })
   }
 )

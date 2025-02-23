@@ -3,7 +3,7 @@ import authRouter from './authRouter'
 const publicRouter = express.Router()
 
 publicRouter.get('/', (_, res) => {
-  res.json({ message: 'Hello World' })
+  res.json({ message: 'Server is online.' })
 })
 
 publicRouter.use('/auth', authRouter)
