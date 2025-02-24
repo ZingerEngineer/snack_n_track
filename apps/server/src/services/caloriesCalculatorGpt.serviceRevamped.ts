@@ -53,8 +53,7 @@ async function scrappingCalculator(
   try {
     console.log('[scrappingCalculator] Launching browser')
     browser = await puppeteerExtra.launch({
-      executablePath: '/usr/bin/google-chrome',
-      headless: false,
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
