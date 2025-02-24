@@ -5,7 +5,7 @@ import {
 } from '../types/global.types'
 
 interface GPTCalculatorResponse {
-  status: 'success' | 'failed'
+  status: string
   calculatorResponse: INutritionData | IEstimatedNutritionData | null
   attempts: number
 }

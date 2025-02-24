@@ -3,54 +3,57 @@ import { Page } from 'puppeteer'
 
 async function goToGPTAndPressLogin(page: Page): Promise<void> {
   try {
-    // Navigate to ChatGPT login page
+    console.log(
+      '[goToGPTAndPressLogin] Navigating to ChatGPT login page: https://chat.openai.com'
+    )
     await page.goto('https://chat.openai.com')
-    console.log('Navigated to ChatGPT login page')
+    console.log(
+      '[goToGPTAndPressLogin] Navigation initiated. Waiting for page load (networkidle0)...'
+    )
     await page.waitForNavigation({ waitUntil: 'networkidle0' })
-    console.log('Waited for navigation')
-    // Login handling
+    console.log('[goToGPTAndPressLogin] Page loaded successfully.')
 
+    // Wait for the login button using two possible selectors.
+    console.log(
+      '[goToGPTAndPressLogin] Waiting for login button using Promise.race with two selectors.'
+    )
     const buttonElement = await Promise.race([
       page.waitForSelector('button.btn-primary[data-testid="login-button"]', {
         visible: true
       }),
       page.waitForSelector(
         'button[class="btn relative btn-primary btn-small"]',
-        {
-          visible: true
-        }
+        { visible: true }
       )
     ])
-    console.log('Waited for login button')
-    console.log('buttonElement', buttonElement)
+    console.log('[goToGPTAndPressLogin] Login button found.')
+    if (buttonElement) {
+      const buttonHTML = await buttonElement.evaluate((el) => el.outerHTML)
+      console.log('[goToGPTAndPressLogin] Login button HTML:', buttonHTML)
+    } else {
+      console.warn(
+        '[goToGPTAndPressLogin] No login button element returned from Promise.race.'
+      )
+    }
+
+    // Click on the login button using Promise.race.
+    console.log(
+      '[goToGPTAndPressLogin] Attempting to click on login button using Promise.race for two selectors.'
+    )
     await Promise.race([
       page.click('button.btn-primary[data-testid="login-button"]'),
       page.click('button[class="btn relative btn-primary btn-small"]')
     ])
-    console.log('Clicked on login button')
+    console.log(
+      '[goToGPTAndPressLogin] Click action performed on login button.'
+    )
   } catch (error) {
+    console.error('[goToGPTAndPressLogin] Error encountered:', error)
     throw new InternalServerError(
       'Error while navigating to ChatGPT login page'
     )
   }
 }
-
-// async function goToGPTAndPressLogin(page: Page): Promise<void> {
-//   try {
-//     await Promise.all([
-//       page.goto('https://chat.openai.com', {
-//         waitUntil: 'networkidle0'
-//       }),
-//       page.waitForSelector('button[data-testid="login-button"]', {
-//         visible: true
-//       })
-//     ])
-
-//     await page.click('button[data-testid="login-button"]')
-//   } catch (error) {
-//     throw new InternalServerError('Failed to load ChatGPT login page')
-//   }
-// }
 
 export default goToGPTAndPressLogin
 

@@ -3,33 +3,22 @@ import { Page } from 'puppeteer'
 
 async function clickSendButton(page: Page): Promise<void> {
   try {
+    console.log('Waiting for the send button to become visible...')
     const sendButton = await page.waitForSelector(
       "button[aria-label='Send prompt']",
       { visible: true }
     )
-    if (!sendButton) throw new Error('Send button not found')
+    if (!sendButton) {
+      console.error('Send button was not found after waiting for the selector.')
+      throw new Error('Send button not found')
+    }
+    console.log('Send button found. Attempting to click it...')
     await sendButton.click()
+    console.log('Send button clicked successfully.')
   } catch (error) {
+    console.error('Error in clickSendButton:', error)
     throw new NotFoundError('ChatGPT Send button not found')
   }
 }
-
-// async function clickSendButton(page: Page): Promise<void> {
-//   try {
-//     await page.waitForSelector("button[aria-label='Send prompt']", {
-//       visible: true
-//     })
-//     await page.waitForSelector("button[data-testid='send-button']", {
-//       visible: true
-//     })
-
-//     await page.click(
-//       "button[aria-label='Send prompt'], button[data-testid='send-button']"
-//     )
-//   } catch (error) {
-//     throw new NotFoundError('Send button not found after 5 seconds')
-//   }
-// }
-
 export default clickSendButton
 

@@ -5,34 +5,28 @@ const debouncedCheckingUpload = async (page: Page) => {
   try {
     console.log('Starting debouncedCheckingUpload')
     await page.evaluate(async () => {
-      const keepCheckingUploadingCircles = async (
-        circlesNumber: number,
-        milliseconds: number,
-        retries: number
-      ) => {
-        try {
-          console.log(`Checking for circles, retries left: ${retries}`)
-          let circles = document.querySelectorAll('circle')
-          console.log(`Found ${circles.length} circles`)
-          if (circles.length > circlesNumber) {
-            if (retries > 0) {
-              await new Promise((resolve) => setTimeout(resolve, milliseconds))
-              return keepCheckingUploadingCircles(
-                circlesNumber,
-                milliseconds,
-                retries - 1
-              )
-            } else {
-              throw new Error('Max retries reached')
-            }
-          }
-        } catch (error) {
-          console.error('Error in keepCheckingUploadingCircles:', error)
-          throw error
-        }
-      }
+      let stableCount = 0
+      const maxStableChecks = 3
+      const maxRetries = 30
+      const interval = 2000
 
-      return keepCheckingUploadingCircles(2, 2000, 30)
+      for (let i = 0; i < maxRetries; i++) {
+        const circles = document.querySelectorAll('circle')
+        console.log(`Attempt ${i + 1}: found ${circles.length} circles`)
+        // Change the threshold as needed. Here we assume that when the number of circles is <= 4, the upload is complete.
+        if (circles.length <= 4) {
+          stableCount++
+          if (stableCount >= maxStableChecks) {
+            console.log('Upload complete (stable state reached).')
+            return
+          }
+        } else {
+          // Reset the stable count if the upload indicator reappears
+          stableCount = 0
+        }
+        await new Promise((resolve) => setTimeout(resolve, interval))
+      }
+      throw new Error('Upload did not complete in the expected time')
     })
     console.log('Finished debouncedCheckingUpload')
   } catch (error) {
@@ -41,33 +35,5 @@ const debouncedCheckingUpload = async (page: Page) => {
   }
 }
 
-// const debouncedCheckingUpload = async (page: Page) => {
-//   try {
-//     await page.evaluate(async () => {
-//       let stableCount = 0
-//       const maxStableChecks = 3
-//       const maxRetries = 15
-
-//       for (let i = 0; i < maxRetries; i++) {
-//         const circles = document.querySelectorAll('circle')
-
-//         if (circles.length <= 2) {
-//           stableCount++
-//           if (stableCount >= maxStableChecks) {
-//             return true
-//           }
-//         } else {
-//           stableCount = 0
-//         }
-
-//         await new Promise((resolve) => setTimeout(resolve, 1000))
-//       }
-
-//       throw new Error('Upload check timeout')
-//     })
-//   } catch (error) {
-//     throw new InternalServerError('Upload verification failed')
-//   }
-// }
 export default debouncedCheckingUpload
 

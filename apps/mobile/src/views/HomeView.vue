@@ -56,7 +56,7 @@ const routeToUserSettings = () => {
           class="flex justify-center flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full min-h-[11rem]"
         >
           <ion-card-header>
-            <ion-card-title> Meals </ion-card-title>
+            <ion-card-title class="text-xl"> Meals </ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <div class="w-full h-full flex flex-col justify-between items-center gap-2">
@@ -94,10 +94,12 @@ const routeToUserSettings = () => {
             class="p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-3/5"
           >
             <ion-card-header>
-              <ion-card-title> Total calories <FontAwesomeIcon :icon="faMedal" /></ion-card-title>
+              <ion-card-title class="text-xl">
+                Calories <FontAwesomeIcon class="w-4" :icon="faMedal"
+              /></ion-card-title>
             </ion-card-header>
             <ion-card-content class="flex items-center justify-center">
-              <svg class="w-36 h-36 mb-2" viewBox="0 0 64 64">
+              <svg class="w- h-36 mb-2" viewBox="0 0 64 64">
                 <circle
                   class="text-medium-shade"
                   stroke-width="4"
@@ -138,7 +140,7 @@ const routeToUserSettings = () => {
             class="flex flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-2/5"
           >
             <ion-card-header>
-              <ion-card-title> Steps </ion-card-title>
+              <ion-card-title class="text-xl"> Steps </ion-card-title>
             </ion-card-header>
             <ion-card-content class="flex flex-grow">
               <div class="w-full h-full flex flex-col justify-center items-center gap-4">
