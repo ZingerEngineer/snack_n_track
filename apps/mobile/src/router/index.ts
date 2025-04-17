@@ -68,6 +68,11 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
+    path: '/intro',
+    name: 'intro',
+    component: () => import('../views/IntroViews/IntroView.vue'),
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('../views/AuthViews/LoginView.vue'),
@@ -89,62 +94,62 @@ const router = createRouter({
   routes,
 })
 
-const getSession = async (): Promise<{ authorized: boolean }> => {
-  try {
-    const response = await fetcher<{ authorized: boolean }>('auth/session', {
-      method: 'GET',
-      contentType: 'application/json',
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${(await PreferencesService.getItem('accessToken')).value}`,
-        Refresh: `Refresher ${(await PreferencesService.getItem('refreshToken')).value}`,
-      },
-    })
+// const getSession = async (): Promise<{ authorized: boolean }> => {
+//   try {
+//     const response = await fetcher<{ authorized: boolean }>('auth/session', {
+//       method: 'GET',
+//       contentType: 'application/json',
+//       credentials: 'include',
+//       headers: {
+//         Authorization: `Bearer ${(await PreferencesService.getItem('accessToken')).value}`,
+//         Refresh: `Refresher ${(await PreferencesService.getItem('refreshToken')).value}`,
+//       },
+//     })
 
-    return response
-  } catch (error) {
-    console.error('Session error:', error)
-    throw new Error(`Failed to fetch session`)
-  }
-}
+//     return response
+//   } catch (error) {
+//     console.error('Session error:', error)
+//     throw new Error(`Failed to fetch session`)
+//   }
+// }
 
 // The route guard using async/await. This guard assumes that routes
 // such as '/login' and '/register' are publicly accessible.
-const authGuard = async (
-  to: RouteLocationNormalized,
-  _: RouteLocationNormalizedLoaded,
-  next: NavigationGuardNext,
-) => {
-  try {
-    const session = await getSession()
-    const isAuthorized = session.authorized
-    // If the user is authorized and trying to access login or register,
-    // redirect them to the dashboard.
-    if (isAuthorized && ['/login', '/register'].includes(to.path)) {
-      return next('/dashboard/home')
-    }
+// const authGuard = async (
+//   to: RouteLocationNormalized,
+//   _: RouteLocationNormalizedLoaded,
+//   next: NavigationGuardNext,
+// ) => {
+//   try {
+//     const session = await getSession()
+//     const isAuthorized = session.authorized
+//     // If the user is authorized and trying to access login or register,
+//     // redirect them to the dashboard.
+//     if (isAuthorized && ['/login', '/register'].includes(to.path)) {
+//       return next('/dashboard/home')
+//     }
 
-    // If the user is not authorized and is trying to access a protected route,
-    // redirect them to login.
-    if (!isAuthorized && !['/login', '/register'].includes(to.path)) {
-      return next('/login')
-    }
+//     // If the user is not authorized and is trying to access a protected route,
+//     // redirect them to login.
+//     if (!isAuthorized && !['/login', '/register'].includes(to.path)) {
+//       return next('/login')
+//     }
 
-    // If the user is already on the login page and not authorized, allow the navigation.
-    if (!isAuthorized && to.path === '/login') {
-      return next()
-    }
+//     // If the user is already on the login page and not authorized, allow the navigation.
+//     if (!isAuthorized && to.path === '/login') {
+//       return next()
+//     }
 
-    // Otherwise, allow the navigation.
-    return next()
-  } catch (error) {
-    console.error('Authorization error:', error)
-    // On error (such as network issues or token expiration), redirect to login.
-    return next('/login')
-  }
-}
+//     // Otherwise, allow the navigation.
+//     return next()
+//   } catch (error) {
+//     console.error('Authorization error:', error)
+//     // On error (such as network issues or token expiration), redirect to login.
+//     return next('/login')
+//   }
+// }
 
 // Register the guard with Vue Router.
-router.beforeEach(authGuard)
+// router.beforeEach(authGuard)
 
 export default router
