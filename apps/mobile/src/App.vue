@@ -11,7 +11,7 @@ console.log('isNative:', isNative)
 
 <template>
   <LoadingComponent />
-  <ion-app :class="{ 'safe-area': isNative }">
+  <IonApp :class="{ 'safe-area': isNative }">
     <ModalComponent modalId="modal">
       <template #header>
         <h1 class="text-2xl font-bold">Modal Header</h1>
@@ -24,8 +24,8 @@ console.log('isNative:', isNative)
       </template>
     </ModalComponent>
 
-    <ion-router-outlet />
-  </ion-app>
+    <IonRouterOutlet />
+  </IonApp>
 </template>
 <style lang="css" scoped>
 .safe-area {

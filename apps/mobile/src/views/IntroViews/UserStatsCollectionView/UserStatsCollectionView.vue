@@ -5,36 +5,28 @@
   </div>
 
   <div class="px-5 w-full flex-grow">
-    <img src="../../assets/age.svg" alt="age" class="w-32" />
-    <div
-      class="px-10 py-2 w-full border-2 my-4 rounded-2xl shadow-lg flex flex-col justify-center items-center"
-    >
-      <div class="w-full flex flex-col justify-between items-center">
-        <ion-label class="font-semibold w-full mt-2">Age:</ion-label>
-        <div class="w-full">
-          <ion-range
-            aria-label="Range with ticks"
-            :pin="true"
-            :pin-formatter="pinFormatter"
-            :ticks="true"
-            :snaps="true"
-            :min="10"
-            :max="100"
-          ></ion-range>
-        </div>
-      </div>
-    </div>
-    <div class="w-full text-[7rem] flex justify-center items-center">{{ age }}</div>
+    <AgeSelectionView v-if="currentIndex === 3" />
+    <WeightSelectionView v-if="currentIndex === 4" />
+    <HeightSelectionView v-if="currentIndex === 5" />
+    <HealthConditionsView v-if="currentIndex === 6" />
+    <DietaryRestrictionsView v-if="currentIndex === 7" />
+    <FoodPreferencesView v-if="currentIndex === 8" />
+    <FoodAllergiesView v-if="currentIndex === 9" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { IonLabel, IonRange } from '@ionic/vue'
-const age = ref(10)
+import useSwiperStore from '../../../stores/swiper.store'
 
-const pinFormatter = (value: number) => {
-  age.value = value
-  return `${value}`
-}
+import WeightSelectionView from './WeightSelectionView.vue'
+import HeightSelectionView from './HeightSelectionView.vue'
+import HealthConditionsView from './HealthConditionsView.vue'
+import DietaryRestrictionsView from './DietaryRestrictionsView.vue'
+import FoodPreferencesView from './FoodPreferencesView.vue'
+import FoodAllergiesView from './FoodAllergiesView.vue'
+import AgeSelectionView from './AgeSelectionView.vue'
+import { computed } from 'vue'
+
+const swiperStore = useSwiperStore()
+const currentIndex = computed(() => swiperStore.getCurrentIndex())
 </script>

@@ -16,8 +16,8 @@ const handleScan = () => {
 </script>
 
 <template>
-  <ion-page>
-    <ion-content>
+  <IonPage>
+    <IonContent>
       <div
         class="content-wrapper h-full flex flex-col items-center justify-center mt-[var(--ion-top-bar-margin)]"
       >
@@ -50,21 +50,21 @@ const handleScan = () => {
               </div>
             </div>
           </div>
-          <ion-button
+          <IonButton
             class="absolute bottom-4 right-10 transition-all duration-300 ease-in-out text-white z-50"
             v-if="isImageSelected"
             @click="handleScan"
           >
             Analyse Food
-          </ion-button>
+          </IonButton>
         </div>
       </div>
-    </ion-content>
-  </ion-page>
+    </IonContent>
+  </IonPage>
 </template>
 
 <style scoped>
-ion-page {
+IonPage {
   color: black;
 }
 </style>

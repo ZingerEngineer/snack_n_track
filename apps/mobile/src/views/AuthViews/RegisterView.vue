@@ -40,8 +40,8 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <ion-page>
-    <ion-content class="ion-padding">
+  <IonPage>
+    <IonContent class="ion-padding">
       <div
         class="login-container min-h-full max-w-full flex flex-col justify-center items-center gap-4"
       >
@@ -53,7 +53,7 @@ const onSubmit = handleSubmit(async (values) => {
 
         <form @submit.prevent="onSubmit" class="flex justify-center items-center gap-4 flex-col">
           <div class="flex flex-col justify-center w-full">
-            <ion-input
+            <IonInput
               class="w-full"
               :helper-text="emailError ? '' : 'Enter your email.'"
               label-placement="floating"
@@ -64,12 +64,12 @@ const onSubmit = handleSubmit(async (values) => {
               name="email"
               v-model="email"
               type="email"
-            ></ion-input>
+            ></IonInput>
             <div class="error-message">{{ emailError }}</div>
           </div>
           <!-- Password Input -->
           <div class="relative flex flex-col justify-center w-full">
-            <ion-input
+            <IonInput
               :helper-text="passwordError ? '' : 'Enter your password.'"
               label-placement="floating"
               label="Password"
@@ -80,8 +80,8 @@ const onSubmit = handleSubmit(async (values) => {
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
             >
-            </ion-input>
-            <ion-button
+            </IonInput>
+            <IonButton
               :class="[
                 'w-8 h-8 absolute top-[0.7rem] z-50',
                 password ? 'right-[3rem]' : 'right-[1rem]',
@@ -93,14 +93,14 @@ const onSubmit = handleSubmit(async (values) => {
                 class="text-[1.1rem]"
                 :icon="showPassword ? faEyeSlash : faEye"
               ></FontAwesomeIcon>
-            </ion-button>
+            </IonButton>
             <span class="error-message">{{ passwordError }}</span>
           </div>
-          <ion-button class="login-button w-full" type="submit">Register</ion-button>
+          <IonButton class="login-button w-full" type="submit">Register</IonButton>
         </form>
       </div>
-    </ion-content>
-  </ion-page>
+    </IonContent>
+  </IonPage>
 </template>
 
 <style scoped>
@@ -108,10 +108,10 @@ h2 {
   margin-bottom: 1.5rem;
   color: #333;
 }
-ion-input {
+IonInput {
   --border-radius: 0.5rem;
 }
-ion-button {
+IonButton {
   --padding-top: 1rem;
   --padding-bottom: 1rem;
 }

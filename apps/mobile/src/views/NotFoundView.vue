@@ -1,18 +1,18 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Page Not Found</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <div class="not-found-container">
-        <h1>404</h1>
-        <p class="text-sm">The page you are looking for does not exist.</p>
-        <ion-button @click="goHome">Go to Home</ion-button>
+  <IonPage>
+    <IonHeader>
+      <IonToolbar>
+        <IonTitle>Page Not Found</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent class="ion-padding">
+      <div class="text-center mt-[50px]">
+        <h1 class="text-8xl mb-5">404</h1>
+        <p class="text-sm mb-5">The page you are looking for does not exist.</p>
+        <IonButton @click="goHome">Go to Home</IonButton>
       </div>
-    </ion-content>
-  </ion-page>
+    </IonContent>
+  </IonPage>
 </template>
 
 <script setup lang="ts">
@@ -25,20 +25,3 @@ const goHome = () => {
   router.push('/dashboard/home')
 }
 </script>
-
-<style scoped>
-.not-found-container {
-  text-align: center;
-  margin-top: 50px;
-}
-
-.not-found-container h1 {
-  font-size: 6rem;
-  margin-bottom: 20px;
-}
-
-.not-found-container p {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-</style>

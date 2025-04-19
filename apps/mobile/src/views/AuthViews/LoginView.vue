@@ -1,3 +1,70 @@
+<template>
+  <IonPage>
+    <IonContent class="ion-padding flex flex-col justify-center items-center">
+      <div
+        class="login-container min-h-full max-w-full flex flex-col justify-center items-center gap-4"
+      >
+        <img :src="snackNTrackLogo" alt="snack n track logo" />
+        <p>
+          New to Snack n' track ?
+          <span @click="router.push('/register')" class="text-primary">Register</span>
+        </p>
+
+        <form @submit.prevent="onSubmit" class="flex justify-center items-center gap-4 flex-col">
+          <div class="flex flex-col justify-center w-full">
+            <IonInput
+              class="w-full"
+              :helper-text="emailError ? '' : 'Enter your email.'"
+              label-placement="floating"
+              label="Email"
+              inputmode="email"
+              fill="outline"
+              clearInput="true"
+              name="email"
+              v-model="email"
+              type="email"
+            ></IonInput>
+            <div class="error-message">{{ emailError }}</div>
+          </div>
+          <!-- Password Input -->
+          <div class="relative flex flex-col justify-center w-full">
+            <IonInput
+              :helper-text="passwordError ? '' : 'Enter your password.'"
+              label-placement="floating"
+              label="Password"
+              inputmode="password"
+              fill="outline"
+              clearInput="true"
+              name="password"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+            >
+            </IonInput>
+            <IonButton
+              :class="[
+                'w-8 h-8 absolute top-[0.7rem] z-50',
+                password ? 'right-[3rem]' : 'right-[1rem]',
+              ]"
+              fill="clear"
+              @click="handleTogglePassword"
+            >
+              <FontAwesomeIcon
+                class="text-[1.1rem]"
+                :icon="showPassword ? faEyeSlash : faEye"
+              ></FontAwesomeIcon>
+            </IonButton>
+            <span class="error-message">{{ passwordError }}</span>
+          </div>
+          <IonButton class="login-button w-full" type="submit">Login</IonButton>
+          <div class="mt-4 w-full flex justify-center items-center bg-red-500">
+            {{ user }}
+          </div>
+        </form>
+      </div>
+    </IonContent>
+  </IonPage>
+</template>
+
 <script setup lang="ts">
 import { useSocialLogin } from '../../stores/googleAuth.store'
 import { IonPage, IonContent, IonInput, IonButton } from '@ionic/vue'
@@ -52,82 +119,15 @@ onMounted(() => {
 })
 </script>
 
-<template>
-  <ion-page>
-    <ion-content class="ion-padding flex flex-col justify-center items-center">
-      <div
-        class="login-container min-h-full max-w-full flex flex-col justify-center items-center gap-4"
-      >
-        <img :src="snackNTrackLogo" alt="snack n track logo" />
-        <p>
-          New to Snack n' track ?
-          <span @click="router.push('/register')" class="text-primary">Register</span>
-        </p>
-
-        <form @submit.prevent="onSubmit" class="flex justify-center items-center gap-4 flex-col">
-          <div class="flex flex-col justify-center w-full">
-            <ion-input
-              class="w-full"
-              :helper-text="emailError ? '' : 'Enter your email.'"
-              label-placement="floating"
-              label="Email"
-              inputmode="email"
-              fill="outline"
-              clearInput="true"
-              name="email"
-              v-model="email"
-              type="email"
-            ></ion-input>
-            <div class="error-message">{{ emailError }}</div>
-          </div>
-          <!-- Password Input -->
-          <div class="relative flex flex-col justify-center w-full">
-            <ion-input
-              :helper-text="passwordError ? '' : 'Enter your password.'"
-              label-placement="floating"
-              label="Password"
-              inputmode="password"
-              fill="outline"
-              clearInput="true"
-              name="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-            >
-            </ion-input>
-            <ion-button
-              :class="[
-                'w-8 h-8 absolute top-[0.7rem] z-50',
-                password ? 'right-[3rem]' : 'right-[1rem]',
-              ]"
-              fill="clear"
-              @click="handleTogglePassword"
-            >
-              <FontAwesomeIcon
-                class="text-[1.1rem]"
-                :icon="showPassword ? faEyeSlash : faEye"
-              ></FontAwesomeIcon>
-            </ion-button>
-            <span class="error-message">{{ passwordError }}</span>
-          </div>
-          <ion-button class="login-button w-full" type="submit">Login</ion-button>
-          <div class="mt-4 w-full flex justify-center items-center bg-red-500">
-            {{ user }}
-          </div>
-        </form>
-      </div>
-    </ion-content>
-  </ion-page>
-</template>
-
 <style scoped>
 h2 {
   margin-bottom: 1.5rem;
   color: #333;
 }
-ion-input {
+IonInput {
   --border-radius: 0.5rem;
 }
-ion-button {
+IonButton {
   --padding-top: 1rem;
   --padding-bottom: 1rem;
 }

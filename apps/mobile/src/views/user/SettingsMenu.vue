@@ -1,28 +1,28 @@
 <template>
-  <ion-page>
-    <ion-menu content-id="main-content">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Menu Content</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-segment-button @click="routeToProfileSettings">Profile</ion-segment-button>
-        <ion-segment-button @click="handleLogout">Logout</ion-segment-button>
-      </ion-content>
-    </ion-menu>
-    <ion-page id="main-content">
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-          <ion-title>Settings</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-router-outlet></ion-router-outlet>
-    </ion-page>
-  </ion-page>
+  <IonPage>
+    <IonMenu content-id="main-content">
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Menu Content</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent class="ion-padding">
+        <IonSegmentButton @click="routeToProfileSettings">Profile</IonSegmentButton>
+        <IonSegmentButton @click="handleLogout">Logout</IonSegmentButton>
+      </IonContent>
+    </IonMenu>
+    <IonPage id="main-content">
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonMenu-button></IonMenu-button>
+          </IonButtons>
+          <IonTitle>Settings</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonRouterOutlet></IonRouterOutlet>
+    </IonPage>
+  </IonPage>
 </template>
 
 <script setup lang="ts">

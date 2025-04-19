@@ -1,37 +1,11 @@
-<script setup lang="ts">
-import { IonPage, IonContent, IonButton } from '@ionic/vue'
-import { useAuthStore } from '../stores/auth.store'
-import { useRouter } from 'vue-router'
-
-import {
-  faBowlRice,
-  faPlateWheat,
-  faUtensils,
-  faMedal,
-  faShoePrints,
-  faCog,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-const router = useRouter()
-const { user } = useAuthStore()
-
-const handleScanRouting = () => {
-  router.push('/dashboard/scan')
-}
-const routeToUserSettings = () => {
-  router.push('/user/settings')
-}
-</script>
-
 <template>
-  <ion-page>
-    <ion-content>
+  <IonPage>
+    <IonContent>
       <div class="p-6 w-full h-full flex items-center flex-col gap-6">
-        <ion-card
+        <IonCard
           class="flex justify-center items-center p-2 w-full border-2 to-primary from-primary/50 bg-gradient-to-l border-primary rounded-2xl shadow-lg min-h-[8rem]"
         >
-          <ion-card-content class="">
+          <IonCardContent>
             <div class="w-full h-full flex flex-row justify-between items-center gap-4">
               <div class="flex flex-row items-center justify-center">
                 <img
@@ -50,15 +24,15 @@ const routeToUserSettings = () => {
                 class="text-white text-4xl"
               />
             </div>
-          </ion-card-content>
-        </ion-card>
-        <ion-card
+          </IonCardContent>
+        </IonCard>
+        <IonCard
           class="flex justify-center flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full min-h-[11rem]"
         >
-          <ion-card-header>
-            <ion-card-title class="text-xl"> Meals </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
+          <IonCardHeader>
+            <IonCardTitle class="text-xl"> Meals </IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
             <div class="w-full h-full flex flex-col justify-between items-center gap-2">
               <div class="w-full h-full flex flex-row justify-between items-center gap-4 flex-wrap">
                 <div class="flex flex-col items-center justify-center">
@@ -83,22 +57,20 @@ const routeToUserSettings = () => {
                   </div>
                 </div>
               </div>
-              <ion-button @click="handleScanRouting" class="w-full text-white"
-                >Scan meal</ion-button
-              >
+              <IonButton @click="handleScanRouting" class="w-full text-white">Scan meal</IonButton>
             </div>
-          </ion-card-content>
-        </ion-card>
+          </IonCardContent>
+        </IonCard>
         <div class="w-full flex flex-row justify-between items-center gap-6">
-          <ion-card
+          <IonCard
             class="p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-3/5"
           >
-            <ion-card-header>
-              <ion-card-title class="text-xl">
+            <IonCardHeader>
+              <IonCardTitle class="text-xl">
                 Calories <FontAwesomeIcon class="w-4" :icon="faMedal"
-              /></ion-card-title>
-            </ion-card-header>
-            <ion-card-content class="flex items-center justify-center">
+              /></IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent class="flex items-center justify-center">
               <svg class="w- h-36 mb-2" viewBox="0 0 64 64">
                 <circle
                   class="text-medium-shade"
@@ -134,15 +106,15 @@ const routeToUserSettings = () => {
                   N/A
                 </text>
               </svg>
-            </ion-card-content>
-          </ion-card>
-          <ion-card
+            </IonCardContent>
+          </IonCard>
+          <IonCard
             class="flex flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-2/5"
           >
-            <ion-card-header>
-              <ion-card-title class="text-xl"> Steps </ion-card-title>
-            </ion-card-header>
-            <ion-card-content class="flex flex-grow">
+            <IonCardHeader>
+              <IonCardTitle class="text-xl"> Steps </IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent class="flex flex-grow">
               <div class="w-full h-full flex flex-col justify-center items-center gap-4">
                 <div class="flex flex-col items-center justify-center">
                   <h1 class="text-4xl">N/A</h1>
@@ -159,13 +131,39 @@ const routeToUserSettings = () => {
                   </div>
                 </div>
               </div>
-            </ion-card-content>
-          </ion-card>
+            </IonCardContent>
+          </IonCard>
         </div>
       </div>
-    </ion-content>
-  </ion-page>
+    </IonContent>
+  </IonPage>
 </template>
+
+<script setup lang="ts">
+import { IonPage, IonContent, IonButton, IonCardHeader, IonCardTitle } from '@ionic/vue'
+import { useAuthStore } from '../stores/auth.store'
+import { useRouter } from 'vue-router'
+
+import {
+  faBowlRice,
+  faPlateWheat,
+  faUtensils,
+  faMedal,
+  faShoePrints,
+  faCog,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+const router = useRouter()
+const { user } = useAuthStore()
+
+const handleScanRouting = () => {
+  router.push('/dashboard/scan')
+}
+const routeToUserSettings = () => {
+  router.push('/user/settings')
+}
+</script>
 
 <style scoped>
 .calories-complete-circle {

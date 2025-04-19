@@ -1,18 +1,6 @@
-<script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue'
-import { faMagicWandSparkles } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { useRouter } from 'vue-router'
-const router = useRouter()
-
-const handleRouteToUpload = () => {
-  router.push('/scan/upload')
-}
-</script>
-
 <template>
-  <ion-page>
-    <ion-content>
+  <IonPage>
+    <IonContent>
       <div
         class="content-wrapper h-full flex gap-5 flex-col items-center justify-center from-tertiary via-primary to-white bg-gradient-to-t"
       >
@@ -28,10 +16,20 @@ const handleRouteToUpload = () => {
         <p class="font-bold text-white px-10">
           Pick a picture for your food and let us do the magic!
         </p>
-        <ion-button @click="handleRouteToUpload">Scan Food</ion-button>
+        <IonButton @click="handleRouteToUpload">Scan Food</IonButton>
       </div>
-    </ion-content>
-  </ion-page>
+    </IonContent>
+  </IonPage>
 </template>
 
-<style scoped></style>
+<script setup lang="ts">
+import { IonPage, IonContent, IonButton } from '@ionic/vue'
+import { faMagicWandSparkles } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const handleRouteToUpload = () => {
+  router.push('/scan/upload')
+}
+</script>

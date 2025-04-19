@@ -1,21 +1,21 @@
 <template>
   <div class="w-full h-full flex flex-col items-center">
     <div class="w-full h-full flex flex-col justify-center items-center">
-      <!-- //step content -->
       <LanguageSelection v-if="currentIndex === 0" />
       <DescriptionView v-if="currentIndex === 1" />
       <OnTrackView v-if="currentIndex === 2" />
-      <UserStatsCollectionView v-if="currentIndex === 3" />
+      <UserStatsCollectionView v-if="currentIndex >= 3 && currentIndex < 10" />
+      <FinishIntroView v-if="currentIndex === 10" />
     </div>
     <div id="intro-buttons" class="flex justify-between items-center w-full px-4">
-      <ion-button @click="backwardButtonFunctionallity">
+      <IonButton @click="backwardButtonFunctionallity">
         <img v-if="currentIndex === 0" src="../../assets/en_svg.svg" alt="English" />
-        <ion-label>{{ backwardButtonLabel }}</ion-label>
-      </ion-button>
-      <ion-button @click="forwardButtonFunctionallity">
+        <IonLabel>{{ backwardButtonLabel }}</IonLabel>
+      </IonButton>
+      <IonButton @click="forwardButtonFunctionallity">
         <img v-if="currentIndex === 0" src="../../assets/ar_svg.svg" alt="Arabic" />
-        <ion-label>{{ forwardButtonLabel }}</ion-label>
-      </ion-button>
+        <IonLabel>{{ forwardButtonLabel }}</IonLabel>
+      </IonButton>
     </div>
     <div>
       <SwiperBulletsComponent
@@ -35,11 +35,12 @@ import SwiperBulletsComponent from '../../components/SwiperBulletsComponent.vue'
 import LanguageSelection from './LanguageSelection.vue'
 import DescriptionView from './DescriptionView.vue'
 import OnTrackView from './OnTrackView.vue'
+import FinishIntroView from './FinishIntroView.vue'
 import UserStatsCollectionView from './UserStatsCollectionView/UserStatsCollectionView.vue'
 const backwardButtonLabel = ref<string>('English')
 const forwardButtonLabel = ref<string>('Arabic')
 const swiperStore = useSwiperStore()
-swiperStore.setSwiperLength(4)
+swiperStore.setSwiperLength(11)
 swiperStore.setCurrentIndex(0)
 const slides = computed(() => swiperStore.getSwiperLength())
 const currentIndex = computed(() => swiperStore.getCurrentIndex())

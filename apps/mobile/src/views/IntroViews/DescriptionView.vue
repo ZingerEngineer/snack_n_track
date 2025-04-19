@@ -4,7 +4,7 @@
     <img
       src="../../assets/wand_sparkles.svg"
       alt="wand sparkles"
-      class="absolute w-36 -top-10 left-[12rem] h-full"
+      class="absolute w-36 top-56 left-[12rem]"
     />
   </div>
   <div id="title" class="px-10 w-full flex flex-col justify-center items-center">
