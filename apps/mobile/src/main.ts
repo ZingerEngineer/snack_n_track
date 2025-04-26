@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import { IonicVue } from '@ionic/vue'
 import App from './App.vue'
 import router from './router'
+import { createI18n } from 'vue-i18n'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css'
@@ -24,8 +25,12 @@ import './theme/variables.css'
 import './theme/global.css'
 
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
+import { i18nConfig } from './statics/translations'
+
+export const i18n = createI18n(i18nConfig)
 
 const app = createApp(App)
+  .use(i18n)
   .use(createPinia())
   .use(router)
   .use(IonicVue)
