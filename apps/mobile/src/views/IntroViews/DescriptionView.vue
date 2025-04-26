@@ -1,11 +1,6 @@
 <template>
   <div class="w-full flex justify-center items-center flex-col mb-20">
     <img src="../../assets/scan_food.svg" alt="scan food" class="w-72 h-full" />
-    <img
-      src="../../assets/wand_sparkles.svg"
-      alt="wand sparkles"
-      class="absolute w-36 top-56 left-[12rem]"
-    />
   </div>
   <div id="title" class="px-10 w-full flex flex-col justify-center items-center">
     <h1 class="w-full text-3xl font-bold">We analyze the food for you.</h1>
