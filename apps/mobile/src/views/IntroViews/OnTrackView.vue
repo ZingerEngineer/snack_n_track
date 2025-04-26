@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full flex px-5 flex-col mb-24">
+  <div class="w-full flex px-5 flex-col mb-24 relative">
     <img src="../../assets/diet.svg" alt="scan food" class="w-64" />
     <img
       src="../../assets/tips.svg"
       alt="wand sparkles"
-      class="absolute w-72 -top-24 left-[5.8rem] h-full"
+      class="absolute w-full top-20 left-[4rem] h-full"
     />
   </div>
   <div id="title" class="px-10 w-full flex flex-col justify-center items-center">

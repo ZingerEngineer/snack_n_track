@@ -13,6 +13,7 @@
           :snaps="true"
           :min="10"
           :max="100"
+          :value="age"
         ></IonRange>
       </div>
     </div>
@@ -23,10 +24,23 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { IonLabel, IonRange } from '@ionic/vue'
-const age = ref(10)
+import { useUserIntroStore } from '../../../stores/user/user.intro.store'
+import { useDebounce } from '../../../composables/useDebounce'
+
+const { debounced: debouncedAgeUpdate } = useDebounce(
+  (age: number) => {
+    userIntroStore.setAge(age)
+  },
+  { delay: 100, leading: false },
+)
+
+const userIntroStore = useUserIntroStore()
+
+const age = ref(userIntroStore.getAge() || 20)
 
 const pinFormatter = (value: number) => {
   age.value = value
+  debouncedAgeUpdate(value)
   return `${value}`
 }
 </script>
