@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useLoadingStore } from '../stores/loading.store'
+import { useLoadingStore } from '../stores/components/loading.store'
 
 const loadingStore = useLoadingStore()
 const { isLoading } = storeToRefs(loadingStore)

@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { IonButton } from '@ionic/vue'
-import { useModalStore } from '../stores/modal.store'
+import { useModalStore } from '../stores/components/modal.store'
 import { useScanStore } from '../stores/scan.store'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useModalStore } from '../stores/modal.store'
+import { useModalStore } from '../stores/components/modal.store'
 
 const modalStore = useModalStore()
 // Compute the top modal (if any)
