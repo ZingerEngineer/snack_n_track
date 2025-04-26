@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt'
 import { RefreshTokenDAO, TokenUtils } from '../daos/token.dao'
 import { accessTokenDataSchema } from '../schemas/token.zod'
 import { ITokenPayload } from '../types/user/user.auth'
+import { IRefreshToken } from '../types/token/refreshToken.type'
 const userDao = new UserDao()
 const refreshTokenDao = new RefreshTokenDAO()
 
@@ -151,7 +152,7 @@ const logoutController = async (req: Request) => {
 
     console.log('[logoutController] Deleting refresh tokens for user:', userId)
     await Promise.all(
-      tokens.map((token) => {
+      tokens.map((token: IRefreshToken) => {
         console.log('[logoutController] Deleting token with id:', token.id)
         return refreshTokenDao.deleteTokenById(token.id.toString())
       })
@@ -215,4 +216,3 @@ export {
   logoutController,
   refreshTokenController
 }
-
