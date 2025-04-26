@@ -1,15 +1,15 @@
 // src/stores/authStore.ts
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { IUser, ILoginCredentials, IRegisterCredentials } from '../types/user/user.types'
-import fetcher from '../utils/server/fetcher'
-import ToastService from '../services/ToastService'
+import type { IUser, ILoginCredentials, IRegisterCredentials } from '../../../types/user/user.types'
+import fetcher from '../../../utils/server/fetcher'
+import ToastService from '../../../services/ToastService'
 import { useRouter } from 'vue-router'
-import { useLoadingStore } from './loading.store'
-import type { ILoginResults } from '../schemas/user/user.auth'
-import PreferencesService from '../apis/mobile/usePreferences'
+import { useLoadingStore } from '../../components/loading.store'
+import type { ILoginResults } from '../../../schemas/user/user.auth'
+import PreferencesService from '../../../apis/mobile/usePreferences'
 import z from 'zod'
-import { UserSchema } from '../schemas/user/user.zod'
+import { UserSchema } from '../../../schemas/user/user.zod'
 
 const LoginResultsSchema: z.ZodType<ILoginResults> = z.object({
   user: z.object({
