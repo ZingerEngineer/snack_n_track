@@ -1,10 +1,10 @@
 <template>
-  <div id="title" class="px-10 w-full flex flex-col justify-center items-center">
+  <div id="title" class="px-10 w-full flex flex-col justify-center items-center mt-10">
     <h1 class="w-full text-3xl font-bold">Let's get started!</h1>
     <h1 class="w-full font-bold">Tell us more about yourself:</h1>
   </div>
 
-  <div class="px-5 w-full flex-grow">
+  <div class="px-5 w-full h-full flex flex-col justify-center items-center">
     <AgeSelectionView v-if="currentIndex === 3" />
     <WeightSelectionView v-if="currentIndex === 4" />
     <HeightSelectionView v-if="currentIndex === 5" />
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import useSwiperStore from '../../../stores/swiper.store'
+import useSwiperStore from '../../../stores/components/swiper.store'
 
 import WeightSelectionView from './WeightSelectionView.vue'
 import HeightSelectionView from './HeightSelectionView.vue'

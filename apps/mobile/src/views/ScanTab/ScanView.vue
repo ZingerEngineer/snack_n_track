@@ -53,7 +53,7 @@ import { home } from 'ionicons/icons'
 import { useScanStore } from '../../stores/scan.store'
 import { faImage, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { useModalStore } from '../../stores/modal.store'
+import { useModalStore } from '../../stores/components/modal.store'
 import SelectedImageModal from '../../components/SelectedImageModal.vue'
 import { useRoute } from 'vue-router'
 const scan = useScanStore()

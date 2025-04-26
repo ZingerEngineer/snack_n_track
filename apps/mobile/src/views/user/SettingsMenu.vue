@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../../stores/auth.store'
+import { useAuthStore } from '../../stores/user/auth/auth.store'
 import {
   IonMenu,
   IonHeader,

@@ -18,9 +18,6 @@
       </div>
     </div>
 
-    <!-- Debug info (can be removed in production) -->
-    <div v-if="debug" class="debug-info">Touch active: {{ isTouching ? 'Yes' : 'No' }}</div>
-
     <!-- Manual controls as fallback -->
     <div class="manual-controls">
       <IonButton fill="outline" color="secondary" @click="decrementWeight"
@@ -103,7 +100,7 @@ interface WeightTick {
   position: number
 }
 
-interface WeightChangeEvent {
+export interface WeightChangeEvent {
   value: number
   unit: WeightUnit
 }
@@ -117,7 +114,6 @@ interface WeightSelectorProps {
   step?: number
   tickSpacing?: number
   visibleTicksCount?: number
-  debug?: boolean
 }
 
 // Props with defaults and type checking
@@ -129,7 +125,6 @@ const props = withDefaults(defineProps<WeightSelectorProps>(), {
   step: 0.1,
   tickSpacing: 20,
   visibleTicksCount: 30, // Number of ticks to render at once
-  debug: false,
 })
 
 // Emits with type checking
@@ -271,7 +266,7 @@ const setUnit = (newUnit: WeightUnit): void => {
   // Emit events for unit and weight change
   emit('update:unit', newUnit)
   emit('update:weight', {
-    value: unit.value === 'kg' ? currentWeight.value : Math.round(currentWeight.value * KG_TO_LBS),
+    value: currentWeight.value,
     unit: unit.value,
   })
 }
@@ -320,7 +315,7 @@ const updateWeightFromTranslate = (): void => {
 
     // Emit with proper unit conversion
     emit('update:weight', {
-      value: unit.value === 'kg' ? constrainedWeight : Math.round(constrainedWeight * KG_TO_LBS),
+      value: constrainedWeight,
       unit: unit.value,
     })
   }
@@ -345,7 +340,7 @@ const incrementWeight = (): void => {
     currentWeight.value = newWeight
     updateTranslateX()
     emit('update:weight', {
-      value: unit.value === 'kg' ? newWeight : Math.round(newWeight * KG_TO_LBS),
+      value: newWeight,
       unit: unit.value,
     })
   }
@@ -371,7 +366,7 @@ const decrementWeight = (): void => {
     currentWeight.value = newWeight
     updateTranslateX()
     emit('update:weight', {
-      value: unit.value === 'kg' ? newWeight : Math.round(newWeight * KG_TO_LBS),
+      value: newWeight,
       unit: unit.value,
     })
   }
@@ -499,7 +494,7 @@ const onWeightInputBlur = (event: Event): void => {
 
     // Emit the update with proper conversion
     emit('update:weight', {
-      value: unit.value === 'kg' ? newWeight : Math.round(newWeight * KG_TO_LBS),
+      value: newWeight,
       unit: unit.value,
     })
   }
@@ -588,7 +583,7 @@ const handleTouchEnd = (event?: TouchEvent): void => {
 
   // Emit the final weight
   emit('update:weight', {
-    value: unit.value === 'kg' ? currentWeight.value : Math.round(currentWeight.value * KG_TO_LBS),
+    value: currentWeight.value,
     unit: unit.value,
   })
 }
@@ -606,8 +601,7 @@ onMounted(() => {
 
     // Emit initial values
     emit('update:weight', {
-      value:
-        unit.value === 'kg' ? currentWeight.value : Math.round(currentWeight.value * KG_TO_LBS),
+      value: currentWeight.value,
       unit: unit.value,
     })
     emit('update:unit', unit.value)
@@ -700,15 +694,6 @@ watch(
 .weight-unit {
   font-size: 2.5rem;
   margin-left: 8px;
-}
-
-.debug-info {
-  text-align: center;
-  margin-bottom: 10px;
-  padding: 5px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  font-size: 0.8rem;
 }
 
 .manual-controls {

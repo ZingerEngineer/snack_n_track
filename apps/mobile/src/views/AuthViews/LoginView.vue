@@ -66,12 +66,12 @@
 </template>
 
 <script setup lang="ts">
-import { useSocialLogin } from '../../stores/googleAuth.store'
+import { useSocialLogin } from '../../stores/user/auth/googleAuth.store'
 import { IonPage, IonContent, IonInput, IonButton } from '@ionic/vue'
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../../stores/auth.store'
+import { useAuthStore } from '../../stores/user/auth/auth.store'
 import { onMounted, ref } from 'vue'
 import { SocialLogin } from '@capgo/capacitor-social-login'
 import snackNTrackLogo from '../../assets/snackntracklogo.svg'

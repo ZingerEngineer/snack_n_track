@@ -141,7 +141,7 @@
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonButton, IonCardHeader, IonCardTitle } from '@ionic/vue'
-import { useAuthStore } from '../stores/auth.store'
+import { useAuthStore } from '../stores/user/auth/auth.store'
 import { useRouter } from 'vue-router'
 
 import {

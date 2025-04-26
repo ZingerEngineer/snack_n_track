@@ -2,7 +2,7 @@
 import { IonPage, IonContent, IonInput, IonButton } from '@ionic/vue'
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { useAuthStore } from '../../stores/auth.store'
+import { useAuthStore } from '../../stores/user/auth/auth.store'
 import { useRouter } from 'vue-router'
 import snackNTrackLogo from '../../assets/snackntracklogo.svg'
 import { RegisterSchema } from '../../schemas/user/user.zod'

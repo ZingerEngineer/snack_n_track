@@ -165,7 +165,7 @@ import {
 import { useScanStore } from '../../stores/scan.store'
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useLoadingStore } from '../../stores/loading.store'
+import { useLoadingStore } from '../../stores/components/loading.store'
 import formatNutritionString from './util/uploadResults'
 import { faCircleCheck, faSadTear } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
