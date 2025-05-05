@@ -9,12 +9,16 @@ import PreferencesService from '../apis/mobile/usePreferences'
 // import { z } from 'zod'
 // import ToastService from '@/services/ToastService'
 
-interface GPTCalculatorResponse {
-  response: {
-    status: 'success' | 'failed'
-    calculatorResponse: INutritionData | IEstimatedNutritionData | null
-    attempts: number
-  }
+// interface GPTCalculatorResponse {
+//   response: {
+//     status: 'success' | 'failed'
+//     calculatorResponse: INutritionData | IEstimatedNutritionData | null
+//     attempts: number
+//   }
+// }
+
+type GeminiApiCalculatorResponse = {
+  response: INutritionData | IEstimatedNutritionData | null
 }
 
 // const GPTCalculatorResponseSchema = z.object({
@@ -82,10 +86,11 @@ export const useScanStore = defineStore('scan', () => {
         },
       })
 
-      nutritionData.value = (data as GPTCalculatorResponse).response.calculatorResponse as
+      const jsonResponse = (data as GeminiApiCalculatorResponse).response as
         | INutritionData
         | IEstimatedNutritionData
-      console.log('Nutrition Data:', nutritionData.value)
+      setNutritionData(jsonResponse)
+      console.log('Nutrition Data:', jsonResponse)
     } catch (error) {
       console.error('Error uploading photo:', error)
     } finally {
