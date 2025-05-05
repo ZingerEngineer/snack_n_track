@@ -1,7 +1,8 @@
-import express, { Request, Response } from 'express'
+import express, { Request, response, Response } from 'express'
 import { InternalServerError } from '../classes/Error'
 import multer from 'multer'
 import scanMeamController from '../controllers/meal.controller'
+import { extractJsonFromString } from '../utils/extractJsonFromString'
 
 const upload = multer({ dest: 'uploads/' })
 const mealRouter = express.Router()
@@ -35,7 +36,22 @@ mealRouter.post(
       console.log(
         '[mealRouter POST /scan] Successfully analysed photo. Sending response.'
       )
-      res.status(200).json({ response })
+      if (!response || !response.data || !response.data.text) {
+        throw new InternalServerError('Failed to analyse photo')
+      }
+      const jsonResponse = extractJsonFromString(response.data.text)
+      if (!jsonResponse) {
+        console.error(
+          '[mealRouter POST /scan] Failed to extract JSON from response'
+        )
+        throw new InternalServerError('Failed to extract JSON from response')
+      }
+      console.log(
+        '[mealRouter POST /scan] Successfully extracted JSON from response'
+      )
+
+      res.status(200).json({ response: jsonResponse })
+      console.log(jsonResponse)
     } catch (error) {
       console.error('[mealRouter POST /scan] Error uploading photo:', error)
       res.status(500).json({ message: 'Failed to analyse photo' })
@@ -44,4 +60,3 @@ mealRouter.post(
 )
 
 export default mealRouter
-

@@ -1,10 +1,6 @@
-import {
-  INutritionData,
-  IEstimatedNutritionData,
-  IFailureObject
-} from '../types/global.types'
+import { INutritionData, IEstimatedNutritionData } from '../types/global.types'
 
-interface GPTCalculatorResponse {
+type GPTCalculatorResponse = {
   status: string
   calculatorResponse: INutritionData | IEstimatedNutritionData | null
   attempts: number
@@ -97,4 +93,3 @@ export class Calculator implements ICalculator {
     }
   }
 }
-

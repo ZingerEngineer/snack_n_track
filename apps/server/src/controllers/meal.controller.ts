@@ -9,6 +9,7 @@ import {
   appendExtensionBasedOnMimeType,
   generateFileName
 } from '../utils/file/file.utils'
+import { geminiApi } from '../services/geminiImageAnalysis.service'
 
 const scanMealController = async (req: Request) => {
   try {
@@ -93,29 +94,63 @@ const scanMealController = async (req: Request) => {
     )
     console.log('[scanMealController] File downloaded to ../downloads')
 
-    const GPTCalculator = new CaloriesCalculatorGPTRevamped()
-    console.log(
-      '[scanMealController] Initiating GPT calculator with file:',
-      finalFilePath
-    )
-    if (!finalFilePath) throw new NotFoundError('File not found')
-    const response = await GPTCalculator.recursiveCalculateCalories(
-      finalFilePath,
-      0,
-      3
-    )
-    console.log('[scanMealController] GPT calculator response:', response)
-    if (!response) {
-      console.error('[scanMealController] No response from GPT calculator')
-      throw new InternalServerError(
-        'Failed to get response from GPT calculator'
-      )
+    if (!finalFilePath) {
+      console.error('[scanMealController] Final file path is undefined')
+      throw new NotFoundError('File not found')
     }
-    return response
+    const response = await geminiApi(
+      finalFilePath,
+      'Provided the image of an Egyptian food. Please tell me what is inisde the image and approximate nutritional data about the image and respond with a certainty level based on the clarity and coherence of the food representation. Your response should be formatted as JSON. 1. If the image is clear and coherently represents the food parts, provide a certainty percentage between 90-100%. Include the following fields in your JSON response: - `percentage_of_certainty`: a number representing the certainty percentage. - `isSure`: a boolean indicating certainty (true). - `name`: the specific name of the food. - `keywords`: multiple keywords or names for the analyzed food in Arabic and English in slang, formal and multiple accents.  - `type_of_food`: categorize it as Vegetable, Fruit, Grain, Dessert, Beverage, or Meal. - `proteins`: the amount of protein in appropriate measurement units (ml or grams). - `carbs`: the amount of carbohydrates in appropriate measurement units (ml or grams). - `fats`: the amount of fats in appropriate measurement units (ml or grams). - `vitamins`: an array of objects, each containing: - `vitamin_name`: the name of the vitamin. - `vitamin_portion`: the amount in appropriate measurement units (ml or grams). 2. If the image is somewhat blurry or the food is not coherent enough, provide a certainty percentage between 60-90%. Your JSON response should include: - `percentage_of_certainty`: a number representing the certainty percentage. - `isSure`: a boolean indicating certainty (false). - `estimated_name`: your best estimate of the food name. - `estimated_typeOfFood`: categorize it as Vegetable, Fruit, Grain, Dessert, Beverage, or Meal. Please analyze the image and provide your response accordingly. Take your time and reply only with the JSON file.'
+    )
+    return {
+      status: 'success',
+      data: response
+    }
+
+    // const GeminiCalculator = new CaloriesCalculatorGemini()
+    // console.log(
+    //   '[scanMealController] Initiating Gemini calculator with file:',
+    //   finalFilePath
+    // )
+    // if (!finalFilePath) throw new NotFoundError('File not found')
+    // const responseGemini = await GeminiCalculator.recursiveCalculateCalories(
+    //   finalFilePath,
+    //   0,
+    //   3
+    // )
+    // console.log(
+    //   '[scanMealController] Gemini calculator response:',
+    //   responseGemini
+    // )
+    // if (!responseGemini) {
+    //   console.error('[scanMealController] No response from Gemini calculator')
+    //   throw new InternalServerError(
+    //     'Failed to get response from Gemini calculator'
+    //   )
+    // }
+    // return responseGemini
+
+    // const GPTCalculator = new CaloriesCalculatorGPTRevamped()
+    // console.log(
+    //   '[scanMealController] Initiating GPT calculator with file:',
+    //   finalFilePath
+    // )
+    // if (!finalFilePath) throw new NotFoundError('File not found')
+    // const response = await GPTCalculator.recursiveCalculateCalories(
+    //   finalFilePath,
+    //   0,
+    //   3
+    // )
+    // console.log('[scanMealController] GPT calculator response:', response)
+    // if (!response) {
+    //   console.error('[scanMealController] No response from GPT calculator')
+    //   throw new InternalServerError(
+    //     'Failed to get response from GPT calculator'
+    //   )
+    // }
   } catch (error: any) {
     console.error('Scan meal controller failed:', error)
   }
 }
 
 export default scanMealController
-
