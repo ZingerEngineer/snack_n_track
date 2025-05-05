@@ -1,7 +1,7 @@
 <template>
   <IonPage>
     <IonContent>
-      <div class="mt-[17rem] w-full h-full flex justify-center items-center">
+      <div class="mt-40 w-full h-full flex justify-center items-center">
         <div
           v-if="nutritionData && !isLoading"
           class="w-full px-8 flex justify-center items-center flex-col gap-6"
@@ -9,7 +9,7 @@
           <img
             v-if="scanStore.imagePath"
             :src="scanStore.imagePath ? scanStore.imagePath : ''"
-            class="w-1/2 h-1/2 rounded-lg shadow-lg border-2 border-primary mt-4"
+            class="flex-grow aspect-square rounded-lg shadow-lg border-2 border-primary mt-4"
           />
           <div class="flex flex-col gap-6 w-full justify-center">
             <IonCard
@@ -19,7 +19,7 @@
               <div
                 class="absolute top-2 right-2 flex flex-row items-center justify-center rounded-lg bg-white p-2 gap-2"
               >
-                <p class="text-primary text-xs">Approved</p>
+                <p class="text-primary text-xs hidden sm:block">Approved</p>
                 <FontAwesomeIcon
                   class="text-primary text-lg"
                   :icon="faCircleCheck"
