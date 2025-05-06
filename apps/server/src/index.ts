@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import multer from 'multer'
 import dotenv from 'dotenv'
-import initSupabase from './services/supabase'
+import { initSupaBaseClient } from './services/supabase'
 import { SupabaseClient } from '@supabase/supabase-js'
 import router from './routers/index'
 import errorHandler from './middlewares/globalErrorHandler'
@@ -35,7 +35,7 @@ const port = 8080
 app.listen(port, async () => {
   console.log(`Server listening at http://localhost:${port}`)
   try {
-    supaBaseClient = initSupabase()
+    supaBaseClient = initSupaBaseClient()
     console.log('Supabase client initialized')
   } catch (error) {
     console.error(error)

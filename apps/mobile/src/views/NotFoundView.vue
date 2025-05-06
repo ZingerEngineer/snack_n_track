@@ -1,11 +1,11 @@
 <template>
   <IonPage>
     <IonHeader>
-      <IonToolbar>
+      <IonToolbar class="tool-bar-notch-gaurd">
         <IonTitle>Page Not Found</IonTitle>
       </IonToolbar>
     </IonHeader>
-    <IonContent class="ion-padding">
+    <IonContent class="tool-bar-safe-margin">
       <div class="text-center mt-[50px]">
         <h1 class="text-8xl mb-5">404</h1>
         <p class="text-sm mb-5">The page you are looking for does not exist.</p>

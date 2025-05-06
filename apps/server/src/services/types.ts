@@ -21,6 +21,7 @@ export class Calculator implements ICalculator {
       id: '1',
       percentage_of_certainty: 100,
       isSure: true,
+      keywords: ['apple', 'تفاحة', 'tofaha'],
       name: 'Apple',
       type_of_food: 'Fruit',
       proteins: '1g',
@@ -62,6 +63,7 @@ export class Calculator implements ICalculator {
       percentage_of_certainty: 100,
       isSure: true,
       name: 'Apple',
+      keywords: ['apple', 'تفاحة', 'tofaha'],
       type_of_food: 'Fruit',
       proteins: '1g',
       carbs: '25g',
@@ -93,3 +95,4 @@ export class Calculator implements ICalculator {
     }
   }
 }
+

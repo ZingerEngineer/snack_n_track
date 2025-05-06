@@ -1,4 +1,4 @@
-export function extractJsonFromString(text: string): any | null {
+export function extractJsonFromString(text: string): object | null {
   // Regex to match content between ```json and ```
   const jsonRegex = /```json\n([\s\S]*?)\n```/
   const match = text.match(jsonRegex)
@@ -15,3 +15,4 @@ export function extractJsonFromString(text: string): any | null {
     return null
   }
 }
+

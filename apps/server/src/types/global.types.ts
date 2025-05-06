@@ -11,6 +11,7 @@ interface INutritionData {
   percentage_of_certainty: number
   isSure: boolean
   name: string
+  keywords: Array<string>
   type_of_food: TTypeOfFood
   proteins: string
   carbs: string
