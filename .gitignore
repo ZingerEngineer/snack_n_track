@@ -19,6 +19,9 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+# Documentation
+*.docx
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

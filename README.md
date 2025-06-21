@@ -329,3 +329,6 @@ Our interface & channel for the user.
 - **`npm run type-check`** – Performs TypeScript type checking.
 - **`npm run lint`** – Runs ESLint and fixes issues automatically.
 - **`npm run format`** – Formats the `src/` directory using Prettier.
+
+## 📘 Project Report
+- You can read the full graduation project report [here](docs/GraduationProject.pdf).
