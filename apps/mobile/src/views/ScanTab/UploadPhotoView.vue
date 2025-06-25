@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { IonPage, IonContent, IonButton } from '@ionic/vue'
+import { IonPage, IonContent } from '@ionic/vue'
 import { useScanStore } from '../../stores/scan.store'
-import { faCameraAlt, faImages } from '@fortawesome/free-solid-svg-icons'
+import { faCameraAlt, faImages, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -19,7 +19,7 @@ const handleScan = () => {
   <IonPage>
     <IonContent>
       <div
-        class="content-wrapper h-full flex flex-col items-center justify-center mt-[var(--ion-top-bar-margin)]"
+        class="content-wrapper tool-bar-safe-margin h-full flex flex-col items-center justify-center"
       >
         <div class="w-full h-full flex flex-col justify-center items-center gap-4">
           <div class="flex flex-col w-full h-full justify-center items-center">
@@ -37,6 +37,18 @@ const handleScan = () => {
               </div>
             </div>
             <div
+              v-if="isImageSelected"
+              @click="handleScan"
+              class="font-semibold p-4 bg-primary w-full flex justify-center items-center text-white"
+            >
+              Analyse Photo
+              <FontAwesomeIcon
+                :icon="faWandMagicSparkles"
+                :class="{ 'max-h-8': isImageSelected, 'max-h-0': !isImageSelected }"
+                class="text-2xl ml-2 transition-all"
+              ></FontAwesomeIcon>
+            </div>
+            <div
               @click="scan.pickPhotoHandler"
               class="bg-tertiary-shade hover:from-tertiary-shade hover:to-secondary hover:bg-gradient-to-t relative w-full h-full flex justify-center items-center z[1]"
             >
@@ -50,13 +62,6 @@ const handleScan = () => {
               </div>
             </div>
           </div>
-          <IonButton
-            class="absolute bottom-4 right-10 transition-all duration-300 ease-in-out text-white z-50"
-            v-if="isImageSelected"
-            @click="handleScan"
-          >
-            Analyse Food
-          </IonButton>
         </div>
       </div>
     </IonContent>

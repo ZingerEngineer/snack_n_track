@@ -3,19 +3,19 @@ import { ref } from 'vue'
 import { pickPicture } from '../apis/mobile/pickPicture'
 import type { INutritionData, IEstimatedNutritionData } from '../types/meal/meal.types'
 import fetcher from '../utils/server/fetcher'
-// import { NutritionDataSchema, EstimatedNutritionDataSchema } from '@/schemas/global.zod'
+import { NutritionDataSchema } from '../schemas/global.zod'
 import { useLoadingStore } from './components/loading.store'
 import PreferencesService from '../apis/mobile/usePreferences'
 // import { z } from 'zod'
 // import ToastService from '@/services/ToastService'
 
-interface GPTCalculatorResponse {
-  response: {
-    status: 'success' | 'failed'
-    calculatorResponse: INutritionData | IEstimatedNutritionData | null
-    attempts: number
-  }
-}
+// interface GPTCalculatorResponse {
+//   response: {
+//     status: 'success' | 'failed'
+//     calculatorResponse: INutritionData | IEstimatedNutritionData | null
+//     attempts: number
+//   }
+// }
 
 // const GPTCalculatorResponseSchema = z.object({
 //   status: z.enum(['success', 'failed']),
@@ -81,11 +81,13 @@ export const useScanStore = defineStore('scan', () => {
           refresh: 'Refresher ' + (await PreferencesService.getItem('refreshToken')).value,
         },
       })
-
-      nutritionData.value = (data as GPTCalculatorResponse).response.calculatorResponse as
-        | INutritionData
-        | IEstimatedNutritionData
-      console.log('Nutrition Data:', nutritionData.value)
+      const checkedData = NutritionDataSchema.safeParse(data)
+      if (!checkedData.success) {
+        console.error('Invalid data format:', checkedData.error)
+        return
+      }
+      setNutritionData(checkedData.data)
+      console.log('Nutrition Data:', checkedData.data)
     } catch (error) {
       console.error('Error uploading photo:', error)
     } finally {

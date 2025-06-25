@@ -31,8 +31,4 @@ onMounted(() => {
     <IonRouterOutlet />
   </IonApp>
 </template>
-<style lang="css" scoped>
-.safe-area {
-  margin-top: var(--safe-area-inset-top, 20px);
-}
-</style>
+<style lang="css" scoped></style>

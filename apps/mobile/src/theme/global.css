@@ -93,3 +93,19 @@ ion-radio.ios::part(container) {
 .radio-checked.ios::part(container) {
   border-color: var(--ion-color-primary);
 }
+
+.tool-bar-safe-margin {
+  margin-top: var(--ion-top-bar-margin);
+}
+
+.tool-bar-notch-gaurd {
+  padding-top: var(--ion-top-bar-notch-gaurd);
+}
+
+.notch-safe-area {
+  margin-top: var(--safe-area-inset-top);
+}
+
+ion-button {
+  font-size: small;
+}

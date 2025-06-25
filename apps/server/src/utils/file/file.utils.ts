@@ -8,6 +8,7 @@ function appendExtensionBasedOnMimeType(
     'image/jpeg': '.jpg',
     'image/png': '.png',
     'image/gif': '.gif',
+    'image/webp': '.webp',
     'application/pdf': '.pdf'
     // Add more mime types and their corresponding extensions as needed
   }
@@ -24,4 +25,3 @@ function generateFileName(originalName: string): string {
 }
 
 export { appendExtensionBasedOnMimeType, generateFileName }
-

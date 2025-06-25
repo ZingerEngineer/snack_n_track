@@ -6,6 +6,7 @@ const NutritionDataSchema = z.object({
   percentage_of_certainty: z.number(),
   isSure: z.boolean(),
   name: z.string(),
+  keywords: z.array(z.string()),
   type_of_food: z.enum([
     'Vegetable',
     'Fruit',

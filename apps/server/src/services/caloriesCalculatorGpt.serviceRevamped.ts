@@ -1,16 +1,13 @@
-import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import loginToMicrosoft from './util/loginToMicrosoft'
-import { checkCredentials } from './util/checkCredentials'
-import goToGPTAndPressLogin from './util/goToGPTAndPressLogin'
-import clickMicrosoftButton from './util/clickMicrosoftButton'
+import loginToMicrosoft from './chatGptScrappingUtils/loginToMicrosoft'
+import { checkCredentials } from './chatGptScrappingUtils/checkCredentials'
+import goToGPTAndPressLogin from './chatGptScrappingUtils/goToGPTAndPressLogin'
+import clickMicrosoftButton from './chatGptScrappingUtils/clickMicrosoftButton'
 import { Calculator } from './types'
 import { InternalServerError, NotFoundError } from '../classes/Error'
 import { INutritionData, IEstimatedNutritionData } from '../types/global.types'
-import attemptGPTInteraction from './util/attemptGPTInteraction'
+import attemptGPTInteraction from './chatGptScrappingUtils/attemptGPTInteraction'
 import { Browser } from 'puppeteer'
-import clickGoogleButton from './util/clickGoogleButton'
-import loginWithGoogle from './util/loginWithGoogle'
 import puppeteerExtra from 'puppeteer-extra'
 puppeteerExtra.use(StealthPlugin())
 
@@ -210,4 +207,3 @@ export class CaloriesCalculatorGPTRevamped implements Calculator {
     }
   }
 }
-

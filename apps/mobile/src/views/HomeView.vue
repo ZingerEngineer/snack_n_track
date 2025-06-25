@@ -1,7 +1,7 @@
 <template>
   <IonPage>
     <IonContent>
-      <div class="p-6 w-full h-full flex items-center flex-col gap-6">
+      <div class="p-6 w-full h-full flex items-center flex-col gap-6 notch-safe-area">
         <IonCard
           class="flex justify-center items-center p-2 w-full border-2 to-primary from-primary/50 bg-gradient-to-l border-primary rounded-2xl shadow-lg min-h-[8rem]"
         >

@@ -1,14 +1,14 @@
 <template>
   <IonPage>
-    <IonToolbar class="border-b-4 border-primary">
+    <IonToolbar class="border-b-4 px-4 tool-bar-notch-gaurd border-primary">
       <IonButtons slot="start">
         <IonBackButton :icon="home" defaultHref="/dashboard/home"></IonBackButton>
       </IonButtons>
-      <IonList v-if="router.name === 'upload'" slot="end">
+      <IonList v-if="router.name === 'upload'" slot="end" class="flex flex-row items-center">
         <IonBadge
           v-if="isImageSelected"
           color="danger"
-          class="rounded-r-none"
+          class="rounded-r-none p-2"
           @click="isImageSelected && scan.resetPhoto()"
         >
           <div class="flex flex-row items-center justify-center gap-2">
@@ -16,7 +16,7 @@
           </div>
         </IonBadge>
         <IonBadge
-          :class="isImageSelected ? 'rounded-l-none' : ''"
+          :class="isImageSelected ? 'rounded-l-none p-2' : 'p-2'"
           @click="
             isImageSelected &&
             modal.openModal(SelectedImageModal, {
@@ -27,7 +27,7 @@
         >
           <div class="flex text-white flex-row items-center justify-center gap-2">
             <FontAwesomeIcon :icon="faImage" class="text-xl"></FontAwesomeIcon><span>:</span
-            ><span>{{ isImageSelected ? '1 Selected' : '0 Selected' }} </span>
+            ><span>{{ isImageSelected ? '1' : '0' }} </span>
           </div>
         </IonBadge>
       </IonList>
