@@ -53,6 +53,23 @@ enum NutritionUnit {
   lb
 }
 
+enum RatingType {
+  APP_OVERALL
+  MEAL_RECOMMENDATION
+  FOOD_RECOGNITION
+  NUTRITION_ACCURACY
+  USER_EXPERIENCE
+  FEATURE_SPECIFIC
+}
+
+enum RatingScale {
+  ONE
+  TWO
+  THREE
+  FOUR
+  FIVE
+}
+
 model User {
   id         String    @id @default(uuid())
   name       String?
@@ -68,12 +85,15 @@ model User {
   deletedAt  DateTime?
   softDelete Boolean   @default(false)
 
-  medicalConditions UserMedicalCondition[]
-  progress          Progress[]
-  RefreshToken      RefreshToken[]
-  preferences       Preferences?
-  healthTracking    UserHealthTracking[]
-  meals             Meal[]
+  medicalConditions     UserMedicalCondition[]
+  progress              Progress[]
+  RefreshToken          RefreshToken[]
+  preferences           Preferences?
+  healthTracking        UserHealthTracking[]
+  meals                 Meal[]
+  ratings               UserRating[]
+  feedback              AppFeedback[]
+  featureUsageAnalytics FeatureUsageAnalytics[]
 }
 
 model Preferences {
@@ -122,7 +142,11 @@ model Meal {
   user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId        String?
   createdAt     DateTime       @default(now())
+  updatedAt     DateTime?      @updatedAt
+  deletedAt     DateTime?
   totalCalories Float
+  author        String         @default("SnackModel")
+  typeOfMeal    String         @default("Other")
   foodItems     MealFoodItem[]
 }
 
@@ -158,9 +182,12 @@ model FoodIngredient {
 }
 
 model Ingredient {
-  id             String @id @default(uuid())
-  ingredientName String
-  amount         Float
+  id String @id @default(uuid())
+
+  ingredientName String @unique
+
+  calories     Float         @default(0)
+  caloriesUnit NutritionUnit @default(kcal)
 
   carbohydratesAmount Float         @default(0)
   carbohydratesUnit   NutritionUnit @default(g)
@@ -171,23 +198,11 @@ model Ingredient {
   fatsAmount Float         @default(0)
   fatsUnit   NutritionUnit @default(g)
 
-  saturatedFatAmount Float         @default(0)
-  saturatedFatUnit   NutritionUnit @default(g)
+  sugarAmount Float         @default(0)
+  sugarUnit   NutritionUnit @default(g)
 
-  unsaturatedFatAmount Float         @default(0)
-  unsaturatedFatUnit   NutritionUnit @default(g)
-
-  transFatAmount Float         @default(0)
-  transFatUnit   NutritionUnit @default(g)
-
-  fiberAmount Float         @default(0)
-  fiberUnit   NutritionUnit @default(g)
-
-  sugarsAmount Float         @default(0)
-  sugarsUnit   NutritionUnit @default(g)
-
-  cholesterolAmount Float         @default(0)
-  cholesterolUnit   NutritionUnit @default(mg)
+  ironAmount Float         @default(0)
+  ironUnit   NutritionUnit @default(mg)
 
   sodiumAmount Float         @default(0)
   sodiumUnit   NutritionUnit @default(mg)
@@ -195,56 +210,14 @@ model Ingredient {
   potassiumAmount Float         @default(0)
   potassiumUnit   NutritionUnit @default(mg)
 
-  calciumAmount Float         @default(0)
-  calciumUnit   NutritionUnit @default(mg)
+  vitaminC     Float         @default(0)
+  vitaminCUnit NutritionUnit @default(mg)
 
-  ironAmount Float         @default(0)
-  ironUnit   NutritionUnit @default(mg)
+  vitaminB6     Float         @default(0)
+  vitaminB6Unit NutritionUnit @default(mg)
 
-  magnesiumAmount Float         @default(0)
-  magnesiumUnit   NutritionUnit @default(mg)
-
-  zincAmount Float         @default(0)
-  zincUnit   NutritionUnit @default(mg)
-
-  vitaminAAmount Float         @default(0)
-  vitaminAUnit   NutritionUnit @default(mg) // IU could be added if needed
-
-  vitaminB1Amount Float         @default(0)
-  vitaminB1Unit   NutritionUnit @default(mg)
-
-  vitaminB2Amount Float         @default(0)
-  vitaminB2Unit   NutritionUnit @default(mg)
-
-  vitaminB3Amount Float         @default(0)
-  vitaminB3Unit   NutritionUnit @default(mg)
-
-  vitaminB5Amount Float         @default(0)
-  vitaminB5Unit   NutritionUnit @default(mg)
-
-  vitaminB6Amount Float         @default(0)
-  vitaminB6Unit   NutritionUnit @default(mg)
-
-  vitaminB7Amount Float         @default(0)
-  vitaminB7Unit   NutritionUnit @default(mcg) // Alternatively, mcg
-
-  vitaminB9Amount Float         @default(0)
-  vitaminB9Unit   NutritionUnit @default(mcg)
-
-  vitaminB12Amount Float         @default(0)
-  vitaminB12Unit   NutritionUnit @default(mcg)
-
-  vitaminCAmount Float         @default(0)
-  vitaminCUnit   NutritionUnit @default(mg)
-
-  vitaminDAmount Float         @default(0)
-  vitaminDUnit   NutritionUnit @default(mg) // or mcg if preferred
-
-  vitaminEAmount Float         @default(0)
-  vitaminEUnit   NutritionUnit @default(mg)
-
-  vitaminKAmount Float         @default(0)
-  vitaminKUnit   NutritionUnit @default(mg)
+  vitaminB12     Float         @default(0)
+  vitaminB12Unit NutritionUnit @default(mcg)
 
   FoodIngredient FoodIngredient[]
 }
@@ -277,4 +250,57 @@ model RefreshToken {
   expiresAt DateTime  @default(dbgenerated("now() + interval '7 days'"))
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model UserRating {
+  id         String      @id @default(uuid())
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  ratingType RatingType
+  rating     RatingScale
+  comment    String?     @db.Text
+  context    Json? // Store additional context (feature used, meal rated, etc.)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime?   @updatedAt
+
+  // Ensure one rating per user per type (can be updated)
+  @@unique([userId, ratingType])
+}
+
+model AppFeedback {
+  id               String    @id @default(uuid())
+  user             User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId           String?
+  feedbackType     String // "bug", "feature_request", "improvement", "compliment"
+  title            String
+  description      String    @db.Text
+  priority         String    @default("medium") // "low", "medium", "high", "critical"
+  status           String    @default("open") // "open", "in_progress", "resolved", "closed"
+  category         String? // "ui", "performance", "accuracy", "functionality"
+  reproducible     Boolean   @default(false)
+  deviceInfo       Json? // Store device/browser info
+  appVersion       String?
+  attachments      String[] // URLs to screenshots or logs
+  adminResponse    String?   @db.Text
+  adminRespondedAt DateTime?
+  adminRespondedBy String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime? @updatedAt
+}
+
+model FeatureUsageAnalytics {
+  id          String   @id @default(uuid())
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId      String?
+  featureName String // "meal_scan", "manual_entry", "nutrition_view", etc.
+  action      String // "view", "create", "update", "delete", "share"
+  sessionId   String? // Group actions by session
+  duration    Int? // Time spent in milliseconds
+  success     Boolean  @default(true)
+  errorCode   String?
+  metadata    Json? // Additional context data
+  timestamp   DateTime @default(now())
+
+  @@index([userId, featureName])
+  @@index([timestamp])
 }
