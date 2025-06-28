@@ -1,7 +1,5 @@
 import { PortionUnit, PrismaClient } from '@prisma/client'
 import { InternalServerError, NotFoundError } from '../classes/Error'
-import ScanMealDao from './scanMeal.dao'
-import MealDao from './meal.dao'
 import IngredientDao from './ingredient.dao'
 
 class FoodItemDao {
@@ -65,7 +63,6 @@ class FoodItemDao {
     include: {
       MealFoodItem: boolean
       ingredients: boolean
-      MealScanFoodItem: boolean
     }
   ) {
     const prisma = this.getPrismaClient()
@@ -90,7 +87,6 @@ class FoodItemDao {
     include: {
       MealFoodItem: boolean
       ingredients: boolean
-      MealScanFoodItem: boolean
     }
   ) {
     const prisma = this.getPrismaClient()
@@ -111,150 +107,128 @@ class FoodItemDao {
     }
   }
 
-  // async createFoodItem(foodItem: {
-  //   foodName: string
-  //   portionUnit: PortionUnit
-  //   portionSizeValue: number
-  //   ingredients: string[]
-  //   MealFoodItem?: string[]
-  //   MealScanFoodItem?: string[]
-  // }) {
-  //   const prisma = this.getPrismaClient()
-  //   try {
-  //     const {
-  //       foodName,
-  //       portionUnit,
-  //       portionSizeValue,
-  //       ingredients,
-  //       MealFoodItem,
-  //       MealScanFoodItem
-  //     } = foodItem
-
-  //     const ingredientDao = new IngredientDao()
-  //     // Get the ingredient objects by name.
-  //     const ingredientList = await Promise.all(
-  //       ingredients.map(async (ingredient) => {
-  //         const currentIngredient =
-  //           await ingredientDao.getIngredientByName(ingredient)
-  //         return currentIngredient[0] // assuming it exists and has an id
-  //       })
-  //     )
-
-  //     let mealFoodItemList: {
-  //       id: string
-  //       name: string
-  //       userId: string | null
-  //       createdAt: Date
-  //       totalCalories: number
-  //     }[] = []
-  //     if (MealFoodItem) {
-  //       const mealDao = new MealDao()
-  //       mealFoodItemList = await Promise.all(
-  //         MealFoodItem.map(async (mealName) => {
-  //           const currentMeal = await mealDao.getMealsByName(mealName)
-  //           return currentMeal[0]
-  //         })
-  //       )
-  //     }
-
-  //     let mealScanFoodItemList: {
-  //       id: string
-  //       name: string
-  //       userId: string
-  //       isChatGPTMade: boolean
-  //       scanDate: Date
-  //       confidenceScore: number
-  //       approvalStatus: string
-  //     }[] = []
-  //     if (MealScanFoodItem) {
-  //       const scanMealDao = new ScanMealDao()
-  //       mealScanFoodItemList = await Promise.all(
-  //         MealScanFoodItem.map(async (scanMealName) => {
-  //           const currentScanMeal =
-  //             await scanMealDao.getScanMealsByName(scanMealName)
-  //           return currentScanMeal[0]
-  //         })
-  //       )
-  //     }
-
-  //     // Use nested create to create FoodIngredient records.
-  //     const newFoodItem = await prisma.foodItem.create({
-  //       data: {
-  //         foodName,
-  //         portionUnit,
-  //         portionSizeValue,
-  //         // Create a FoodIngredient record for each ingredient.
-  //         ingredients: {
-  //           create: ingredientList.map((ingredient) => ({
-  //             // Prisma will automatically set the foodId to the newly created FoodItem's id.
-  //             ingredient: {
-  //               connect: { id: ingredient.id }
-  //             },
-  //             // You can specify the amount or any other fields for the FoodIngredient.
-  //             amount: ingredient.amount // Or a default value
-  //           }))
-  //         },
-  //         // If there are related MealFoodItem records, connect them.
-  //         ...(mealFoodItemList.length > 0 && {
-  //           MealFoodItem: {
-  //             connect: mealFoodItemList.map((meal) => ({
-  //               mealId: meal.id,
-  //               foodId: undefined // This field will be auto-populated once the FoodItem exists; adjust if necessary.
-  //             }))
-  //           }
-  //         }),
-  //         // Similarly for MealScanFoodItem.
-  //         ...(mealScanFoodItemList.length > 0 && {
-  //           MealScanFoodItem: {
-  //             connect: mealScanFoodItemList.map((scanMeal) => ({
-  //               id: scanMeal.id
-  //             }))
-  //           }
-  //         })
-  //       }
-  //     })
-
-  //     return newFoodItem
-  //   } catch (error) {
-  //     throw new InternalServerError('Failed to create food item')
-  //   } finally {
-  //     await this.closePrismaClient()
-  //   }
-  // }
-
   async createFoodItem(foodItem: {
     foodName: string
     portionUnit: PortionUnit
     portionSizeValue: number
+    ingredientString: string
     ingredients: string[]
   }) {
     try {
-      const dbIngredientList = []
       const prisma = this.getPrismaClient()
-      const { foodName, portionUnit, portionSizeValue, ingredients } = foodItem
+      const {
+        foodName,
+        portionUnit,
+        portionSizeValue,
+        ingredients,
+        ingredientString
+      } = foodItem
 
       const ingredientDao = new IngredientDao()
-      // Get the ingredient objects by name.
+      // Get the ingredient objects by name and extract their IDs
       const ingredientList = await Promise.all(
-        ingredients.map(async (ingredient) => {
+        ingredients.map(async (ingredientName) => {
           const currentIngredient =
-            await ingredientDao.getIngredientByName(ingredient)
-          return currentIngredient[0] // assuming it exists and has an id
+            await ingredientDao.getIngredientByName(ingredientName)
+          if (!currentIngredient || currentIngredient.length === 0) {
+            throw new NotFoundError(`Ingredient '${ingredientName}' not found`)
+          }
+          return { ingredientId: currentIngredient[0].id }
         })
       )
 
-      // Use nested create to create FoodIngredient records.
+      if (ingredientList.length === 0) {
+        throw new NotFoundError('No valid ingredients found')
+      }
+
+      // Create the food item with proper Prisma relation syntax
       const newFoodItem = await prisma.foodItem.create({
         data: {
           foodName,
           portionUnit,
-          portionSizeValue
+          portionSizeValue,
+          ingredientString,
+          ingredients: {
+            create: ingredientList.map((ingredient) => ({
+              ingredient: {
+                connect: { id: ingredient.ingredientId }
+              }
+            }))
+          }
+        },
+        include: {
+          ingredients: {
+            include: {
+              ingredient: true
+            }
+          }
         }
       })
 
       return newFoodItem
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error
+      }
       throw new InternalServerError('Failed to create food item')
+    } finally {
+      await this.closePrismaClient()
+    }
+  }
+
+  async createFoodItemWithIngredientIds(foodItem: {
+    foodName: string
+    portionUnit: PortionUnit
+    portionSizeValue: number
+    ingredientString: string
+    ingredientIds: string[]
+  }) {
+    try {
+      const prisma = this.getPrismaClient()
+      const {
+        foodName,
+        portionUnit,
+        portionSizeValue,
+        ingredientIds,
+        ingredientString
+      } = foodItem
+
+      if (ingredientIds.length === 0) {
+        throw new NotFoundError('At least one ingredient ID is required')
+      }
+
+      // Create the food item with proper Prisma relation syntax using ingredient IDs
+      const newFoodItem = await prisma.foodItem.create({
+        data: {
+          foodName,
+          portionUnit,
+          portionSizeValue,
+          ingredientString,
+          ingredients: {
+            create: ingredientIds.map((ingredientId) => ({
+              ingredient: {
+                connect: { id: ingredientId }
+              }
+            }))
+          }
+        },
+        include: {
+          ingredients: {
+            include: {
+              ingredient: true
+            }
+          }
+        }
+      })
+
+      return newFoodItem
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error
+      }
+      throw new InternalServerError(
+        'Failed to create food item with ingredient IDs'
+      )
     } finally {
       await this.closePrismaClient()
     }
