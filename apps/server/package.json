@@ -5,6 +5,8 @@
     "clearUsers": "ts-node ./seeds/users/clearUsers.ts",
     "foodItemSeed": "ts-node ./seeds/foodItems/foodItemsSeed.ts",
     "clearFoodItems": "ts-node ./seeds/foodItems/clearFoodItems.ts",
+    "ingredientsSeed": "ts-node ./seeds/ingredients/ingredientsSeed.ts",
+    "clearIngredients": "ts-node ./seeds/ingredients/clearIngredients.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -44,3 +46,4 @@
     "@types/multer": "^1.4.12"
   }
 }
+
