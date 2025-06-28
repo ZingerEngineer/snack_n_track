@@ -9,11 +9,6 @@ import { BaseError } from '../classes/Error'
 import authorizationMiddleware from '../middlewares/authorizationMiddleware'
 const authRouter = express.Router()
 
-authRouter.get('/getme', (req: Request, res: Response) => {
-  console.log('[authRouter GET /getme] Request received')
-  res.json({ message: 'hello' })
-})
-
 authRouter.post('/login', async (req: Request, res: Response) => {
   console.log('[authRouter POST /login] Request received')
   try {
