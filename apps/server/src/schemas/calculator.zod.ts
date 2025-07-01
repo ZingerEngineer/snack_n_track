@@ -1,9 +1,8 @@
 import z from 'zod'
-import createUUID from '../utils/createUUID'
-
+import uuidv4 from 'uuid'
 const NutritionDataSchema = z.object({
-  id: z.string().default(() => createUUID()),
-  percentage_of_certainty: z.number(),
+  id: z.string().default(() => uuidv4.v4()),
+  certainty_percentage: z.number(),
   isSure: z.boolean(),
   name: z.string(),
   keywords: z.array(z.string()),
@@ -27,8 +26,8 @@ const NutritionDataSchema = z.object({
 })
 
 const EstimatedNutritionDataSchema = z.object({
-  id: z.string().default(() => createUUID()),
-  percentage_of_certainty: z.number(),
+  id: z.string().default(() => uuidv4.v4()),
+  certainty_percentage: z.number(),
   isSure: z.boolean(),
   estimated_name: z.string(),
   estimated_typeOfFood: z.enum([

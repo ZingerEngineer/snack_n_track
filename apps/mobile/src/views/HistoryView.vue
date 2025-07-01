@@ -14,7 +14,7 @@
               </IonRow>
               <IonRow>
                 <IonCol>Percentage of Certainty</IonCol>
-                <IonCol>{{ data.percentage_of_certainty }}%</IonCol>
+                <IonCol>{{ data.certainty_percentage }}%</IonCol>
               </IonRow>
               <IonRow>
                 <IonCol>Is Sure</IonCol>
@@ -82,7 +82,7 @@ import {
   IonCol,
 } from '@ionic/vue'
 import { ref } from 'vue'
-import type { INutritionData, IEstimatedNutritionData } from '../types/meal/meal.types'
+import type { INutritionData, IEstimatedNutritionData } from '../types/nutrition.types'
 
 const scannedFood = ref<null | INutritionData[] | IEstimatedNutritionData[]>(null)
 </script>

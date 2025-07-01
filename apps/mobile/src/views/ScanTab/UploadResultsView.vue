@@ -157,7 +157,7 @@ import {
   IonCol,
   IonButton,
 } from '@ionic/vue'
-import { useScanStore } from '../../stores/scan.store'
+import { useScanStore } from '../../stores/scanStore/scan.store'
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoadingStore } from '../../stores/components/loading.store'

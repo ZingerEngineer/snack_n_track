@@ -61,9 +61,9 @@
             </div>
           </IonCardContent>
         </IonCard>
-        <div class="w-full flex flex-row justify-between items-center gap-6">
+        <div class="w-full flex-grow flex flex-row justify-between items-center gap-6">
           <IonCard
-            class="p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-3/5"
+            class="p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg w-full h-full"
           >
             <IonCardHeader>
               <IonCardTitle class="text-xl">
@@ -71,7 +71,7 @@
               /></IonCardTitle>
             </IonCardHeader>
             <IonCardContent class="flex items-center justify-center">
-              <svg class="w- h-36 mb-2" viewBox="0 0 64 64">
+              <svg class="w-4/5 mb-2" viewBox="0 0 64 64">
                 <circle
                   class="text-medium-shade"
                   stroke-width="4"
@@ -108,31 +108,6 @@
               </svg>
             </IonCardContent>
           </IonCard>
-          <IonCard
-            class="flex flex-col p-2 border-2 to-light from-medium bg-gradient-to-l border-medium-shade rounded-2xl shadow-lg h-full w-2/5"
-          >
-            <IonCardHeader>
-              <IonCardTitle class="text-xl"> Steps </IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent class="flex flex-grow">
-              <div class="w-full h-full flex flex-col justify-center items-center gap-4">
-                <div class="flex flex-col items-center justify-center">
-                  <h1 class="text-4xl">N/A</h1>
-                  <div class="flex flex-row items-center justify-center gap-2">
-                    <p class="text-sm">Today</p>
-                    <FontAwesomeIcon :icon="faShoePrints" />
-                  </div>
-                </div>
-                <div class="flex flex-col items-center justify-center">
-                  <h1 class="text-4xl">N/A</h1>
-                  <div class="flex flex-row items-center justify-center gap-2">
-                    <p class="text-sm">Average</p>
-                    <FontAwesomeIcon :icon="faMedal" />
-                  </div>
-                </div>
-              </div>
-            </IonCardContent>
-          </IonCard>
         </div>
       </div>
     </IonContent>
@@ -140,7 +115,15 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonButton, IonCardHeader, IonCardTitle } from '@ionic/vue'
+import {
+  IonPage,
+  IonContent,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+} from '@ionic/vue'
 import { useAuthStore } from '../stores/user/auth/auth.store'
 import { useRouter } from 'vue-router'
 
@@ -149,7 +132,6 @@ import {
   faPlateWheat,
   faUtensils,
   faMedal,
-  faShoePrints,
   faCog,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

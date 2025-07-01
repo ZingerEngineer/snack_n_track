@@ -7,6 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+  OTHER
+}
+
+enum FoodType {
+  // Common food categories
+  VEGETABLE
+  FRUIT
+  GRAIN
+  DESSERT
+  BEVERAGE
+  MEAL
+}
+
 enum PortionUnit {
   // Volume (liquid) measurements
   TEASPOON
@@ -137,17 +155,18 @@ model Progress {
 }
 
 model Meal {
-  id            String         @id @default(uuid())
-  name          String         @default("New Meal")
-  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId        String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime?      @updatedAt
-  deletedAt     DateTime?
-  totalCalories Float
-  author        String         @default("SnackModel")
-  typeOfMeal    String         @default("Other")
-  foodItems     MealFoodItem[]
+  id                  String         @id @default(uuid())
+  name                String         @default("New Meal")
+  user                User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId              String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime?      @updatedAt
+  deletedAt           DateTime?
+  totalCalories       Float
+  author              String         @default("SnackModel")
+  certaintyPercentage Float          @default(0) // Percentage of certainty for meal recognition
+  mealType            MealType       @default(OTHER)
+  foodItems           MealFoodItem[]
 }
 
 model MealFoodItem {
@@ -162,6 +181,7 @@ model MealFoodItem {
 model FoodItem {
   id               String           @id @default(uuid())
   foodName         String           @unique
+  foodType         FoodType
   portionUnit      PortionUnit      @default(SERVING)
   portionSizeValue Float            @default(1)
   ingredientString String
