@@ -15,20 +15,8 @@ onMounted(() => {
 
 <template>
   <LoadingComponent />
+  <ModalComponent />
   <IonApp :class="{ 'safe-area': isNative }">
-    <ModalComponent modalId="modal">
-      <template #header>
-        <h1 class="text-2xl font-bold">Modal Header</h1>
-      </template>
-      <template #body>
-        <p class="text-lg">Modal Body</p>
-      </template>
-      <template #footer>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Close</button>
-      </template>
-    </ModalComponent>
-
     <IonRouterOutlet />
   </IonApp>
 </template>
-<style lang="css" scoped></style>
