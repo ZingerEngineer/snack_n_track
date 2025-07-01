@@ -64,6 +64,6 @@
   --ion-color-dark-tint: #262626;
 
   --ion-top-bar-notch-gaurd: 30px;
-  --ion-top-bar-margin: calc(var(--ion-top-bar-notch-gaurd) + 48px);
+  --ion-top-bar-margin: calc(var(--ion-top-bar-notch-gaurd) + 60px);
   --safe-area-inset-top: 20px;
 }
