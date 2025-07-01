@@ -133,41 +133,10 @@ export interface TMealSearchParams {
   includeDeleted?: boolean
 }
 
-// Legacy nutrition types (keeping for backward compatibility)
-interface IIngredientNutrition {
-  id: string
-  ingredientId: string
-  carbohydrates: number
-  proteins: number
-  fats: number
-  saturatedFat: number
-  unsaturatedFat: number
-  transFat: number
-  fiber: number
-  sugars: number
-  cholesterol: number
-  sodium: number
-  potassium: number
-  calcium: number
-  iron: number
-  magnesium: number
-  zinc: number
-  vitaminA: number
-  vitaminB1: number
-  vitaminB2: number
-  vitaminB3: number
-  vitaminB5: number
-  vitaminB6: number
-  vitaminB7: number
-  vitaminB9: number
-  vitaminB12: number
-  vitaminC: number
-  vitaminD: number
-  vitaminE: number
-  vitaminK: number
-}
-
-type TTypeOfFood =
+// Import shared nutrition types from mobile app
+// Note: In a real monorepo setup, these should be in a shared package
+// For now, we'll define server-specific nutrition types that match the mobile shared types
+export type TTypeOfFood =
   | 'Vegetable'
   | 'Fruit'
   | 'Grain'
@@ -175,11 +144,12 @@ type TTypeOfFood =
   | 'Beverage'
   | 'Meal'
 
-interface INutritionData {
+export interface INutritionData {
   id: string
-  percentage_of_certainty: number
+  certainty_percentage: number
   isSure: boolean
   name: string
+  keywords?: Array<string> // Optional for mobile compatibility
   type_of_food: TTypeOfFood
   proteins: string
   carbs: string
@@ -190,18 +160,11 @@ interface INutritionData {
   }>
 }
 
-interface IEstimatedNutritionData {
+export interface IEstimatedNutritionData {
   id: string
-  percentage_of_certainty: number
+  certainty_percentage: number
   isSure: boolean
   estimated_name: string
   estimated_typeOfFood: TTypeOfFood
-}
-
-export type {
-  IEstimatedNutritionData,
-  INutritionData,
-  TTypeOfFood,
-  IIngredientNutrition
 }
 

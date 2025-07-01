@@ -8,7 +8,7 @@ type TTypeOfFood =
 
 interface INutritionData {
   id: string
-  percentage_of_certainty: number
+  certainty_percentage: number
   isSure: boolean
   name: string
   keywords: Array<string>
@@ -24,7 +24,7 @@ interface INutritionData {
 
 interface IEstimatedNutritionData {
   id: string
-  percentage_of_certainty: number
+  certainty_percentage: number
   isSure: boolean
   estimated_name: string
   estimated_typeOfFood: TTypeOfFood

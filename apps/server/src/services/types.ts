@@ -19,7 +19,7 @@ export class Calculator implements ICalculator {
     // Mock implementation for demonstration purposes
     const mockNutritionData: INutritionData = {
       id: '1',
-      percentage_of_certainty: 100,
+      certainty_percentage: 100,
       isSure: true,
       keywords: ['apple', 'تفاحة', 'tofaha'],
       name: 'Apple',
@@ -41,7 +41,7 @@ export class Calculator implements ICalculator {
 
     const mockEstimatedNutritionData: IEstimatedNutritionData = {
       id: '1',
-      percentage_of_certainty: 100,
+      certainty_percentage: 100,
       isSure: true,
       estimated_name: 'Apple',
       estimated_typeOfFood: 'Fruit'
@@ -60,7 +60,7 @@ export class Calculator implements ICalculator {
   ): Promise<GPTCalculatorResponse> => {
     let mockedCalculatorResponse: INutritionData = {
       id: '1',
-      percentage_of_certainty: 100,
+      certainty_percentage: 100,
       isSure: true,
       name: 'Apple',
       keywords: ['apple', 'تفاحة', 'tofaha'],
@@ -81,7 +81,7 @@ export class Calculator implements ICalculator {
     }
     let mockedEstimatedCalculatorResponse: IEstimatedNutritionData = {
       id: '1',
-      percentage_of_certainty: 100,
+      certainty_percentage: 100,
       isSure: true,
       estimated_name: 'Apple',
       estimated_typeOfFood: 'Fruit'
