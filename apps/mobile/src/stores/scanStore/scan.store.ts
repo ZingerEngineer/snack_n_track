@@ -1,41 +1,36 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import {
-  pickPicture,
-  takePhoto,
-  selectFromGallery,
-  checkCameraPermissions,
-  requestCameraPermissions,
-  isMobile,
-  PickPictureError,
-  type IPickPictureOptions,
-  type IPickPictureResult,
-  type TPickPictureError,
-} from '../../apis/mobile/pickPicture/pickPicture'
-import {
-  pickFileWithElement,
-  type IBrowserFileOptions,
-} from '../../apis/browser/pickPicture/pickPicture.browser'
-import { isBrowser } from '../../apis/browser/pickPicture/utils'
-import type { INutritionData } from '../../types/nutrition.types'
 import type { IScanProgress, IScanError, IScanResult } from '../../types/stores/scan.types'
 import type { IImageCompressionResult } from '../../utils/image'
 import fetcher from '../../utils/server/fetcher'
-import { NutritionDataSchema } from '../../schemas/global.zod'
 import { useLoadingStore } from '../components/loading.store'
-import PreferencesService from '../../apis/mobile/usePreferences'
 import {
   compressImage,
   getRecommendedCompressionOptions,
   isValidImageFile,
 } from '../../utils/image'
+import type { TMeal } from '../../types/meal.types'
+import { isBrowser } from '../../apis/browser/pickPicture/utils/platformDetection'
+import { isMobile } from '../../apis/mobile/pickPicture/utils/platformDetection'
+import type { TPickPictureError, TPickPictureResult } from '../../types/apis/shared.apis.types'
+import {
+  checkCameraPermissions,
+  requestCameraPermissions,
+} from '../../apis/mobile/pickPicture/utils/permissionManagement'
+import type { TPickPictureOptions } from '../../types/apis/mobile/pickPicture.types'
+import { pickPicture } from '../../apis/shared/pickPicture'
+import { PickPictureError } from '../../classes/PickPictureError'
+import { selectFromGallery, takePhoto } from '../../apis/mobile/pickPicture/pickPictureMobile'
+import type { TBrowserFileOptions } from '../../types/apis/browser/pickPicturebrowser.types'
+import { pickFileWithElement } from '../../apis/browser/pickPicture/pickPictureBrowser'
+import { backEndScanResponseSchema } from '../../zodSchemas/scanStore/scanStore.zod'
 
 const loadingStore = useLoadingStore()
 
 export const useScanStore = defineStore('scan', () => {
   // === State ===
   const imagePath = ref<string | null>(null)
-  const nutritionData = ref<INutritionData | null>(null)
+  const mealScan = ref<TMeal[] | null>(null)
   const isUploading = ref<boolean>(false)
   const isImagePathSet = ref<boolean>(false)
   const isCompressing = ref<boolean>(false)
@@ -64,25 +59,7 @@ export const useScanStore = defineStore('scan', () => {
 
   const hasImage = computed(() => !!imagePath.value)
 
-  const hasNutritionData = computed(() => !!nutritionData.value)
-
-  const compressionStats = computed(() => {
-    if (!compressionInfo.value) return null
-
-    return {
-      originalSize: compressionInfo.value.originalSize,
-      compressedSize: compressionInfo.value.compressedSize,
-      compressionRatio: compressionInfo.value.compressionRatio,
-      originalSizeMB: (compressionInfo.value.originalSize / 1024 / 1024).toFixed(2),
-      compressedSizeMB: (compressionInfo.value.compressedSize / 1024 / 1024).toFixed(2),
-      savedBytes: compressionInfo.value.originalSize - compressionInfo.value.compressedSize,
-      savedMB: (
-        (compressionInfo.value.originalSize - compressionInfo.value.compressedSize) /
-        1024 /
-        1024
-      ).toFixed(2),
-    }
-  })
+  const hasMeal = computed(() => !!mealScan.value && mealScan.value.length > 0)
 
   // Platform detection
   const isPlatformBrowser = computed(() => isBrowser())
@@ -228,7 +205,7 @@ export const useScanStore = defineStore('scan', () => {
   }
 
   // === Image Picking ===
-  const pickPhotoHandler = async (options?: IPickPictureOptions): Promise<IScanResult> => {
+  const pickPhotoHandler = async (options?: TPickPictureOptions): Promise<IScanResult> => {
     console.log('[ScanStore] pickPhotoHandler', options)
     try {
       clearError()
@@ -250,7 +227,7 @@ export const useScanStore = defineStore('scan', () => {
         progress: 10,
       }
 
-      const result: IPickPictureResult = await pickPicture(options)
+      const result: TPickPictureResult = await pickPicture(options)
 
       if (!result.webPath) {
         setError({
@@ -287,7 +264,7 @@ export const useScanStore = defineStore('scan', () => {
         }
       }, 1000)
 
-      return { success: true, data: nutritionData.value || undefined }
+      return { success: true, data: mealScan.value || undefined }
     } catch (error) {
       console.error('[ScanStore] Error picking photo:', error)
 
@@ -312,7 +289,7 @@ export const useScanStore = defineStore('scan', () => {
   }
 
   const takePhotoHandler = async (
-    options?: Omit<IPickPictureOptions, 'allowGallery'>,
+    options?: Omit<TPickPictureOptions, 'allowGallery'>,
   ): Promise<IScanResult> => {
     console.log('[ScanStore] takePhotoHandler', options)
     try {
@@ -335,7 +312,7 @@ export const useScanStore = defineStore('scan', () => {
         progress: 10,
       }
 
-      const result: IPickPictureResult = await takePhoto(options)
+      const result: TPickPictureResult = await takePhoto(options)
 
       if (!result.webPath) {
         setError({
@@ -372,7 +349,7 @@ export const useScanStore = defineStore('scan', () => {
         }
       }, 1000)
 
-      return { success: true, data: nutritionData.value || undefined }
+      return { success: true, data: mealScan.value || undefined }
     } catch (error) {
       console.error('[ScanStore] Error taking photo:', error)
 
@@ -397,7 +374,7 @@ export const useScanStore = defineStore('scan', () => {
   }
 
   const selectFromGalleryHandler = async (
-    options?: Omit<IPickPictureOptions, 'allowCamera'>,
+    options?: Omit<TPickPictureOptions, 'allowCamera'>,
   ): Promise<IScanResult> => {
     console.log('[ScanStore] selectFromGalleryHandler', options)
     try {
@@ -410,7 +387,7 @@ export const useScanStore = defineStore('scan', () => {
         progress: 10,
       }
 
-      const result: IPickPictureResult = await selectFromGallery(options)
+      const result: TPickPictureResult = await selectFromGallery(options)
 
       if (!result.webPath) {
         setError({
@@ -447,7 +424,7 @@ export const useScanStore = defineStore('scan', () => {
         }
       }, 1000)
 
-      return { success: true, data: nutritionData.value || undefined }
+      return { success: true, data: mealScan.value || undefined }
     } catch (error) {
       console.error('[ScanStore] Error selecting from gallery:', error)
 
@@ -474,7 +451,7 @@ export const useScanStore = defineStore('scan', () => {
   // === Browser File Upload ===
   const uploadFileHandler = async (
     inputElement: HTMLInputElement,
-    options?: IBrowserFileOptions,
+    options?: TBrowserFileOptions,
   ): Promise<IScanResult> => {
     console.log('[ScanStore] uploadFileHandler', inputElement, options)
     try {
@@ -487,7 +464,7 @@ export const useScanStore = defineStore('scan', () => {
         progress: 10,
       }
 
-      const result: IPickPictureResult = await pickFileWithElement(inputElement, {
+      const result: TPickPictureResult = await pickFileWithElement(inputElement, {
         acceptTypes: ['image/jpeg', 'image/png', 'image/webp'],
         multiple: false,
         maxSize: 10 * 1024 * 1024, // 10MB
@@ -532,7 +509,7 @@ export const useScanStore = defineStore('scan', () => {
           }
         }
       }, 1000)
-      return { success: true, data: nutritionData.value || undefined }
+      return { success: true, data: mealScan.value || undefined }
     } catch (error) {
       console.error('[ScanStore] Error uploading file:', error)
 
@@ -715,7 +692,7 @@ export const useScanStore = defineStore('scan', () => {
       loadingStore.updateMessage('Analyzing nutrition data...')
       loadingStore.updateProgress(80)
 
-      const checkedData = NutritionDataSchema.safeParse(data)
+      const checkedData = backEndScanResponseSchema.safeParse(data)
       if (!checkedData.success) {
         console.error('[ScanStore] Invalid data format:', checkedData.error)
         setError({
@@ -725,8 +702,6 @@ export const useScanStore = defineStore('scan', () => {
         })
         return { success: false, error: 'Invalid server response' }
       }
-
-      setNutritionData(checkedData.data)
 
       currentProgress.value = {
         step: 'complete',
@@ -738,7 +713,11 @@ export const useScanStore = defineStore('scan', () => {
       loadingStore.updateProgress(100)
 
       console.log('[ScanStore] Nutrition analysis successful:', checkedData.data)
-      return { success: true, data: checkedData.data }
+      if (!checkedData.data.data || checkedData.data.data.length === 0) {
+        throw new Error('No nutrition data found in the response')
+      }
+      setMealScan(checkedData.data.data || null)
+      return { success: true, data: checkedData.data.data }
     } catch (error) {
       console.error('[ScanStore] Error analyzing photo:', error)
 
@@ -797,15 +776,15 @@ export const useScanStore = defineStore('scan', () => {
     isImagePathSet.value = !!path
   }
 
-  const setNutritionData = (data: INutritionData | null) => {
-    console.log('[ScanStore] setNutritionData', data)
-    nutritionData.value = data
+  const setMealScan = (data: TMeal[] | null) => {
+    console.log('[ScanStore] setMealScan', data)
+    mealScan.value = data
   }
 
   const reset = () => {
     console.log('[ScanStore] reset')
     resetPhoto()
-    nutritionData.value = null
+    mealScan.value = null
     isUploading.value = false
     isCompressing.value = false
     lastError.value = null
@@ -838,7 +817,7 @@ export const useScanStore = defineStore('scan', () => {
   return {
     // === State ===
     imagePath,
-    nutritionData,
+    mealScan,
     isUploading,
     isImagePathSet,
     isCompressing,
@@ -853,8 +832,7 @@ export const useScanStore = defineStore('scan', () => {
     isProcessing,
     canProceed,
     hasImage,
-    hasNutritionData,
-    compressionStats,
+    hasMeal,
     isPlatformBrowser,
     isPlatformMobile,
     supportsCameraDirectly,
@@ -878,15 +856,9 @@ export const useScanStore = defineStore('scan', () => {
     // Utility
     resetPhoto,
     setImagePath,
-    setNutritionData,
+    setMealScan,
     reset,
     clearError,
     initialize,
-
-    // === Legacy compatibility ===
-    anaylsePhotoHandler: analyzePhotoHandler, // Keep the typo for backward compatibility
-    getCompressionStats: () => compressionStats.value,
-    isProcessingLegacy: () => isProcessing.value,
-    hasCompressionData: () => !!compressionInfo.value,
   }
 })

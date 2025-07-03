@@ -1,4 +1,4 @@
-import { PickPictureError } from '../types'
+import { PickPictureError } from '../../../../classes/PickPictureError'
 
 /**
  * Handle Capacitor camera errors and convert to PickPictureError

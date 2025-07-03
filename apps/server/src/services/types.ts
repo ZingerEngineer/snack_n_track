@@ -20,7 +20,6 @@ export class Calculator implements ICalculator {
     const mockNutritionData: INutritionData = {
       id: '1',
       certainty_percentage: 100,
-      isSure: true,
       keywords: ['apple', 'تفاحة', 'tofaha'],
       name: 'Apple',
       type_of_food: 'Fruit',
@@ -42,7 +41,6 @@ export class Calculator implements ICalculator {
     const mockEstimatedNutritionData: IEstimatedNutritionData = {
       id: '1',
       certainty_percentage: 100,
-      isSure: true,
       estimated_name: 'Apple',
       estimated_typeOfFood: 'Fruit'
     }
@@ -61,7 +59,6 @@ export class Calculator implements ICalculator {
     let mockedCalculatorResponse: INutritionData = {
       id: '1',
       certainty_percentage: 100,
-      isSure: true,
       name: 'Apple',
       keywords: ['apple', 'تفاحة', 'tofaha'],
       type_of_food: 'Fruit',
@@ -82,7 +79,6 @@ export class Calculator implements ICalculator {
     let mockedEstimatedCalculatorResponse: IEstimatedNutritionData = {
       id: '1',
       certainty_percentage: 100,
-      isSure: true,
       estimated_name: 'Apple',
       estimated_typeOfFood: 'Fruit'
     }

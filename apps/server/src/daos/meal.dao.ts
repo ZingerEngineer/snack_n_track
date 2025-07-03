@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, MealType } from '@prisma/client'
 import { InternalServerError, NotFoundError } from '../classes/Error'
 
 class MealDao {
@@ -223,12 +223,20 @@ class MealDao {
     userId?: string
     totalCalories: number
     author: string
-    typeOfMeal: string
+    mealType: MealType
+    certaintyPercentage?: number
   }) {
     console.log(`[MealDao] createMeal called with name: ${data.name}`)
     try {
       const prisma = this.getPrismaClient()
-      const { name, userId, totalCalories, author, typeOfMeal } = data
+      const {
+        name,
+        userId,
+        totalCalories,
+        author,
+        mealType,
+        certaintyPercentage
+      } = data
 
       console.log('[MealDao] Creating new meal...')
       const newMeal = await prisma.meal.create({
@@ -237,7 +245,8 @@ class MealDao {
           userId,
           totalCalories,
           author,
-          typeOfMeal
+          mealType,
+          certaintyPercentage: certaintyPercentage || 0
         }
       })
 
@@ -256,7 +265,8 @@ class MealDao {
     userId?: string
     totalCalories: number
     author: string
-    typeOfMeal: string
+    mealType: MealType
+    certaintyPercentage?: number
     foodItemIds: string[]
   }) {
     console.log(
@@ -264,8 +274,15 @@ class MealDao {
     )
     try {
       const prisma = this.getPrismaClient()
-      const { name, userId, totalCalories, author, typeOfMeal, foodItemIds } =
-        data
+      const {
+        name,
+        userId,
+        totalCalories,
+        author,
+        mealType,
+        certaintyPercentage,
+        foodItemIds
+      } = data
 
       console.log('[MealDao] Creating meal with food items...')
       const newMeal = await prisma.meal.create({
@@ -274,7 +291,8 @@ class MealDao {
           userId,
           totalCalories,
           author,
-          typeOfMeal,
+          mealType,
+          certaintyPercentage: certaintyPercentage || 0,
           foodItems: {
             create: foodItemIds.map((foodItemId) => ({
               foodItem: {
@@ -310,7 +328,8 @@ class MealDao {
     name?: string
     totalCalories?: number
     author?: string
-    typeOfMeal?: string
+    mealType?: MealType
+    certaintyPercentage?: number
   }) {
     console.log(`[MealDao] updateMeal called for ID: ${data.id}`)
     try {
@@ -439,7 +458,7 @@ class MealDao {
     name?: string
     userId?: string
     author?: string
-    typeOfMeal?: string
+    mealType?: MealType
     startDate?: Date
     endDate?: Date
     minCalories?: number
@@ -455,7 +474,7 @@ class MealDao {
         name,
         userId,
         author,
-        typeOfMeal,
+        mealType,
         startDate,
         endDate,
         minCalories,
@@ -487,8 +506,8 @@ class MealDao {
         whereConditions.author = author
       }
 
-      if (typeOfMeal) {
-        whereConditions.typeOfMeal = typeOfMeal
+      if (mealType) {
+        whereConditions.mealType = mealType
       }
 
       if (startDate || endDate) {

@@ -16,10 +16,6 @@
                 <IonCol>Percentage of Certainty</IonCol>
                 <IonCol>{{ data.certainty_percentage }}%</IonCol>
               </IonRow>
-              <IonRow>
-                <IonCol>Is Sure</IonCol>
-                <IonCol>{{ data.isSure ? 'Yes' : 'No' }}</IonCol>
-              </IonRow>
               <IonRow v-if="'name' in data">
                 <IonCol>Name</IonCol>
                 <IonCol>{{ data.name }}</IonCol>

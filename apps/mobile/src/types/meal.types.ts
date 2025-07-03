@@ -1,16 +1,23 @@
-// Meal-related types
-// This file contains types specifically for meal management and meal operations
-
+import type { TFoodItem } from './food.types'
 export type TMealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK' | 'OTHER'
 
-export interface IMeal {
+export type TMeal = {
   id: string
   name: string
-  userId?: string | null
-  createdAt: Date
-  updatedAt?: Date | null
-  deletedAt?: Date | null
   totalCalories: number
-  author: string
   mealType: TMealType
+  certaintyPercentage?: number
+  foodItems?: TFoodItem[]
+}
+
+export type TSavedMeal = {
+  id: string
+  name: string
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+  certaintyPercentage: number
+  totalCalories: number
+  mealType: TMealType
+  foodItems: TFoodItem[]
 }

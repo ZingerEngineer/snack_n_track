@@ -14,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'root',
     redirect: '/dashboard',
   },
+
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -51,6 +52,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/scan/upload-results',
         name: 'upload-results',
         component: () => import('../views/ScanTab/UploadResultsView.vue'),
+      },
+      {
+        path: '/test',
+        name: 'test',
+        component: () => import('../views/ScanTab/newUploadResultsView.vue'),
       },
     ],
   },

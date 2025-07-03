@@ -1,11 +1,11 @@
 // Scan store types
 // This file contains types specifically for the scan store and scan functionality
 
-import type { INutritionData } from '../nutrition.types'
+import type { TMeal } from '../meal.types'
 
 export interface IScanStoreState {
   imagePath: string | null
-  nutritionData: INutritionData | null
+  mealScan: TMeal[] | null
   isUploading: boolean
   isImagePathSet: boolean
   isCompressing: boolean
@@ -14,7 +14,7 @@ export interface IScanStoreState {
 
 export interface IScanResult {
   success: boolean
-  data?: INutritionData
+  data?: TMeal[]
   error?: string
 }
 

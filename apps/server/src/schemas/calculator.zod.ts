@@ -3,7 +3,6 @@ import uuidv4 from 'uuid'
 const NutritionDataSchema = z.object({
   id: z.string().default(() => uuidv4.v4()),
   certainty_percentage: z.number(),
-  isSure: z.boolean(),
   name: z.string(),
   keywords: z.array(z.string()),
   type_of_food: z.enum([
@@ -28,7 +27,6 @@ const NutritionDataSchema = z.object({
 const EstimatedNutritionDataSchema = z.object({
   id: z.string().default(() => uuidv4.v4()),
   certainty_percentage: z.number(),
-  isSure: z.boolean(),
   estimated_name: z.string(),
   estimated_typeOfFood: z.enum([
     'Vegetable',

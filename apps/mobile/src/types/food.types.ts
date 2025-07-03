@@ -1,41 +1,12 @@
-// Food item types
-// This file contains types specifically for food items and food management
+import type { FoodType, PortionUnit } from './shared.types'
+import type { TIngredient } from './ingredient.types'
 
-export type TFoodType = 'VEGETABLE' | 'FRUIT' | 'GRAIN' | 'DESSERT' | 'BEVERAGE' | 'MEAL'
-
-export type TPortionUnit =
-  // Volume (liquid) measurements
-  | 'TEASPOON'
-  | 'TABLESPOON'
-  | 'CUP'
-  | 'MILLILITER'
-  | 'LITER'
-  | 'PINT'
-  | 'QUART'
-  | 'GALLON'
-  // Weight measurements
-  | 'GRAM'
-  | 'KILOGRAM'
-  | 'OUNCE'
-  | 'POUND'
-  // Other generic or small quantity measures
-  | 'PINCH'
-  | 'DASH'
-  | 'PIECE'
-  | 'SLICE'
-  | 'SERVING'
-
-export interface IFoodItem {
+export type TFoodItem = {
   id: string
   foodName: string
-  foodType: TFoodType
-  portionUnit: TPortionUnit
+  foodType: FoodType
+  portionUnit: PortionUnit
   portionSizeValue: number
-  ingredientString: string
-  createdAt?: Date
-  updatedAt?: Date
-  deletedAt?: Date
+  ingredientString?: string
+  ingredients?: TIngredient[]
 }
-
-// Legacy type for backward compatibility (deprecated - use TFoodType instead)
-export type TTypeOfFood = 'Vegetable' | 'Fruit' | 'Grain' | 'Dessert' | 'Beverage' | 'Meal'

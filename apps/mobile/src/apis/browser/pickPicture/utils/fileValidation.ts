@@ -1,6 +1,6 @@
-import { PickPictureError } from '../../../mobile/pickPicture/pickPicture'
+import { PickPictureError } from '../../../../classes/PickPictureError'
 import { isValidImageFile } from '../../../../utils/image/fileValidator'
-import type { IBrowserFileOptions } from '../types'
+import type { TBrowserFileOptions } from '../../../../types/apis/browser/pickPicturebrowser.types'
 
 /**
  * Validate file against specified criteria using the existing file validator
@@ -8,7 +8,7 @@ import type { IBrowserFileOptions } from '../types'
  * @param options Validation options
  * @throws PickPictureError if validation fails
  */
-export async function validateFile(file: File, options: IBrowserFileOptions): Promise<void> {
+export async function validateFile(file: File, options: TBrowserFileOptions): Promise<void> {
   // Check if file exists
   if (!file) {
     throw new PickPictureError(

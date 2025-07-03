@@ -1,21 +1,17 @@
-import type { IPickPictureResult } from '../../../mobile/pickPicture/types'
-import type { IBrowserFileOptions } from '../types'
-import { DEFAULT_BROWSER_OPTIONS } from '../types'
+import type { TPickPictureResult } from '../../../../types/apis/shared.apis.types'
+import {
+  type TBrowserFileOptions,
+  defaultBrowserOptions,
+} from '../../../../types/apis/browser/pickPicturebrowser.types'
 import { handleFileSelection } from './fileSelectionHandler'
-import { PickPictureError } from '../../../mobile/pickPicture/types'
-
-interface IPickFileOptions {
-  acceptTypes?: string[]
-  multiple?: boolean
-  [key: string]: unknown
-}
+import { PickPictureError } from '../../../../classes/PickPictureError'
 
 /**
  * Create a file input element with specified options
  * @param options Browser file selection options
  * @returns Configured HTMLInputElement
  */
-function createFileInput(options: IBrowserFileOptions): HTMLInputElement {
+function createFileInput(options: TBrowserFileOptions): HTMLInputElement {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = options.acceptTypes?.join(',') || 'image/*'
@@ -29,12 +25,14 @@ function createFileInput(options: IBrowserFileOptions): HTMLInputElement {
  * @param options Pick picture options
  * @returns Promise resolving to pick picture result
  */
-export async function pickFileFromBrowser(options: IPickFileOptions): Promise<IPickPictureResult> {
+export async function pickFileFromBrowser(
+  options: TBrowserFileOptions,
+): Promise<TPickPictureResult> {
   return new Promise((resolve, reject) => {
-    const browserOptions: IBrowserFileOptions = {
-      acceptTypes: options.acceptTypes || DEFAULT_BROWSER_OPTIONS.acceptTypes,
-      multiple: options.multiple || DEFAULT_BROWSER_OPTIONS.multiple,
-      maxSize: DEFAULT_BROWSER_OPTIONS.maxSize,
+    const browserOptions: TBrowserFileOptions = {
+      acceptTypes: options.acceptTypes || defaultBrowserOptions.acceptTypes,
+      multiple: options.multiple || defaultBrowserOptions.multiple,
+      maxSize: defaultBrowserOptions.maxSize,
     }
 
     const input = createFileInput(browserOptions)

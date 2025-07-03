@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express'
 import multer from 'multer'
 import {
-  scanMealController,
-  mealController
+  scanMealGeminiController,
+  scanMealHybridController
 } from '../controllers/meal.controller'
 import authorizationMiddleware from '../middlewares/authorizationMiddleware'
 import {
@@ -220,22 +220,7 @@ const handleErrors: express.ErrorRequestHandler = (
 }
 
 /**
- * Health check endpoint
- */
-mealRouter.get('/health', (req: ExtendedRequest, res: Response) => {
-  const stats = concurrencyManager.getStats()
-
-  res.status(200).json({
-    success: true,
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    concurrency: stats,
-    requestId: req.id
-  })
-})
-
-/**
- * Enhanced meal scanning endpoint with full security and validation
+ * Main meal scanning endpoint with hybrid approach (SnacknTrack + Gemini fallback)
  */
 mealRouter.post(
   '/scan',
@@ -244,22 +229,19 @@ mealRouter.post(
   upload.single('file'), // Handle file upload with security
   async (req: ExtendedRequest, res: Response, next: NextFunction) => {
     try {
-      console.info('[MealRouter] POST /scan - Processing meal scan request', {
+      console.info('[MealRouter] POST /scan - Processing hybrid scan request', {
         requestId: req.id,
-        userId: (req as any).user?.id,
-        hasFile: !!req.file,
-        fileSize: req.file?.size
-          ? `${(req.file.size / 1024 / 1024).toFixed(2)}MB`
-          : 'N/A'
+        userId: (req as any).user?.id
       })
 
-      const response = await scanMealController(req)
+      const response = await scanMealHybridController(req)
 
       res.status(200).json({
         success: true,
         data: response,
         requestId: req.id,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        note: `Processed using ${response.source} with ${response.confidence}% confidence`
       })
     } catch (error) {
       next(error)
@@ -268,66 +250,31 @@ mealRouter.post(
 )
 
 /**
- * Legacy scan endpoint (kept for backward compatibility)
+ * Gemini-only meal scanning endpoint
  */
 mealRouter.post(
-  '/scan-legacy',
-  scanRateLimit.middleware(),
-  authorizationMiddleware,
-  upload.single('file'),
+  '/scan/gemini',
+  scanRateLimit.middleware(), // Apply scan-specific rate limiting
+  authorizationMiddleware, // Require authentication
+  upload.single('file'), // Handle file upload with security
   async (req: ExtendedRequest, res: Response, next: NextFunction) => {
     try {
-      console.warn(
-        '[MealRouter] POST /scan-legacy - Using deprecated endpoint',
+      console.info(
+        '[MealRouter] POST /scan/gemini - Processing Gemini-only scan request',
         {
           requestId: req.id,
           userId: (req as any).user?.id
         }
       )
 
-      const response = await mealController(req)
+      const response = await scanMealGeminiController(req)
 
       res.status(200).json({
         success: true,
         data: response,
         requestId: req.id,
         timestamp: new Date().toISOString(),
-        warning: 'This endpoint is deprecated. Please use /scan instead.'
-      })
-    } catch (error) {
-      next(error)
-    }
-  }
-)
-
-/**
- * Public scan endpoint (no auth required, more limited)
- */
-mealRouter.post(
-  '/scan-public',
-  publicRateLimit.middleware(),
-  upload.single('file'),
-  async (req: ExtendedRequest, res: Response, next: NextFunction) => {
-    try {
-      console.info(
-        '[MealRouter] POST /scan-public - Processing public scan request',
-        {
-          requestId: req.id,
-          ip: req.ip
-        }
-      )
-
-      // Set saveToHistory to false for public scans
-      req.body.saveToHistory = false
-
-      const response = await scanMealController(req)
-
-      res.status(200).json({
-        success: true,
-        data: response,
-        requestId: req.id,
-        timestamp: new Date().toISOString(),
-        note: 'Public scan - results not saved to history. Create an account to save your scans.'
+        note: 'Processed using Gemini AI analysis'
       })
     } catch (error) {
       next(error)

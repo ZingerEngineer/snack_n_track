@@ -22,6 +22,10 @@ enum FoodType {
   GRAIN
   DESSERT
   BEVERAGE
+  DAIRY
+  FATS
+  NUTS
+  MEAT
   MEAL
 }
 
@@ -181,7 +185,7 @@ model MealFoodItem {
 model FoodItem {
   id               String           @id @default(uuid())
   foodName         String           @unique
-  foodType         FoodType
+  foodType         FoodType         @default(MEAL)
   portionUnit      PortionUnit      @default(SERVING)
   portionSizeValue Float            @default(1)
   ingredientString String

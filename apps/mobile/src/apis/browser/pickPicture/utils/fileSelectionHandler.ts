@@ -1,6 +1,6 @@
-import { PickPictureError } from '../../../mobile/pickPicture/pickPicture'
-import type { IPickPictureResult } from '../../../mobile/pickPicture/pickPicture'
-import type { IBrowserFileOptions } from '../types'
+import { PickPictureError } from '../../../../classes/PickPictureError'
+import type { TBrowserFileOptions } from '../../../../types/apis/browser/pickPicturebrowser.types'
+import type { TPickPictureResult } from '../../../../types/apis/shared.apis.types'
 import { processSelectedFile } from './fileProcessing'
 
 /**
@@ -11,8 +11,8 @@ import { processSelectedFile } from './fileProcessing'
  */
 export async function handleFileSelection(
   files: FileList | null,
-  options: IBrowserFileOptions,
-): Promise<IPickPictureResult> {
+  options: TBrowserFileOptions,
+): Promise<TPickPictureResult> {
   if (!files || files.length === 0) {
     throw new PickPictureError('USER_CANCELLED', 'No file selected')
   }

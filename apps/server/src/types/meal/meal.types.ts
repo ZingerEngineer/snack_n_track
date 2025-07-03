@@ -147,7 +147,6 @@ export type TTypeOfFood =
 export interface INutritionData {
   id: string
   certainty_percentage: number
-  isSure: boolean
   name: string
   keywords?: Array<string> // Optional for mobile compatibility
   type_of_food: TTypeOfFood
@@ -163,7 +162,6 @@ export interface INutritionData {
 export interface IEstimatedNutritionData {
   id: string
   certainty_percentage: number
-  isSure: boolean
   estimated_name: string
   estimated_typeOfFood: TTypeOfFood
 }

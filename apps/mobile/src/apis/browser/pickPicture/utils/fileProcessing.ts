@@ -1,5 +1,5 @@
-import type { IPickPictureResult } from '../../../mobile/pickPicture/pickPicture'
-import type { IBrowserFileOptions } from '../types'
+import type { TBrowserFileOptions } from '../../../../types/apis/browser/pickPicturebrowser.types'
+import type { TPickPictureResult } from '../../../../types/apis/shared.apis.types'
 import { validateFile } from './fileValidation'
 
 /**
@@ -24,8 +24,8 @@ export function fileToDataUrl(file: File): Promise<string> {
  */
 export async function processSelectedFile(
   file: File,
-  options: IBrowserFileOptions,
-): Promise<IPickPictureResult> {
+  options: TBrowserFileOptions,
+): Promise<TPickPictureResult> {
   await validateFile(file, options)
 
   const dataUrl = await fileToDataUrl(file)

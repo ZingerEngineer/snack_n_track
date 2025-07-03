@@ -1,10 +1,9 @@
-import type { IPickPictureResult } from '../../mobile/pickPicture/pickPicture'
-import type { IBrowserFileOptions } from './types'
-import { DEFAULT_BROWSER_OPTIONS } from './types'
-import { handleFileSelection } from './utils'
-
-// Re-export types for external use
-export type { IBrowserFileOptions } from './types'
+import type { TPickPictureResult } from '../../../types/apis/shared.apis.types'
+import {
+  type TBrowserFileOptions,
+  defaultBrowserOptions,
+} from '../../../types/apis/browser/pickPicturebrowser.types'
+import { handleFileSelection } from './utils/fileSelectionHandler'
 
 /**
  * Pick file using an existing HTML input element (for UI integration)
@@ -14,8 +13,8 @@ export type { IBrowserFileOptions } from './types'
  */
 export async function pickFileWithElement(
   inputElement: HTMLInputElement,
-  options: IBrowserFileOptions = DEFAULT_BROWSER_OPTIONS,
-): Promise<IPickPictureResult> {
+  options: TBrowserFileOptions = defaultBrowserOptions,
+): Promise<TPickPictureResult> {
   // Ensure input element is properly configured
   try {
     inputElement.type = 'file'
