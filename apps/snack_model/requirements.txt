@@ -1,0 +1,21 @@
+# FastAPI and web framework dependencies
+fastapi
+uvicorn
+pydantic
+
+# HTTP client for image downloads
+httpx
+
+# Async file operations
+aiofiles
+
+# Machine learning dependencies
+ultralytics
+torch
+torchvision
+opencv-python
+pillow
+numpy
+
+# Additional utilities
+python-multipart
