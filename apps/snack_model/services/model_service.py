@@ -51,11 +51,7 @@ class YOLOModelService:
         """Check if model is loaded"""
         return self.model is not None
         
-    def get_class_name(self, class_index: int) -> str:
-        """Get class name by index"""
-        return self.class_names.get(class_index, f"class_{class_index}")
-        
-    def predict(self, image_path: str, confidence_threshold: float = 0.5) -> List[Dict[str, Any]]:
+    def predict(self, image_path: str, confidence_threshold: float = 0.3) -> List[Dict[int, float]]:
         """
         Run inference on an image
         
@@ -89,9 +85,7 @@ class YOLOModelService:
                     for i, (box, conf, cls_idx) in enumerate(zip(boxes, confidences, class_indices)):
                         detection = {
                             "class_index": int(cls_idx),
-                            "class_name": self.get_class_name(cls_idx),
                             "confidence": float(conf),
-                            "bounding_box": box.tolist()
                         }
                         detections.append(detection)
                         

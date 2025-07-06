@@ -10,9 +10,7 @@ class RequestStatus(str, Enum):
 
 class DetectionResult(BaseModel):
     class_index: int = Field(..., description="Index of the detected class")
-    class_name: str = Field(..., description="Name of the detected class")
     confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence score between 0 and 1")
-    bounding_box: Optional[List[float]] = Field(None, description="Bounding box coordinates [x1, y1, x2, y2]")
 
 class ScanRequest(BaseModel):
     request_id: str = Field(..., min_length=1, max_length=100, description="Unique identifier for the request")
