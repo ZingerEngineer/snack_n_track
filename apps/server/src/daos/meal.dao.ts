@@ -267,7 +267,7 @@ class MealDao {
     author: string
     mealType: MealType
     certaintyPercentage?: number
-    foodItemIds: string[]
+    foodItemIds: number[]
   }) {
     console.log(
       `[MealDao] createMealWithFoodItems called with name: ${data.name}`
@@ -405,7 +405,7 @@ class MealDao {
     }
   }
 
-  async addFoodItemsToMeal(mealId: string, foodItemIds: string[]) {
+  async addFoodItemsToMeal(mealId: string, foodItemIds: number[]) {
     console.log(`[MealDao] addFoodItemsToMeal called for meal: ${mealId}`)
     try {
       const prisma = this.getPrismaClient()
@@ -429,7 +429,7 @@ class MealDao {
     }
   }
 
-  async removeFoodItemsFromMeal(mealId: string, foodItemIds: string[]) {
+  async removeFoodItemsFromMeal(mealId: string, foodItemIds: number[]) {
     console.log(`[MealDao] removeFoodItemsFromMeal called for meal: ${mealId}`)
     try {
       const prisma = this.getPrismaClient()

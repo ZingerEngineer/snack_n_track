@@ -1,18 +1,35 @@
-export function extractJsonFromString(text: string): object | null {
-  // Regex to match content between ```json and ```
-  const jsonRegex = /```json\n([\s\S]*?)\n```/
-  const match = text.match(jsonRegex)
+import JSON5 from 'json5'
 
-  if (!match || !match[1]) {
-    return null // No JSON found
+export function extractJson5FromText(text: string): object | null {
+  const jsonRegex = /```json\s*([\s\S]*?)\s*```/g
+  let match: RegExpExecArray | null
+
+  while ((match = jsonRegex.exec(text)) !== null) {
+    try {
+      const jsonString = match[1].trim()
+      return JSON5.parse(jsonString)
+    } catch (error) {
+      // Ignore malformed blocks
+    }
   }
 
-  try {
-    const jsonString = match[1].trim()
-    return JSON.parse(jsonString)
-  } catch (error) {
-    console.error('Failed to parse JSON:', error)
-    return null
+  return null // No valid JSON5 found
+}
+
+export function extractAllJson5FromText(text: string): object[] {
+  const jsonRegex = /```json\s*([\s\S]*?)\s*```/g
+  const results: object[] = []
+  let match: RegExpExecArray | null
+
+  while ((match = jsonRegex.exec(text)) !== null) {
+    try {
+      const jsonString = match[1].trim()
+      results.push(JSON5.parse(jsonString))
+    } catch (error) {
+      // Skip malformed JSON5 blocks
+    }
   }
+
+  return results
 }
 

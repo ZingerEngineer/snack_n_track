@@ -1,14 +1,17 @@
 import { MealType } from '../types/shared.types'
 import z from 'zod'
 import { foodItemSchema } from './foodItems.zod'
+import { parseStringNumber } from './utils/parseStringNumber'
 
 export const mealSchema = z.object({
-  id: z.string().default(() => crypto.randomUUID()),
-  name: z.string().default('New meal'),
-  totalCalories: z.number().default(0),
-  mealType: z.nativeEnum(MealType).default(MealType.OTHER),
-  certaintyPercentage: z.number().default(0).optional(),
-  foodItems: foodItemSchema.array().default([]),
+  id: z.string().catch(() => crypto.randomUUID()),
+  name: z.string().catch('New meal'),
+  totalCalories: z.number().catch((totalCalories) => parseStringNumber(totalCalories)),
+  mealType: z.nativeEnum(MealType).catch(MealType.OTHER),
+  certaintyPercentage: z
+    .number()
+    .catch((certaintyPercentage) => parseStringNumber(certaintyPercentage)),
+  foodItems: foodItemSchema.array().catch([]),
 })
 
 export const savedMealSchema = z.object({

@@ -41,6 +41,31 @@ async function fetcher<T>(endpoint: string, options: FetcherOptions = {}): Promi
     ...((options.headers as Record<string, string>) || {}),
   }
 
+  // Process the body and set appropriate Content-Type
+  let processedBody: BodyInit | null = null
+
+  if (options.body) {
+    if (options.body instanceof FormData) {
+      // FormData: Don't stringify, don't set Content-Type (browser sets it with boundary)
+      processedBody = options.body
+    } else if (
+      options.body instanceof Blob ||
+      options.body instanceof ArrayBuffer ||
+      options.body instanceof URLSearchParams ||
+      typeof options.body === 'string'
+    ) {
+      // Already valid BodyInit types: use as-is
+      processedBody = options.body as BodyInit
+    } else if (typeof options.body === 'object') {
+      // Plain JSON object: stringify and set Content-Type
+      processedBody = JSON.stringify(options.body as JSONRequestBody)
+      if (!options.contentType && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json'
+      }
+    }
+  }
+
+  // Apply custom Content-Type if specified
   if (options.contentType) {
     headers['Content-Type'] = options.contentType
   }
@@ -49,37 +74,50 @@ async function fetcher<T>(endpoint: string, options: FetcherOptions = {}): Promi
     method: options.method || 'GET',
     headers,
     credentials: 'include', // Include credentials by default
-    ...options,
-    body:
-      options.body && typeof options.body === 'object' && !(options.body instanceof FormData)
-        ? JSON.stringify(options.body as JSONRequestBody)
-        : (options.body as BodyInit | null),
-  }
-
-  // If the body exists, check if it is a plain JSON object and not one of the other allowed types.
-  if (options.body && typeof options.body === 'object' && !(options.body instanceof FormData)) {
-    // Only stringify if it's not one of the other BodyInit types that shouldn't be stringified.
-    if (
-      !(options.body instanceof Blob) &&
-      !(options.body instanceof ArrayBuffer) &&
-      !(options.body instanceof URLSearchParams)
-    ) {
-      config.body = JSON.stringify(options.body as JSONRequestBody)
-    }
+    body: processedBody,
+    // Spread other options but exclude body since we processed it above
+    ...Object.fromEntries(
+      Object.entries(options).filter(([key]) => key !== 'body' && key !== 'contentType'),
+    ),
   }
 
   try {
+    console.log('[fetcher] Request:', {
+      url,
+      method: config.method,
+      headers: config.headers,
+      bodyType: processedBody ? typeof processedBody : 'null',
+      bodyContent: processedBody instanceof FormData ? '[FormData]' : processedBody,
+    })
+
     const response = await fetch(url, config)
 
     if (!response.ok) {
-      const errorData = await response.text()
+      let errorData: string
+      try {
+        const errorJson = await response.json()
+        errorData = JSON.stringify(errorJson)
+      } catch {
+        errorData = await response.text()
+      }
+
+      console.error('[fetcher] HTTP Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+      })
+
       throw new Error(`HTTP error ${response.status}: ${response.statusText}\n${errorData}`)
     }
 
     const data = await response.json()
-    return data as Promise<T>
+    console.log('[fetcher] Success response:', data)
+    return data as T
   } catch (error) {
-    // Swallow errors
+    console.error('[fetcher] Request failed:', {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    })
     return Promise.reject(error)
   }
 }

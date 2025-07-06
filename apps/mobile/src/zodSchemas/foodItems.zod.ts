@@ -1,15 +1,16 @@
 import { FoodType, PortionUnit } from '../types/shared.types'
 import { z } from 'zod'
 import { ingredientSchema, savedIngredientSchema } from './ingredient.zod'
+import { parseStringNumber } from './utils/parseStringNumber'
 
 export const foodItemSchema = z.object({
-  id: z.string().default(() => crypto.randomUUID()),
-  foodName: z.string().default('New food item'),
-  foodType: z.nativeEnum(FoodType).default(FoodType.MEAL),
-  portionUnit: z.nativeEnum(PortionUnit).default(PortionUnit.SERVING),
-  portionSizeValue: z.number().default(1),
-  ingredientString: z.string().optional().default(''),
-  ingredients: ingredientSchema.array().default([]),
+  id: z.string().catch(() => crypto.randomUUID()),
+  foodName: z.string().catch('New food item'),
+  foodType: z.nativeEnum(FoodType).catch(FoodType.MEAL),
+  portionUnit: z.nativeEnum(PortionUnit).catch(PortionUnit.SERVING),
+  portionSizeValue: z.number().catch((portionSizeValue) => parseStringNumber(portionSizeValue)),
+  ingredientString: z.string().optional().catch(''),
+  ingredients: ingredientSchema.array().catch([]),
 })
 
 export const savedFoodItem = z.object({

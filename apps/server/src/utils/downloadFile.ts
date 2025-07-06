@@ -21,7 +21,6 @@ async function downloadFile(
 
     if (!response.ok) {
       throw new Error(`Failed to fetch the file. Status: ${response.status}`)
-      console.log(`Failed to fetch the file. Status: ${response.status}`)
     }
 
     // Ensure the directory exists

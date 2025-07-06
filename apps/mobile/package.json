@@ -36,6 +36,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@ionic/vue": "^8.4.0",
     "@ionic/vue-router": "^8.4.0",
+    "@supabase/supabase-js": "^2.50.3",
     "@vee-validate/zod": "^4.15.0",
     "axios": "^1.7.9",
     "browser-image-compression": "^2.0.2",

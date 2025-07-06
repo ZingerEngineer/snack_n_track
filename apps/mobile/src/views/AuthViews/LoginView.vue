@@ -56,24 +56,37 @@
             <span class="error-message">{{ passwordError }}</span>
           </div>
           <IonButton class="login-button w-full" type="submit">Login</IonButton>
-          <div class="mt-4 w-full flex justify-center items-center bg-red-500">
-            {{ user }}
-          </div>
         </form>
+        <div
+          id="g_id_onload"
+          data-client_id="795655910199-tegacmq62fgirj62nf9t2s2hkvmeibnn.apps.googleusercontent.com"
+          data-context="signin"
+          data-ux_mode="popup"
+          data-callback="handleSignInWithGoogle"
+          data-itp_support="true"
+        ></div>
+
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="filled_black"
+          data-text="signin_with"
+          data-size="large"
+          data-logo_alignment="left"
+        ></div>
       </div>
     </IonContent>
   </IonPage>
 </template>
 
 <script setup lang="ts">
-import { useSocialLogin } from '../../stores/user/auth/googleAuth.store'
 import { IonPage, IonContent, IonInput, IonButton } from '@ionic/vue'
 import { useField, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/user/auth/auth.store'
-import { onMounted, ref } from 'vue'
-import { SocialLogin } from '@capgo/capacitor-social-login'
+import { ref } from 'vue'
 import snackNTrackLogo from '../../assets/snackntracklogo.svg'
 import { LoginSchema } from '../../zodSchemas/user/user.zod'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -81,9 +94,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { togglePasswordVisibility } from './utils'
 
 const router = useRouter()
-
-const { user } = useSocialLogin()
-
 const { login } = useAuthStore()
 
 const handleTogglePassword = () => {
@@ -108,14 +118,6 @@ const onSubmit = handleSubmit(async (values) => {
   } catch {
     return
   }
-})
-
-onMounted(() => {
-  SocialLogin.initialize({
-    google: {
-      webClientId: '795655910199-tegacmq62fgirj62nf9t2s2hkvmeibnn.apps.googleusercontent.com',
-    },
-  })
 })
 </script>
 

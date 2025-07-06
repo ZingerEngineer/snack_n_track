@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum MealAuthor {
+  SNACK_MODEL
+  GEMINI
+  OTHER
+}
+
 enum MealType {
   BREAKFAST
   LUNCH
@@ -93,19 +99,19 @@ enum RatingScale {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  name       String?
-  email      String    @unique
-  avatar     String?
-  googleId   String?   @unique
-  password   String
-  role       String    @default("USER")
-  age        Int?
-  gender     String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @updatedAt
-  deletedAt  DateTime?
-  softDelete Boolean   @default(false)
+  id            String    @id @default(uuid())
+  name          String?
+  email         String    @unique
+  avatar        String?
+  password      String
+  role          String    @default("USER")
+  age           Int?
+  gender        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+  deletedAt     DateTime?
+  softDelete    Boolean   @default(false)
+  introComplete Boolean   @default(false)
 
   medicalConditions     UserMedicalCondition[]
   progress              Progress[]
@@ -167,7 +173,7 @@ model Meal {
   updatedAt           DateTime?      @updatedAt
   deletedAt           DateTime?
   totalCalories       Float
-  author              String         @default("SnackModel")
+  author              MealAuthor     @default(GEMINI)
   certaintyPercentage Float          @default(0) // Percentage of certainty for meal recognition
   mealType            MealType       @default(OTHER)
   foodItems           MealFoodItem[]
@@ -175,7 +181,7 @@ model Meal {
 
 model MealFoodItem {
   mealId   String
-  foodId   String
+  foodId   Int
   meal     Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
   foodItem FoodItem @relation(fields: [foodId], references: [id], onDelete: Cascade)
 
@@ -183,7 +189,7 @@ model MealFoodItem {
 }
 
 model FoodItem {
-  id               String           @id @default(uuid())
+  id               Int              @id @default(autoincrement())
   foodName         String           @unique
   foodType         FoodType         @default(MEAL)
   portionUnit      PortionUnit      @default(SERVING)
@@ -197,7 +203,7 @@ model FoodItem {
 }
 
 model FoodIngredient {
-  foodId       String
+  foodId       Int
   ingredientId String
   foodItem     FoodItem   @relation(fields: [foodId], references: [id])
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id])

@@ -14,7 +14,7 @@ const checkFile = (filePath: string) => {
   const zodImageChecker = new ZodImageFileChecker()
   const file = {
     filePath,
-    mimeType: lookup(filePath)
+    mimeType: lookup(filePath) || 'image/jpeg' // Default to jpeg if lookup fails
   }
   console.log('File details:', file)
   const fileCheckResults = zodImageChecker.isAllowed(file)
@@ -68,3 +68,4 @@ export async function geminiApi(filePath: string, prompt: string) {
     throw new Error('Gemini API call failed')
   }
 }
+

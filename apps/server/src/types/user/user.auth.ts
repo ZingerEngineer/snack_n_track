@@ -1,7 +1,21 @@
-interface ITokenPayload {
+export type TTokenPayload = {
   userId: string
-  googleId: string | null
   role: string
 }
 
-export { ITokenPayload }
+export type TRefreshToken = {
+  id: string
+  token: string
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type TLoginCredentials = {
+  email: string
+  password: string
+}
+export type TRegisterCredentials = {
+  email: string
+  password: string
+}

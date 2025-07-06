@@ -3,6 +3,7 @@ export type TMealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK' | 'OTHER'
 
 export type TMeal = {
   id: string
+  userId: string
   name: string
   totalCalories: number
   mealType: TMealType

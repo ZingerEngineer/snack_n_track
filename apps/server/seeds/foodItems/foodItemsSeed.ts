@@ -3,9 +3,18 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+  try {
+    await prisma.$executeRawUnsafe(
+      'TRUNCATE TABLE "FoodItem" RESTART IDENTITY CASCADE;'
+    )
+    console.log('FoodItem table truncated and sequence reset successfully.')
+  } catch (error) {
+    console.error('Error resetting FoodItem table:', error)
+    throw error
+  }
   const foods = [
     {
-      foodName: 'White Rice',
+      foodName: 'White rice',
       ingredientString:
         'Rice: 200 grams, Water: 200 ml, Salt: 1 teaspoon, Oil: 2 tablespoons'
     },
@@ -29,6 +38,7 @@ async function main() {
       ingredientString:
         'Puff Pastry: 150 grams, Milk: 1000 ml, Sugar: 60 grams, Raisins: 50 grams, Nuts: 30 grams, Cinnamon: 1/2 teaspoon, Cream: 25 grams'
     },
+    { foodName: 'Edible game', ingredientString: null },
     {
       foodName: 'Baba ghanoush',
       ingredientString:
@@ -50,7 +60,7 @@ async function main() {
         'Semolina: 500 grams, Sugar: 420 grams, Ghee: 150 grams, Yogurt: 150 ml, Baking Powder: 1 teaspoon, Vanilla: 1 teaspoon, Coconut: 30 grams, Almonds: 30 grams'
     },
     {
-      foodName: 'Biscuits',
+      foodName: 'Biscuit',
       ingredientString:
         'Flour: 1000 grams, Butter: 600 grams, Sugar: 400 grams, Eggs: 200 grams, Vanilla: 1 teaspoon, Baking Powder: 1/2 teaspoon, Milk: 75 ml'
     },
@@ -85,9 +95,23 @@ async function main() {
         'Potatoes: 600 grams, Oil: 200 grams, Salt: 1/2 teaspoon'
     },
     {
-      foodName: 'Balah El Sham',
+      foodName: 'Baklava',
+      ingredientString:
+        'Phyllo Pastry: 400 grams, Nuts: 200 grams, Ghee: 200 grams, Sugar: 300 grams, Water: 200 ml, Lemon Juice: 1 tablespoon'
+    },
+    {
+      foodName: 'Balah el sham',
       ingredientString:
         'Flour: 250 grams, Ghee: 100 grams, Eggs: 100 grams, Vanilla: 1 teaspoon, Water: 120 ml, Oil: 200 grams'
+    },
+    {
+      foodName: 'Pizza',
+      ingredientString:
+        'Flour: 300 grams, Water: 200 ml, Yeast: 1 teaspoon, Salt: 1 teaspoon, Oil: 2 tablespoons, Tomato Sauce: 100 grams, Cheese: 100 grams'
+    },
+    {
+      foodName: 'Omelette eggs',
+      ingredientString: 'Eggs: 150 grams, Oil: 1 tablespoon, Salt: 1/2 teaspoon'
     },
     {
       foodName: 'Eggs with pastrami',
@@ -261,6 +285,11 @@ async function main() {
         'Flour: 375 grams, Yeast: 1 teaspoon, Sugar: 1 teaspoon, Salt: 1 teaspoon, Oil: 2 tablespoons'
     },
     {
+      foodName: 'Fasolya in tomato sauce',
+      ingredientString:
+        'Beans: 500 grams, Tomatoes: 200 grams, Onion: 100 grams, Garlic: 10 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
+    },
+    {
       foodName: 'White beans',
       ingredientString:
         'White Beans: 1 cup (200 grams), Water: 4 cups (800 ml), Onion: 1 piece (100 grams), Garlic: 2 cloves (10 grams), Tomatoes: 2 pieces (200 grams), Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon, Oil: 2 tablespoons'
@@ -280,11 +309,14 @@ async function main() {
       ingredientString:
         'Flour: 375 grams, Ghee: 100 grams, Salt: 1/2 teaspoon, Sugar: 1 teaspoon'
     },
-    { foodName: 'Peanuts', ingredientString: 'Peanuts: 100 grams' },
     {
-      foodName: 'Beans in tomato sauce',
+      foodName: 'Brown toast',
+      ingredientString: null
+    },
+    {
+      foodName: 'Foul medames',
       ingredientString:
-        'Beans: 500 grams, Tomatoes: 200 grams, Onion: 100 grams, Garlic: 10 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
+        'Fava Beans: 200 grams, Olive Oil: 2 tablespoons, Lemon Juice: 1 tablespoon, Garlic: 10 grams, Salt: 1/2 teaspoon'
     },
     {
       foodName: 'Qatayef',
@@ -332,6 +364,10 @@ async function main() {
         'Chicken: 300 grams, Cheddar Cheese: 50 grams, Turkey: 50 grams, Eggs: 100 grams, Flour: 60 grams, Breadcrumbs: 100 grams, Oil: 200 grams'
     },
     {
+      foodName: 'White toast',
+      ingredientString: null
+    },
+    {
       foodName: 'Zucchini in tomato sauce',
       ingredientString:
         'Zucchini: 1000 grams, Tomatoes: 1000 grams, Onion: 100 grams, Garlic: 15 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
@@ -342,9 +378,8 @@ async function main() {
         'Green Cabbage: 300 grams, Carrot: 150 grams, Mayonnaise: 120 grams, Vinegar: 1 tablespoon, Sugar: 1 teaspoon, Salt: 1/2 teaspoon'
     },
     {
-      foodName: 'Meat in tomato sauce',
-      ingredientString:
-        'Meat: 500 grams, Tomatoes: 300 grams, Onion: 100 grams, Garlic: 15 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
+      foodName: 'Vienna bread',
+      ingredientString: null
     },
     {
       foodName: 'Boiled meat',
@@ -352,14 +387,24 @@ async function main() {
         'Meat: 500 grams, Onion: 100 grams, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
     },
     {
+      foodName: 'Meat in tomato sauce',
+      ingredientString:
+        'Meat: 500 grams, Tomatoes: 300 grams, Onion: 100 grams, Garlic: 15 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
+    },
+    {
+      foodName: 'Basmati rice',
+      ingredientString:
+        'Basmati Rice: 200 grams, Water: 200 ml, Salt: 1 teaspoon, Oil: 2 tablespoons'
+    },
+    {
       foodName: 'Orzo',
       ingredientString:
         'Orzo: 200 grams, Chicken Broth: 480 ml, Oil: 1 tablespoon, Salt: 1/2 teaspoon'
     },
     {
-      foodName: 'Cowpea in tomato sauce',
+      foodName: 'Lobya in tomato sauce',
       ingredientString:
-        'Cowpea: 500 grams, Tomatoes: 1000 grams, Onion: 100 grams, Garlic: 15 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
+        'Beans: 500 grams, Tomatoes: 200 grams, Onion: 100 grams, Garlic: 10 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
     },
     {
       foodName: 'Stuffed eggplant',
@@ -417,7 +462,7 @@ async function main() {
         'Pasta: 400 grams, Minced Meat: 300 grams, Onion: 100 grams, Tomatoes: 500 grams, Oil: 2 tablespoons, Salt: 1 teaspoon, Black Pepper: 1/2 teaspoon'
     },
     {
-      foodName: 'Béchamel pasta',
+      foodName: 'Bechamel pasta',
       ingredientString:
         'Pasta: 400 grams, Minced Meat: 300 grams, Onion: 100 grams, Milk: 1500 ml, Flour: 3 tablespoons, Ghee: 3 tablespoons, Salt: 1/2 teaspoon'
     },
@@ -450,7 +495,55 @@ async function main() {
       foodName: 'Muhallebi',
       ingredientString:
         'Milk: 2000 ml, Sugar: 100 grams, Cornstarch: 2 tablespoons, Vanilla: 1 teaspoon'
-    }
+    },
+    { foodName: 'Pumpkin', ingredientString: null },
+    { foodName: 'Eggplant', ingredientString: null },
+    { foodName: 'Broccoli', ingredientString: null },
+    { foodName: 'Carrot', ingredientString: null },
+    { foodName: 'Garlic', ingredientString: null },
+    { foodName: 'Green pepper', ingredientString: null },
+    { foodName: 'Green hot pepper', ingredientString: null },
+    { foodName: 'Kiwi', ingredientString: null },
+    { foodName: 'Okra', ingredientString: null },
+    { foodName: 'Mushroom', ingredientString: null },
+    { foodName: 'Onion', ingredientString: null },
+    { foodName: 'White carrot', ingredientString: null },
+    { foodName: 'Red pepper', ingredientString: null },
+    { foodName: 'Red onion', ingredientString: null },
+    { foodName: 'Sweet potato', ingredientString: null },
+    { foodName: 'Tomato', ingredientString: null },
+    { foodName: 'Yellow pepper', ingredientString: null },
+    { foodName: 'Yellow potatoes', ingredientString: null },
+    { foodName: 'Apple', ingredientString: null },
+    { foodName: 'Banana', ingredientString: null },
+    { foodName: 'Beans', ingredientString: null },
+    { foodName: 'Beetroot', ingredientString: null },
+    { foodName: 'Red beet', ingredientString: null },
+    { foodName: 'Bell pepper', ingredientString: null },
+    { foodName: 'Cabbage', ingredientString: null },
+    { foodName: 'Orange carrot', ingredientString: null },
+    { foodName: 'Cucumber', ingredientString: null },
+    { foodName: 'Dragon fruit', ingredientString: null },
+    { foodName: 'Egg', ingredientString: null },
+    { foodName: 'Large eggplant', ingredientString: null },
+    { foodName: 'Local garlic', ingredientString: null },
+    { foodName: 'Red grapes', ingredientString: null },
+    { foodName: 'Guava', ingredientString: null },
+    { foodName: 'Yellow lemon', ingredientString: null },
+    { foodName: 'Mango', ingredientString: null },
+    { foodName: 'Chinese cabbage', ingredientString: null },
+    { foodName: 'Dry onion', ingredientString: null },
+    { foodName: 'Orange', ingredientString: null },
+    { foodName: 'Peach', ingredientString: null },
+    { foodName: 'Green pear', ingredientString: null },
+    { foodName: 'Hot pepper', ingredientString: null },
+    { foodName: 'Pineapple', ingredientString: null },
+    { foodName: 'Mud potatoes', ingredientString: null },
+    { foodName: 'Red radish', ingredientString: null },
+    { foodName: 'Sapote', ingredientString: null },
+    { foodName: 'Banadora', ingredientString: null },
+    { foodName: 'White turnip', ingredientString: null },
+    { foodName: 'Green zucchini', ingredientString: null }
   ]
 
   for (const food of foods) {
@@ -461,7 +554,7 @@ async function main() {
       await prisma.foodItem.create({
         data: {
           foodName: food.foodName,
-          ingredientString: food.ingredientString
+          ingredientString: food.ingredientString || ''
         }
       })
     }

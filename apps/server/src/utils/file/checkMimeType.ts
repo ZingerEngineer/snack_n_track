@@ -63,17 +63,21 @@ export class ZodImageFileChecker extends FileChecker {
   constructor() {
     const imageSchema = z.object({
       filePath: z.string().min(1),
-      mimeType: z.string().refine(
-        (value) => {
-          const mimeTypes = ['image/jpeg', 'image/png', 'image/webp']
-          return mimeTypes.includes(value)
-        },
-        {
-          message: 'Invalid MIME type'
-        }
-      )
+      mimeType: z
+        .string()
+        .refine(
+          (value) => {
+            const mimeTypes = ['image/jpeg', 'image/png', 'image/webp']
+            return mimeTypes.includes(value)
+          },
+          {
+            message: 'Invalid MIME type'
+          }
+        )
+        .catch(() => 'image/jpeg')
     })
 
     super(new ZodSchemaProvider(imageSchema))
   }
 }
+

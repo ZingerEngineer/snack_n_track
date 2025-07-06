@@ -2,8 +2,8 @@
   <IonPage>
     <IonMenu content-id="main-content">
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Menu Content</IonTitle>
+        <IonToolbar class="border-b-4 px-4 tool-bar-notch-gaurd border-primary">
+          <IonTitle slot="start"></IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent class="ion-padding">
@@ -13,11 +13,14 @@
     </IonMenu>
     <IonPage id="main-content">
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar class="border-b-4 px-4 tool-bar-notch-gaurd border-primary">
           <IonButtons slot="start">
-            <IonMenu-button></IonMenu-button>
+            <IonMenuButton />
           </IonButtons>
-          <IonTitle>Settings</IonTitle>
+          <IonButton slot="secondary" @click="handleRouteHome" fill="clear">
+            <FontAwesomeIcon :icon="faHome" /> Home
+          </IonButton>
+          <IonTitle slot="start">Settings</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonRouterOutlet></IonRouterOutlet>
@@ -40,8 +43,14 @@ import {
   IonMenuButton,
   IonRouterOutlet,
 } from '@ionic/vue'
+import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 const router = useRouter()
 const authStore = useAuthStore()
+
+const handleRouteHome = () => {
+  router.push('/dashboard/home')
+}
 
 const handleLogout = async () => {
   try {

@@ -28,7 +28,7 @@ class FoodItemDao {
     }
   }
 
-  async getFoodItemById(foodItemId: string) {
+  async getFoodItemById(foodItemId: number) {
     const prisma = this.getPrismaClient()
     try {
       const foodItem = await prisma.foodItem.findUnique({
@@ -59,7 +59,7 @@ class FoodItemDao {
   }
 
   async getFullFoodItemById(
-    foodItemId: string,
+    foodItemId: number,
     include: {
       MealFoodItem: boolean
       ingredients: boolean

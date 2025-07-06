@@ -6,8 +6,7 @@ import { loginSchema, registerSchema } from '../schemas/user/user.auth.zod'
 import bcrypt from 'bcrypt'
 import { RefreshTokenDAO, TokenUtils } from '../daos/token.dao'
 import { accessTokenDataSchema } from '../schemas/token.zod'
-import { ITokenPayload } from '../types/user/user.auth'
-import { IRefreshToken } from '../types/token/refreshToken.type'
+import { TTokenPayload, TRefreshToken } from '../types/user/user.auth'
 const userDao = new UserDao()
 const refreshTokenDao = new RefreshTokenDAO()
 
@@ -45,10 +44,9 @@ const loginController = async (req: Request) => {
       throw new ValidationError('Invalid email or password')
     }
 
-    const tokensPayload: ITokenPayload = {
+    const tokensPayload: TTokenPayload = {
       userId: user.id,
-      role: user.role || 'USER',
-      googleId: user.googleId ? user.googleId : null
+      role: user.role || 'USER'
     }
     console.log('[loginController] Generating access token')
     const accessToken = TokenUtils.createAccessToken(tokensPayload)
@@ -125,7 +123,7 @@ const logoutController = async (req: Request) => {
   try {
     const accessToken =
       req.signedCookies['accessToken'] ||
-      req.headers['authorization']?.toString().split(' ')[1]
+      req.headers['authentication']?.toString().split(' ')[1]
     console.log('[logoutController] Access token received:', accessToken)
     if (!accessToken || typeof accessToken !== 'string') {
       console.error('[logoutController] Invalid access token cookie')
@@ -152,7 +150,7 @@ const logoutController = async (req: Request) => {
 
     console.log('[logoutController] Deleting refresh tokens for user:', userId)
     await Promise.all(
-      tokens.map((token: IRefreshToken) => {
+      tokens.map((token: TRefreshToken) => {
         console.log('[logoutController] Deleting token with id:', token.id)
         return refreshTokenDao.deleteTokenById(token.id.toString())
       })
@@ -193,8 +191,7 @@ const refreshTokenController = async (req: Request) => {
     )
     const newAccessToken = TokenUtils.createAccessToken({
       userId: parsedToken.userId,
-      role: parsedToken.role,
-      googleId: parsedToken.googleId
+      role: parsedToken.role
     })
     console.log(
       '[refreshTokenController] New access token generated:',
@@ -216,3 +213,4 @@ export {
   logoutController,
   refreshTokenController
 }
+

@@ -56,7 +56,7 @@ const debouncedRouting = debounce(async (to: unknown, from: unknown, next: unkno
       }
     }
   } catch (error) {
-    console.error('Authorization error:', error)
+    console.error('Authentication error:', error)
     console.log('Error occurred, redirecting to /login')
     next('/login') // Redirect on error (e.g., token expired)
   }

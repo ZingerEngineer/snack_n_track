@@ -8,18 +8,15 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 import PrismaGlobal from '../classes/PrismaGlobal'
-import { ITokenPayload } from '../types/user/user.auth'
-import { IRefreshToken } from '../types/token/refreshToken.type'
-
+import { TRefreshToken, TTokenPayload } from '../types/user/user.auth'
 class TokenUtils {
   private static refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
   private static accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
-  static createRefreshToken(payload: ITokenPayload): string {
+  static createRefreshToken(payload: TTokenPayload): string {
     console.log('[TokenUtils.createRefreshToken] Called with payload:', {
       userId: payload.userId,
-      role: payload.role,
-      googleId: payload.googleId
+      role: payload.role
     })
     const refreshTokenSecret = this.refreshTokenSecret
     if (!refreshTokenSecret || !payload) {
@@ -35,11 +32,10 @@ class TokenUtils {
     return token
   }
 
-  static createAccessToken(payload: ITokenPayload): string {
+  static createAccessToken(payload: TTokenPayload): string {
     console.log('[TokenUtils.createAccessToken] Called with payload:', {
       userId: payload.userId,
-      role: payload.role,
-      googleId: payload.googleId
+      role: payload.role
     })
     const accessTokenSecret = this.accessTokenSecret
     if (!accessTokenSecret || !payload) {
@@ -102,17 +98,16 @@ class TokenUtils {
 }
 
 class RefreshTokenDAO {
-  async createToken(payload: ITokenPayload): Promise<IRefreshToken> {
+  async createToken(payload: TTokenPayload): Promise<TRefreshToken> {
     console.log('[RefreshTokenDAO.createToken] Creating token for payload:', {
       userId: payload.userId
     })
     try {
       const prisma = PrismaGlobal.getPrismaClient()
-      const { userId, role, googleId } = payload
+      const { userId, role } = payload
       const refreshToken = TokenUtils.createRefreshToken({
         userId: userId,
-        role: role,
-        googleId: googleId
+        role: role
       })
       console.log('[RefreshTokenDAO.createToken] Refresh token generated')
       const token = await prisma.refreshToken.create({
@@ -124,7 +119,7 @@ class RefreshTokenDAO {
       console.log(
         '[RefreshTokenDAO.createToken] Refresh token stored in database successfully'
       )
-      return token as IRefreshToken
+      return token as TRefreshToken
     } catch (error) {
       console.error(
         '[RefreshTokenDAO.createToken] Error occurred while creating token:',
@@ -137,7 +132,7 @@ class RefreshTokenDAO {
     }
   }
 
-  async getUserTokensByUserId(userId: string): Promise<IRefreshToken[]> {
+  async getUserTokensByUserId(userId: string): Promise<TRefreshToken[]> {
     console.log(
       '[RefreshTokenDAO.getUserTokensByUserId] Fetching tokens for userId:',
       userId
@@ -158,7 +153,7 @@ class RefreshTokenDAO {
         )
         throw new NotFoundError('No tokens found for user')
       }
-      return tokens as IRefreshToken[]
+      return tokens as TRefreshToken[]
     } catch (error) {
       console.error(
         '[RefreshTokenDAO.getUserTokensByUserId] Error occurred while fetching tokens:',
@@ -173,7 +168,7 @@ class RefreshTokenDAO {
     }
   }
 
-  async getTokenByTokenId(tokenId: string): Promise<IRefreshToken | null> {
+  async getTokenByTokenId(tokenId: string): Promise<TRefreshToken | null> {
     console.log(
       '[RefreshTokenDAO.getTokenByTokenId] Fetching token with tokenId:',
       tokenId
@@ -187,7 +182,7 @@ class RefreshTokenDAO {
         '[RefreshTokenDAO.getTokenByTokenId] Token retrieved:',
         token ? 'Found' : 'Not Found'
       )
-      return token as IRefreshToken | null
+      return token as TRefreshToken | null
     } catch (error) {
       console.error(
         '[RefreshTokenDAO.getTokenByTokenId] Error occurred while fetching token:',
@@ -200,7 +195,7 @@ class RefreshTokenDAO {
     }
   }
 
-  async getTokenByUserId(userId: string): Promise<IRefreshToken | null> {
+  async getTokenByUserId(userId: string): Promise<TRefreshToken | null> {
     console.log(
       '[RefreshTokenDAO.getTokenByUserId] Fetching token for userId:',
       userId
@@ -214,7 +209,7 @@ class RefreshTokenDAO {
         '[RefreshTokenDAO.getTokenByUserId] Token retrieved:',
         token ? 'Found' : 'Not Found'
       )
-      return token as IRefreshToken | null
+      return token as TRefreshToken | null
     } catch (error) {
       console.error(
         '[RefreshTokenDAO.getTokenByUserId] Error occurred while fetching token:',
@@ -254,3 +249,4 @@ class RefreshTokenDAO {
 }
 
 export { RefreshTokenDAO, TokenUtils }
+

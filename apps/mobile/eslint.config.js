@@ -17,18 +17,26 @@ export default [
 
   ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
-  
+
+  {
+    name: 'app/vue-custom-rules',
+    files: ['**/*.vue'],
+    rules: {
+      // Disable false positive warnings for Ionic's slot attributes
+      // Ionic uses 'slot' as a positioning attribute (like slot="start", slot="end")
+      // which is NOT the same as Vue's deprecated slot directive
+      'vue/no-deprecated-slot-attribute': 'off',
+    },
+  },
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
   },
-  
+
   {
     ...pluginCypress.configs.recommended,
-    files: [
-      'cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}',
-      'cypress/support/**/*.{js,ts,jsx,tsx}'
-    ],
+    files: ['cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}', 'cypress/support/**/*.{js,ts,jsx,tsx}'],
   },
   skipFormatting,
 ]

@@ -118,7 +118,7 @@ export const useAuthStore = defineStore('auth', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          authorization: `Bearer ${accessToken.value}`,
+          authentication: `Bearer ${accessToken.value}`,
         },
         credentials: 'include',
         contentType: 'application/json',

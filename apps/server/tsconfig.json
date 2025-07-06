@@ -10,7 +10,8 @@
     "forceConsistentCasingInFileNames": true // Ensure file name casing consistency
   },
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/**/*.d.ts"],
+
   "exclude": ["node_modules"]
 }
 

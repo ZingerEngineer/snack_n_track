@@ -1,5 +1,5 @@
 <template>
-  <div class="success-modal bg-white rounded-lg p-6 max-w-sm w-full shadow-2xl">
+  <div class="bg-white rounded-lg p-6 m-4 max-w-sm w-full relative">
     <!-- Close button -->
     <button
       v-if="showCloseButton"
@@ -27,7 +27,7 @@
               class="bg-green-500 h-1 rounded-full transition-all ease-linear"
               :style="{
                 width: `${autoCloseProgress}%`,
-                transitionDuration: `${autoCloseDelay}ms`,
+                transitionDuration: `${updateInterval}ms`,
               }"
             ></div>
           </div>
@@ -78,18 +78,22 @@ const emit = defineEmits<{
 
 const autoCloseProgress = ref(0)
 const remainingTime = ref(props.autoCloseDelay)
+const updateInterval = 50 // Update every 50ms
 let autoCloseTimer: ReturnType<typeof setTimeout> | null = null
 let progressInterval: ReturnType<typeof setInterval> | null = null
 
 const handleClose = () => {
   if (autoCloseTimer) {
     clearTimeout(autoCloseTimer)
+    autoCloseTimer = null
   }
   if (progressInterval) {
     clearInterval(progressInterval)
+    progressInterval = null
   }
 
-  if (props.onClose) {
+  // Safely call onClose if it exists and is a function
+  if (props.onClose && typeof props.onClose === 'function') {
     props.onClose()
   }
   emit('close')
@@ -113,9 +117,10 @@ onMounted(() => {
       if (progress >= 100) {
         if (progressInterval) {
           clearInterval(progressInterval)
+          progressInterval = null
         }
       }
-    }, 50)
+    }, updateInterval)
   }
 })
 
@@ -130,6 +135,20 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 50;
+}
+
 .success-modal {
   position: relative;
   animation: successModalSlideIn 0.3s ease-out;

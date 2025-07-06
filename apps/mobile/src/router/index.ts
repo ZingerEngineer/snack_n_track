@@ -56,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/test',
         name: 'test',
-        component: () => import('../views/ScanTab/newUploadResultsView.vue'),
+        component: () => import('../views/ScanTab/UploadResultsView.vue'),
       },
     ],
   },
@@ -107,8 +107,8 @@ const getSession = async (): Promise<{ authorized: boolean }> => {
       contentType: 'application/json',
       credentials: 'include',
       headers: {
-        Authorization: `Bearer ${(await PreferencesService.getItem('accessToken')).value}`,
-        Refresh: `Refresher ${(await PreferencesService.getItem('refreshToken')).value}`,
+        authentication: `Bearer ${(await PreferencesService.getItem('accessToken')).value}`,
+        refresh: `Refresher ${(await PreferencesService.getItem('refreshToken')).value}`,
       },
     })
 
@@ -147,7 +147,7 @@ const authGuard = async (
     // Otherwise, allow the navigation.
     return next()
   } catch (error) {
-    console.error('Authorization error:', error)
+    console.error('Authentication error:', error)
     // On error (such as network issues or token expiration), redirect to login.
     return next('/login')
   }

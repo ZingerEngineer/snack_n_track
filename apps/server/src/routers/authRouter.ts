@@ -6,7 +6,7 @@ import {
   refreshTokenController
 } from '../controllers/auth.controller'
 import { BaseError } from '../classes/Error'
-import authorizationMiddleware from '../middlewares/authorizationMiddleware'
+import authenticationMiddleware from '../middlewares/authenticationMiddleware'
 const authRouter = express.Router()
 
 authRouter.post('/login', async (req: Request, res: Response) => {
@@ -115,10 +115,10 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
 
 authRouter.get(
   '/session',
-  authorizationMiddleware,
+  authenticationMiddleware,
   async (_, res: Response) => {
     console.log(
-      '[authRouter GET /session] Session endpoint reached after authorization'
+      '[authRouter GET /session] Session endpoint reached after authentication.'
     )
     res.json({ authorized: true })
   }

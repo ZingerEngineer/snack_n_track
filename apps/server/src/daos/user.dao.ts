@@ -73,33 +73,6 @@ class UserDAO {
     }
   }
 
-  async getUserByGoogleId(googleId: string) {
-    console.log(
-      `[UserDAO.getUserByGoogleId] Fetching user by Google ID: ${googleId}`
-    )
-    const prisma = this.getPrismaClient()
-    try {
-      const user = await prisma.user.findUnique({
-        where: { googleId: googleId }
-      })
-      console.log(
-        `[UserDAO.getUserByGoogleId] User fetched successfully for Google ID: ${googleId}`
-      )
-      return user
-    } catch (error) {
-      console.error(
-        `[UserDAO.getUserByGoogleId] Error fetching user by Google ID ${googleId}:`,
-        error
-      )
-      throw new NotFoundError('Failed to get user by ID')
-    } finally {
-      await this.closePrismaClient()
-      console.log(
-        `[UserDAO.getUserByGoogleId] Prisma client closed for Google ID: ${googleId}`
-      )
-    }
-  }
-
   async getUserByEmail(email: string) {
     console.log(`[UserDAO.getUserByEmail] Fetching user by Email: ${email}`)
     const prisma = this.getPrismaClient()
@@ -173,6 +146,116 @@ class UserDAO {
       await this.closePrismaClient()
       console.log(
         `[UserDAO.createUser] Prisma client closed after creating user with Email: ${email}`
+      )
+    }
+  }
+
+  async updateUser(
+    userId: string,
+    data: {
+      name?: string
+      age?: number
+      gender?: string
+      avatar?: string
+    }
+  ) {
+    console.log(`[UserDAO.updateUser] Updating user: ${userId}`)
+    const prisma = this.getPrismaClient()
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data
+      })
+      console.log(`[UserDAO.updateUser] User updated successfully: ${userId}`)
+      return updatedUser
+    } catch (error) {
+      console.error(
+        `[UserDAO.updateUser] Error updating user ${userId}:`,
+        error
+      )
+      throw new InternalServerError('Failed to update user')
+    } finally {
+      await this.closePrismaClient()
+      console.log(
+        `[UserDAO.updateUser] Prisma client closed after updating user: ${userId}`
+      )
+    }
+  }
+
+  async getUserWithRelations(userId: string) {
+    console.log(
+      `[UserDAO.getUserWithRelations] Fetching user with relations by ID: ${userId}`
+    )
+    const prisma = this.getPrismaClient()
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          preferences: true,
+          medicalConditions: {
+            include: {
+              medicalCondition: true
+            }
+          },
+          healthTracking: {
+            orderBy: { dateRecorded: 'desc' },
+            take: 1
+          }
+        }
+      })
+      console.log(
+        `[UserDAO.getUserWithRelations] User with relations fetched successfully for ID: ${userId}`
+      )
+      return user
+    } catch (error) {
+      console.error(
+        `[UserDAO.getUserWithRelations] Error fetching user with relations by ID ${userId}:`,
+        error
+      )
+      throw new NotFoundError('Failed to get user with relations by ID')
+    } finally {
+      await this.closePrismaClient()
+      console.log(
+        `[UserDAO.getUserWithRelations] Prisma client closed for ID: ${userId}`
+      )
+    }
+  }
+
+  async createOrUpdateUserPreferences(
+    userId: string,
+    preferences: {
+      language?: string
+      theme?: string
+      notifications?: boolean
+    }
+  ) {
+    console.log(
+      `[UserDAO.createOrUpdateUserPreferences] Updating preferences for user: ${userId}`
+    )
+    const prisma = this.getPrismaClient()
+    try {
+      const userPreferences = await prisma.preferences.upsert({
+        where: { userId },
+        update: preferences,
+        create: {
+          userId,
+          ...preferences
+        }
+      })
+      console.log(
+        `[UserDAO.createOrUpdateUserPreferences] User preferences updated successfully for user: ${userId}`
+      )
+      return userPreferences
+    } catch (error) {
+      console.error(
+        `[UserDAO.createOrUpdateUserPreferences] Error updating preferences for user ${userId}:`,
+        error
+      )
+      throw new InternalServerError('Failed to update user preferences')
+    } finally {
+      await this.closePrismaClient()
+      console.log(
+        `[UserDAO.createOrUpdateUserPreferences] Prisma client closed for user: ${userId}`
       )
     }
   }

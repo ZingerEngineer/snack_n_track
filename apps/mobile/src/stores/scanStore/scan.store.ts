@@ -678,7 +678,7 @@ export const useScanStore = defineStore('scan', () => {
       const formData = new FormData()
       formData.append('file', compressedFile)
 
-      const data = await fetcher('private/scan', {
+      const data = await fetcher('private/meals/scan', {
         method: 'POST',
         body: formData,
       })

@@ -1,5 +1,4 @@
 import { NutritionUnit, PrismaClient } from '@prisma/client'
-import { IngredientParser } from '../utils/ingredientParser'
 import { InternalServerError, NotFoundError } from '../classes/Error'
 import FoodItemDao from './foodItem.dao'
 
@@ -200,15 +199,11 @@ class IngredientDao {
     try {
       const prisma = this.getPrismaClient()
 
-      const ingredientParser = new IngredientParser()
-
-      const validatedData = ingredientParser.parseCreateIngredient(data)
-
       console.log(
         '[IngredientDao] Creating new ingredient with validated data...'
       )
       const newIngredient = await prisma.ingredient.create({
-        data: validatedData
+        data
       })
 
       console.log(
@@ -220,129 +215,6 @@ class IngredientDao {
     } catch (error) {
       console.error('[IngredientDao] Error in createIngredient:', error)
       throw new InternalServerError('Failed to create ingredient')
-    } finally {
-      await this.closePrismaClient()
-    }
-  }
-
-  async createIngredientWithFoodItems(data: {
-    ingredientName: string
-    calories?: number
-    caloriesUnit?: NutritionUnit
-    carbohydratesAmount?: number
-    carbohydratesUnit?: NutritionUnit
-    proteinsAmount?: number
-    proteinsUnit?: NutritionUnit
-    fatsAmount?: number
-    fatsUnit?: NutritionUnit
-    sugarAmount?: number
-    sugarUnit?: NutritionUnit
-    ironAmount?: number
-    ironUnit?: NutritionUnit
-    sodiumAmount?: number
-    sodiumUnit?: NutritionUnit
-    potassiumAmount?: number
-    potassiumUnit?: NutritionUnit
-    vitaminC?: number
-    vitaminCUnit?: NutritionUnit
-    vitaminB6?: number
-    vitaminB6Unit?: NutritionUnit
-    vitaminB12?: number
-    vitaminB12Unit?: NutritionUnit
-    foodItemNames: string[]
-  }) {
-    console.log(
-      `[IngredientDao] createIngredientWithFoodItems called with ingredientName: ${data.ingredientName}`
-    )
-    try {
-      const foodItemDao = new FoodItemDao()
-      const prisma = this.getPrismaClient()
-
-      // Use validation from ingredientParser
-      const ingredientParser = new IngredientParser()
-      const { foodItemNames, ...ingredientData } = data
-      const validatedData =
-        ingredientParser.parseCreateIngredient(ingredientData)
-
-      console.log('[IngredientDao] Creating new ingredient...')
-      const newIngredient = await prisma.ingredient.create({
-        data: validatedData
-      })
-      console.log(
-        '[IngredientDao] New ingredient created with ID:',
-        newIngredient.id
-      )
-
-      if (foodItemNames && foodItemNames.length > 0) {
-        console.log(
-          '[IngredientDao] Fetching FoodItems for FoodIngredient names...'
-        )
-        const foodItems = await Promise.all(
-          foodItemNames.map(async (foodItemName) => {
-            console.log(
-              `[IngredientDao] Looking up FoodItem by name: ${foodItemName}`
-            )
-            const currentFoodItem =
-              await foodItemDao.getFoodItemByName(foodItemName)
-            console.log(
-              `[IngredientDao] FoodItem found: ${currentFoodItem[0].foodName} with ID: ${currentFoodItem[0].id}`
-            )
-            return currentFoodItem[0]
-          })
-        )
-        console.log(
-          '[IngredientDao] FoodItems fetched:',
-          foodItems.map((fi) => fi.id)
-        )
-
-        console.log(
-          '[IngredientDao] Checking for existing FoodIngredient records...'
-        )
-        const existingFoodItemIngredient = await prisma.foodIngredient.findMany(
-          {
-            where: {
-              ingredientId: newIngredient.id,
-              foodId: {
-                in: foodItems.map((foodItem) => foodItem.id)
-              }
-            }
-          }
-        )
-
-        if (existingFoodItemIngredient.length === 0) {
-          console.log(
-            '[IngredientDao] No existing FoodIngredient records found. Creating new ones...'
-          )
-          const createManyResult = await prisma.foodIngredient.createMany({
-            data: foodItems.map((foodItem) => ({
-              ingredientId: newIngredient.id,
-              foodId: foodItem.id
-            }))
-          })
-          console.log(
-            '[IngredientDao] Created FoodIngredient records:',
-            createManyResult
-          )
-        } else {
-          console.log(
-            '[IngredientDao] Existing FoodIngredient records found:',
-            existingFoodItemIngredient
-          )
-        }
-      }
-
-      console.log(
-        '[IngredientDao] createIngredientWithFoodItems completed successfully.'
-      )
-      return newIngredient
-    } catch (error) {
-      console.error(
-        '[IngredientDao] Error in createIngredientWithFoodItems:',
-        error
-      )
-      throw new InternalServerError(
-        'Failed to create ingredient with food items'
-      )
     } finally {
       await this.closePrismaClient()
     }
